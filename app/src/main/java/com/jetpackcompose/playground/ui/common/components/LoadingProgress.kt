@@ -1,4 +1,4 @@
-package com.jetpackcompose.playground.ui.search.common.components
+package com.jetpackcompose.playground.ui.common.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
