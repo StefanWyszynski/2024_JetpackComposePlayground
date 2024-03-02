@@ -20,8 +20,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
@@ -38,7 +37,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.jetpackcompose.playground.ui.cameraxtest.CameraXTestScreen
 import com.jetpackcompose.playground.ui.search.repo.SearchRepoScreen
+import com.jetpackcompose.playground.ui.search.repo.viewmodel.SerachRepoViewModel
 import com.jetpackcompose.playground.ui.search.user.SearchUserScreen
+import com.jetpackcompose.playground.ui.search.user.viewmodel.SerachUserViewModel
 import com.jetpackcompose.playground.ui.theme.LearningAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -79,9 +80,6 @@ class MainActivityCompose : ComponentActivity() {
 fun SetNavAppHost(
     navController: NavHostController
 ) {
-    val currentScreenSate = remember {
-        mutableStateOf(Screen.SearchRepo.route)
-    }
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -104,15 +102,14 @@ fun SetNavAppHost(
     ) {
         NavHost(navController = navController, startDestination = Screen.SearchUser.route) {
             composable(Screen.SearchUser.route) {
-                currentScreenSate.value = Screen.SearchUser.route
-                SearchUserScreen(currentScreenSate, scope, drawerState)
+                val hiltViewModel = hiltViewModel<SerachUserViewModel>(it)
+                SearchUserScreen(hiltViewModel, scope, drawerState)
             }
             composable(Screen.SearchRepo.route) {
-                currentScreenSate.value = Screen.SearchRepo.route
-                SearchRepoScreen(currentScreenSate, scope, drawerState)
+                val hiltViewModel = hiltViewModel<SerachRepoViewModel>(it)
+                SearchRepoScreen(hiltViewModel, scope, drawerState)
             }
             composable(Screen.CameraXTest.route) {
-                currentScreenSate.value = Screen.CameraXTest.route
                 CameraXTestScreen(scope, drawerState)
             }
         }

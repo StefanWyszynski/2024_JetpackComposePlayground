@@ -6,6 +6,9 @@ import com.jetpackcompose.playground.common.network.NetworkOperation
 import com.jetpackcompose.playground.domain.mappers.GithubUser
 import com.jetpackcompose.playground.domain.use_case.GithubSearchUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,6 +22,7 @@ import javax.inject.Inject
  *
  * @author Stefan Wyszynski
  */
+@OptIn(FlowPreview::class)
 @HiltViewModel
 class SerachUserViewModel @Inject constructor(
     private val githubSearchUserUseCase: GithubSearchUserUseCase
@@ -51,8 +55,9 @@ class SerachUserViewModel @Inject constructor(
     fun searchUsers(userName: String) {
         viewModelScope.launch {
             _gitHubUsers.value = NetworkOperation.Loading()
-            githubSearchUserUseCase(userName).collect {
-                _gitHubUsers.value = it
+
+            launch(Dispatchers.IO) {
+                _gitHubUsers.value = githubSearchUserUseCase(userName)
             }
         }
     }

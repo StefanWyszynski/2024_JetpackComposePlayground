@@ -12,7 +12,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -39,7 +38,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun SearchUserScreen(
-    currentScreenSate: MutableState<String>,
+    viewModel: SerachUserViewModel,
     scope: CoroutineScope,
     drawerState: DrawerState
 ) {
@@ -60,15 +59,13 @@ fun SearchUserScreen(
                 .padding(scaffoldPading)
         )
         {
-            SearchUserScreenContent()
+            SearchUserScreenContent(viewModel)
         }
     }
 }
 
 @Composable
-private fun SearchUserScreenContent(
-    viewModel: SerachUserViewModel = hiltViewModel()
-) {
+private fun SearchUserScreenContent(   viewModel: SerachUserViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()

@@ -1,12 +1,8 @@
 package com.jetpackcompose.playground.domain.use_case
 
 import com.jetpackcompose.playground.common.network.NetworkOperation
-import com.jetpackcompose.playground.common.network.safeApiCallRunner
 import com.jetpackcompose.playground.domain.mappers.GithubUser
-import com.jetpackcompose.playground.model.repositiories.GithubRepositoryImpl
-import com.jetpackcompose.playground.model.users.mapToDomain
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
+import com.jetpackcompose.playground.domain.repositories.GithubRepository
 import javax.inject.Inject
 
 /*
@@ -14,16 +10,9 @@ import javax.inject.Inject
  *
  * @author Stefan Wyszynski
  */
-class GithubSearchUserUseCase @Inject constructor(private val githubRepository: GithubRepositoryImpl) {
+class GithubSearchUserUseCase @Inject constructor(private val githubRepository: GithubRepository) {
 
-    operator fun invoke(userName: String): Flow<NetworkOperation<List<GithubUser>>> {
-        return safeApiCallRunner(
-            dispatcher = Dispatchers.IO,
-            apiCall = {
-                githubRepository.searchUser(userName)
-            },
-            onMapNetworkData = {
-                it.mapToDomain()
-            })
+    suspend operator fun invoke(userName: String): NetworkOperation<List<GithubUser>> {
+        return githubRepository.searchUser(userName)
     }
 }

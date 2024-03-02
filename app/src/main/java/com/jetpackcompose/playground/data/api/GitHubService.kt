@@ -1,8 +1,8 @@
-package com.jetpackcompose.playground.model.api
+package com.jetpackcompose.playground.data.api
 
-import com.jetpackcompose.playground.model.dto.GithubReposSearchDto
-import com.jetpackcompose.playground.model.users.GithubUserDto
-import com.jetpackcompose.playground.model.users.GithubUsersSearchDto
+import com.jetpackcompose.playground.data.dto.GithubReposSearchDto
+import com.jetpackcompose.playground.data.users.GithubUserDto
+import com.jetpackcompose.playground.data.users.GithubUsersSearchDto
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Headers

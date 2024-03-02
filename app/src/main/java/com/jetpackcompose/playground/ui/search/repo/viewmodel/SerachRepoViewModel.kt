@@ -6,6 +6,8 @@ import com.jetpackcompose.playground.common.network.NetworkOperation
 import com.jetpackcompose.playground.domain.mappers.GithubRepo
 import com.jetpackcompose.playground.domain.use_case.GithubSearchRepoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,6 +21,7 @@ import javax.inject.Inject
  *
  * @author Stefan Wyszynski
  */
+@OptIn(FlowPreview::class)
 @HiltViewModel
 class SerachRepoViewModel @Inject constructor(
     private val githubSearchRepoUseCase: GithubSearchRepoUseCase,
@@ -51,8 +54,8 @@ class SerachRepoViewModel @Inject constructor(
     fun searchRepos(repoName: String) {
         viewModelScope.launch {
             _gitHubRepos.value = NetworkOperation.Loading()
-            githubSearchRepoUseCase(repoName).collect {
-                _gitHubRepos.value = it
+            launch(Dispatchers.IO) {
+                _gitHubRepos.value = githubSearchRepoUseCase(repoName)
             }
         }
     }
