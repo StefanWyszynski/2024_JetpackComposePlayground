@@ -2,9 +2,11 @@ package com.jetpackcompose.playground.di.modules
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.jetpackcompose.playground.data.api.GitHubApiService
-import com.jetpackcompose.playground.data.repositiories.GithubRepositoryImpl
-import com.jetpackcompose.playground.domain.repositories.GithubRepository
+import com.jetpackcompose.playground.common.data.api.GitHubApiService
+import com.jetpackcompose.playground.domain.repositories.GithubUsersRepository
+import com.jetpackcompose.playground.repos.data.repositiories.GithubReposRepositoryImpl
+import com.jetpackcompose.playground.repos.data.repositiories.GithubUsersRepositoryImpl
+import com.jetpackcompose.playground.repos.domain.repositories.GithubReposRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -50,9 +52,14 @@ class ApiModule {
 
     @Provides
     @Singleton
-    // provided this way for future testing
-    fun provideGithubRepository(gitHubApiService: GitHubApiService): GithubRepository {
-        return GithubRepositoryImpl(gitHubApiService)
+    fun provideGithubReposRepository(gitHubApiService: GitHubApiService): GithubReposRepository {
+        return GithubReposRepositoryImpl(gitHubApiService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGithubUsersRepository(gitHubApiService: GitHubApiService): GithubUsersRepository {
+        return GithubUsersRepositoryImpl(gitHubApiService)
     }
 
     companion object {
