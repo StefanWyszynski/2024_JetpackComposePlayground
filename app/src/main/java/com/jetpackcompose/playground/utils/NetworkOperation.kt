@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
  */
 sealed interface NetworkOperation<T> {
 
-    data class Initial<T>(var placeholder: T? = null) : NetworkOperation<T>
     data class Loading<T>(var placeholder: T? = null) : NetworkOperation<T>
 
     data class Success<T>(var users: T) : NetworkOperation<T>

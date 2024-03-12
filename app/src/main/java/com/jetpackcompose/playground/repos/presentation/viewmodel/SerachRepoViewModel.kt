@@ -31,7 +31,7 @@ class SerachRepoViewModel @Inject constructor(
     var searchText: StateFlow<String> = _searchText.asStateFlow()
 
     private var _gitHubRepos =
-        MutableStateFlow<NetworkOperation<List<GithubRepo>>>(NetworkOperation.Initial())
+        MutableStateFlow<NetworkOperation<List<GithubRepo>>>(NetworkOperation.Success(arrayListOf()))
     var gitHubRepos = _gitHubRepos.asStateFlow()
 
     init {
