@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.Scaffold
@@ -23,9 +24,8 @@ import com.jetpackcompose.playground.common.presentation.components.MyTopAppBar
 import com.jetpackcompose.playground.common.presentation.components.SearchResultListItem
 import com.jetpackcompose.playground.common.presentation.components.searchField
 import com.jetpackcompose.playground.common.presentation.components.spacer
-import com.jetpackcompose.playground.users.domain.model.GithubUser
+import com.jetpackcompose.playground.users.presentation.redux.GithubUserState
 import com.jetpackcompose.playground.users.presentation.viewmodel.SerachUserViewModel
-import com.jetpackcompose.playground.utils.NetworkOperation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -71,27 +71,36 @@ private fun SearchUserScreenContent(viewModel: SerachUserViewModel) {
         val gitHubUsers by viewModel.gitHubUsers.collectAsStateWithLifecycle()
         searchField(serachText, viewModel::onSearchTextChange)
         spacer()
-        showUsers(users = gitHubUsers)
+        showUsers(gitHubUsers, viewModel::onErrorAction)
     }
 }
 
 @Composable
-private fun showUsers(users: NetworkOperation<List<GithubUser>>) {
-    users.onSuccess { users ->
-        val reposRes = users.take(50)
-        LazyColumn(modifier = Modifier.fillMaxHeight()) {
-            items(reposRes.count()) { itemId ->
-                val repo = reposRes[itemId]
-                SearchResultListItem(repo, repo.avatarUrl, repo.userName, onItemClick = {
-
-                })
-                Divider()
+private fun showUsers(githubUserState: GithubUserState?, onErrorAction: () -> Unit) {
+    when (githubUserState) {
+        is GithubUserState.ContentState -> {
+            val reposRes = githubUserState.users.take(50)
+            LazyColumn(modifier = Modifier.fillMaxHeight()) {
+                items(reposRes.count()) { itemId ->
+                    val repo = reposRes[itemId]
+                    SearchResultListItem(repo, repo.avatarUrl, repo.userName, onItemClick = {
+                        // next screen here
+                    })
+                    Divider()
+                }
             }
         }
-    }.onLoading {
-        LoadingProgress()
-    }.onFailure {
-        Text(text = "Something went wrong" + (it ?: ""))
+        is GithubUserState.Error -> {
+            Text(text = "Something went wrong" + (githubUserState.e.localizedMessage ?: ""))
+            Button(onClick = onErrorAction) {
+                Text(text = "Retry")
+            }
+        }
+        is GithubUserState.Load -> {
+            LoadingProgress()
+        }
+
+        null -> Unit
     }
 }
 

@@ -5,6 +5,7 @@ Kotlin project
 
 Technology stack:
 - Jetpack compose
+- flow redux
 - CameraX
 - Hilt/dagger2
 - retrofit

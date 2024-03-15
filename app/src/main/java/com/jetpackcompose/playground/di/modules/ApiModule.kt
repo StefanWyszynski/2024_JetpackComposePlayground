@@ -7,6 +7,7 @@ import com.jetpackcompose.playground.domain.repositories.GithubUsersRepository
 import com.jetpackcompose.playground.repos.data.repositiories.GithubReposRepositoryImpl
 import com.jetpackcompose.playground.repos.data.repositiories.GithubUsersRepositoryImpl
 import com.jetpackcompose.playground.repos.domain.repositories.GithubReposRepository
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -50,19 +51,9 @@ class ApiModule {
         return retrofit.create(GitHubApiService::class.java)
     }
 
-    @Provides
-    @Singleton
-    fun provideGithubReposRepository(gitHubApiService: GitHubApiService): GithubReposRepository {
-        return GithubReposRepositoryImpl(gitHubApiService)
-    }
-
-    @Provides
-    @Singleton
-    fun provideGithubUsersRepository(gitHubApiService: GitHubApiService): GithubUsersRepository {
-        return GithubUsersRepositoryImpl(gitHubApiService)
-    }
 
     companion object {
         val HTTP_GITHUB_ROOT_ENDPOINT = "https://api.github.com"
     }
 }
+
