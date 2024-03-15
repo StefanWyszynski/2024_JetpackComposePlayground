@@ -123,9 +123,8 @@ dependencies {
     /* Gson */
     implementation libs.gson
     // coil
-    implementation(libs.coil.compose)
-    implementation("io.coil-kt:coil-compose:2.0.0-rc01")
+    implementation libs.coil.compose
     // flowredux
-    implementation 'com.freeletics.flowredux:flowredux-jvm:1.2.1'
-    implementation 'com.freeletics.flowredux:compose:1.2.1'
+    implementation libs.flowredux.jvm
+    implementation libs.flowredux.compose
 }
