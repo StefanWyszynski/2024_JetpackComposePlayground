@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Divider
@@ -16,15 +17,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.jetpackcompose.playground.utils.NetworkOperation
-import com.jetpackcompose.playground.repos.domain.model.GithubRepo
 import com.jetpackcompose.playground.common.presentation.components.LoadingProgress
 import com.jetpackcompose.playground.common.presentation.components.MyTopAppBar
+import com.jetpackcompose.playground.common.presentation.components.SearchField
 import com.jetpackcompose.playground.common.presentation.components.SearchResultListItem
-import com.jetpackcompose.playground.common.presentation.components.searchField
-import com.jetpackcompose.playground.common.presentation.components.spacer
+import com.jetpackcompose.playground.common.presentation.components.Spacer
+import com.jetpackcompose.playground.repos.domain.model.GithubRepo
 import com.jetpackcompose.playground.repos.presentation.viewmodel.SerachRepoViewModel
+import com.jetpackcompose.playground.utils.NetworkOperation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -71,14 +73,14 @@ private fun SearchRepoScreenContent(viewModel: SerachRepoViewModel) {
     ) {
         val serachText by viewModel.searchText.collectAsState("")
         val githubRepos by viewModel.gitHubRepos.collectAsStateWithLifecycle()
-        searchField(serachText, viewModel::onSearchTextChange)
-        spacer()
-        showRepositories(repositiories = githubRepos)
+        SearchField(serachText, viewModel::onSearchTextChange)
+        Spacer()
+        ShowRepositories(repositiories = githubRepos)
     }
 }
 
 @Composable
-private fun showRepositories(repositiories: NetworkOperation<List<GithubRepo>>) {
+private fun ShowRepositories(repositiories: NetworkOperation<List<GithubRepo>>) {
     repositiories.onSuccess { repos ->
         val reposRes = repos.take(50)
         LazyColumn(modifier = Modifier.fillMaxHeight()) {
@@ -89,10 +91,21 @@ private fun showRepositories(repositiories: NetworkOperation<List<GithubRepo>>) 
                 })
                 Divider()
             }
+            if (repos.count() == 0) {
+                item {
+                    Text(
+                        text = "No repos found", textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            }
         }
     }.onLoading {
         LoadingProgress()
     }.onFailure {
-        Text(text = "Something went wrong, " + (it ?: ""))
+        Text(
+            text = "Something went wrong, " + (it ?: ""), textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }

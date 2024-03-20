@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun spacer() {
+fun Spacer() {
     Spacer(
         modifier = Modifier
             .height(10.dp)

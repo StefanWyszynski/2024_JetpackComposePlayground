@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun searchField(
+fun SearchField(
     serachText: String,
     onSearchTextChange: (text: String) -> Unit
 ) {

@@ -118,6 +118,7 @@ dependencies {
 
     // retrofit 2
     implementation libs.retrofit2.retrofit
+    implementation libs.logging.interceptor
     // JSON Converter
     implementation libs.converter.gson
     /* Gson */
