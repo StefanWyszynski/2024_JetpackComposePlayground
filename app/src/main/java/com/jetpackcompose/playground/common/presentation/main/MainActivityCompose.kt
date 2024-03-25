@@ -35,7 +35,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.jetpackcompose.camerax.presentation.cameraxtest.CameraXTestScreen
+import com.jetpackcompose.playground.camerax.presentation.cameraxtest.CameraXScreenContainer
 import com.jetpackcompose.playground.repos.presentation.SearchRepoScreen
 import com.jetpackcompose.playground.repos.presentation.viewmodel.SerachRepoViewModel
 import com.jetpackcompose.playground.users.presentation.SearchUserScreen
@@ -110,7 +110,7 @@ fun SetNavAppHost(
                 SearchRepoScreen(hiltViewModel, scope, drawerState)
             }
             composable(Screen.CameraXTest.route) {
-                CameraXTestScreen(scope, drawerState)
+                CameraXScreenContainer(scope, drawerState)
             }
         }
     }

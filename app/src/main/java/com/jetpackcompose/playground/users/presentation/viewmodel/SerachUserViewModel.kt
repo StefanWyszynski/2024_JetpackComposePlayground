@@ -1,7 +1,7 @@
 package com.jetpackcompose.playground.users.presentation.viewmodel
 
 import androidx.lifecycle.viewModelScope
-import com.jetpackcompose.camerax.presentation.cameraxtest.StateViewModel
+import com.jetpackcompose.playground.common.presentation.viewmodel.StateViewModel
 import com.jetpackcompose.playground.users.presentation.redux.GithubUserAction
 import com.jetpackcompose.playground.users.presentation.redux.GithubUserState
 import com.jetpackcompose.playground.users.presentation.redux.GithubUsersStateMachine

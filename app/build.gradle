@@ -63,6 +63,8 @@ android {
 
 dependencies {
 
+    implementation(project(":permissions-util"))
+
     // core
     implementation libs.core.ktx
     implementation libs.appcompat
@@ -100,7 +102,7 @@ dependencies {
     implementation libs.androidx.camera.extensions
 
     // permissions state /remember permission
-    implementation libs.accompanist.permissions
+//    implementation libs.accompanist.permissions
 
     // jetpack compose navigation
 //    implementation "androidx.navigation:navigation-common-ktx:$nav_version"
