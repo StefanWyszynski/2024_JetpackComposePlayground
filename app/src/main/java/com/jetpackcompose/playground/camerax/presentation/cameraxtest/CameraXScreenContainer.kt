@@ -39,11 +39,4 @@ private fun rememberPermissionsBuilder() = remember {
                 "Change settings camera in perm dialog"
             )
         )
-        .addPermission(
-            PermissionInfo(
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                "Need coarse location permission",
-                "Change settings coarse location in perm dialog"
-            )
-        )
 }
