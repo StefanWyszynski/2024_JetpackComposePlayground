@@ -41,6 +41,7 @@ import com.jetpackcompose.playground.repos.presentation.viewmodel.SerachRepoView
 import com.jetpackcompose.playground.users.presentation.SearchUserScreen
 import com.jetpackcompose.playground.users.presentation.viewmodel.SerachUserViewModel
 import com.jetpackcompose.playground.common.presentation.theme.LearningAppTheme
+import com.jetpackcompose.playground.maps.presentation.GoogleMapScreen
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -53,6 +54,7 @@ sealed class Screen(val route: String) {
     object SearchUser : Screen("searchUser")
     object SearchRepo : Screen("searchRepo")
     object CameraXTest : Screen("CameraXTest")
+    object MapsTest : Screen("MapTest")
 }
 
 @AndroidEntryPoint
@@ -112,6 +114,10 @@ fun SetNavAppHost(
             composable(Screen.CameraXTest.route) {
                 CameraXTestScreen(scope, drawerState)
             }
+            composable(Screen.MapsTest.route) {
+                GoogleMapScreen(scope, drawerState)
+            }
+
         }
     }
 }
@@ -144,6 +150,10 @@ fun DrawerContent(
         GotoCameraXTest(navController, nav)
         onClickOption()
     }, "Camera X test")
+    DrawerContentOptionButton({
+        GotoCameraXTest(navController, nav)
+        onClickOption()
+    }, "Map test")
 }
 
 @Composable

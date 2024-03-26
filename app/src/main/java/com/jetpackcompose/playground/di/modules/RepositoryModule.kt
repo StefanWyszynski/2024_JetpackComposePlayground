@@ -18,5 +18,5 @@ abstract class RepositoryModule {
     abstract fun bindGithubRepository(githubReposRepositoryImpl: GithubReposRepositoryImpl): GithubReposRepository
 
     @Binds
-    abstract fun bindGraphQLResponseHandler(githubUsersRepositoryImpl: GithubUsersRepositoryImpl): GithubUsersRepository
+    abstract fun bindGithubUserRepository(githubUsersRepositoryImpl: GithubUsersRepositoryImpl): GithubUsersRepository
 }
