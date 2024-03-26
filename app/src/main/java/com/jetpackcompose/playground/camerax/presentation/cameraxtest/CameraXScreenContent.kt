@@ -1,7 +1,7 @@
-package com.jetpackcompose.camerax.presentation.cameraxtest
+package com.jetpackcompose.playground.camerax.presentation.cameraxtest
 
-import android.Manifest
 import android.content.Context
+import android.graphics.Color
 import android.util.Log
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -29,28 +29,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionState
-import com.google.accompanist.permissions.rememberPermissionState
 import com.jetpackcompose.playground.common.presentation.components.MyTopAppBar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun CameraXTestScreen(scope: CoroutineScope, drawerState: DrawerState) {
-    val permission: PermissionState =
-        rememberPermissionState(permission = Manifest.permission.CAMERA)
-    if (permission.hasPermission) {
-        CameraXTestScreenContent(scope, drawerState)
-    } else {
-        NoPermissionScreen(permission, permission::launchPermissionRequest)
-    }
-}
-
-@Composable
-fun CameraXTestScreenContent(
+fun CameraXScreenContent(
     scope: CoroutineScope,
     drawerState: DrawerState
 ) {
@@ -59,6 +43,7 @@ fun CameraXTestScreenContent(
     val camController = remember {
         LifecycleCameraController(context)
     }
+
     Scaffold(
         topBar = {
             val topAppBarTitle = "CameraX test"
@@ -118,7 +103,7 @@ fun CameraScreenContent(camController: LifecycleCameraController, owner: Lifecyc
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT
                 )
-                setBackgroundColor(android.graphics.Color.BLACK)
+                setBackgroundColor(Color.BLACK)
                 scaleType = PreviewView.ScaleType.FILL_START
                 controller = camController
                 camController.bindToLifecycle(owner)

@@ -1,17 +1,13 @@
-package com.jetpackcompose.camerax.presentation.cameraxtest
+package com.jetpackcompose.playground.common.presentation.viewmodel
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.freeletics.flowredux.compose.rememberState
 import com.freeletics.flowredux.dsl.FlowReduxStateMachine
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
 
-@OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
-abstract class StateViewModel<State : Any, Action : Any>
-@OptIn(ExperimentalCoroutinesApi::class) constructor(
+abstract class StateViewModel<State : Any, Action : Any> constructor(
     protected val stateMachine: FlowReduxStateMachine<State, Action>
 ) : ViewModel() {
 

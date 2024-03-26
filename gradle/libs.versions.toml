@@ -1,5 +1,5 @@
 [versions]
-accompanistPermissionsVersion = "0.23.1"
+#accompanistPermissionsVersion = "0.23.1"
 activityComposeVersion = "1.8.2"
 appcompatVersion = "1.6.1"
 cameraCoreVersion = "1.3.2"
@@ -20,9 +20,11 @@ materialVersion = "1.11.0"
 navigationComposeVersion = "2.7.7"
 retrofit2Version = "2.9.0"
 composeBomVersion = "2024.02.02"
+agpVersion = "8.3.1"
+kotlinVersion = "1.9.0"
 
 [libraries]
-accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissionsVersion" }
+#accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissionsVersion" }
 activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityComposeVersion" }
 androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraCoreVersion" }
 androidx-camera-core = { module = "androidx.camera:camera-core", version.ref = "cameraCoreVersion" }
@@ -62,3 +64,5 @@ compose-material3 = { module = "androidx.compose.material3:material3" }
 compose = ["compose-ui","compose-ui-graphics","compose-ui-tooling","compose-material3"]
 
 [plugins]
+androidLibrary = { id = "com.android.library", version.ref = "agpVersion" }
+jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlinVersion" }
