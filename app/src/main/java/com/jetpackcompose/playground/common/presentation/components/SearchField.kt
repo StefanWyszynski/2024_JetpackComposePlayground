@@ -18,11 +18,11 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun SearchField(
-    serachText: String,
+    searchText: String,
     onSearchTextChange: (text: String) -> Unit
 ) {
     TextField(
-        value = serachText,
+        value = searchText,
         onValueChange = onSearchTextChange,
         modifier = Modifier
             .fillMaxWidth()

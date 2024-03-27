@@ -19,8 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.jetpackcompose.playground.common.presentation.components.CustomTopAppBar
 import com.jetpackcompose.playground.common.presentation.components.LoadingProgress
-import com.jetpackcompose.playground.common.presentation.components.MyTopAppBar
 import com.jetpackcompose.playground.common.presentation.components.SearchField
 import com.jetpackcompose.playground.common.presentation.components.SearchResultListItem
 import com.jetpackcompose.playground.common.presentation.components.Spacer
@@ -28,14 +28,12 @@ import com.jetpackcompose.playground.repos.domain.model.GithubRepo
 import com.jetpackcompose.playground.repos.presentation.viewmodel.SerachRepoViewModel
 import com.jetpackcompose.playground.utils.NetworkOperation
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 /*
  * Copyright 2023
  *
  * @author Stefan Wyszynski
  */
-
 @Composable
 fun SearchRepoScreen(
     viewModel: SerachRepoViewModel,
@@ -44,14 +42,7 @@ fun SearchRepoScreen(
 ) {
     Scaffold(
         topBar = {
-            val topAppBarTitle = "Search for repo"
-            MyTopAppBar(topAppBarTitle) {
-                scope.launch {
-                    drawerState.apply {
-                        if (isClosed) open() else close()
-                    }
-                }
-            }
+            CustomTopAppBar("Search for repo", scope, drawerState)
         }) { scaffoldPading ->
         Surface(
             modifier = Modifier
@@ -71,9 +62,9 @@ private fun SearchRepoScreenContent(viewModel: SerachRepoViewModel) {
             .fillMaxSize()
             .background(Color.White)
     ) {
-        val serachText by viewModel.searchText.collectAsState("")
+        val searchText by viewModel.searchText.collectAsState("")
         val githubRepos by viewModel.gitHubRepos.collectAsStateWithLifecycle()
-        SearchField(serachText, viewModel::onSearchTextChange)
+        SearchField(searchText, viewModel::onSearchTextChange)
         Spacer()
         ShowRepositories(repositiories = githubRepos)
     }

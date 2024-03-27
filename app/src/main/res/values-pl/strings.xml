@@ -2,4 +2,10 @@
 <resources>
     <string name="home_search_for">Wyszukaj: </string>
     <string name="home_enter_tooltip">Wpisz nazwę %s</string>
+    <string name="confirm">Potwierdź</string>
+    <string name="cancel">Anuluj</string>
+    <string name="add_task">Dodaj zadanie</string>
+    <string name="priority">Priorytet</string>
+    <string name="add_new_task">Dodaj nowe zadanie</string>
+    <string name="tasks">Zadania</string>
 </resources>

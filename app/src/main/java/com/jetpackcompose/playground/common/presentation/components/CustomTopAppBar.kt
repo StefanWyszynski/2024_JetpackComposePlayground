@@ -4,19 +4,27 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun MyTopAppBar(title: String, onDrawerIconClick: () -> Unit) {
-    androidx.compose.material3.TopAppBar(
+fun CustomTopAppBar(
+    title: String,
+    scope: CoroutineScope,
+    drawerState: DrawerState
+) {
+    TopAppBar(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight(),
@@ -28,7 +36,13 @@ fun MyTopAppBar(title: String, onDrawerIconClick: () -> Unit) {
             Text(title)
         },
         navigationIcon = {
-            IconButton(onClick = onDrawerIconClick) {
+            IconButton(onClick = {
+                scope.launch {
+                    drawerState.apply {
+                        if (isClosed) open() else close()
+                    }
+                }
+            }) {
                 Icon(Icons.Filled.List, contentDescription = "")
             }
         }

@@ -32,16 +32,21 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.jetpackcompose.playground.camerax.presentation.cameraxtest.CameraXScreenContainer
-import com.jetpackcompose.playground.repos.presentation.SearchRepoScreen
-import com.jetpackcompose.playground.repos.presentation.viewmodel.SerachRepoViewModel
-import com.jetpackcompose.playground.users.presentation.SearchUserScreen
-import com.jetpackcompose.playground.users.presentation.viewmodel.SerachUserViewModel
 import com.jetpackcompose.playground.common.presentation.theme.LearningAppTheme
 import com.jetpackcompose.playground.maps.presentation.GoogleMapScreen
+import com.jetpackcompose.playground.repos.presentation.SearchRepoScreen
+import com.jetpackcompose.playground.repos.presentation.viewmodel.SerachRepoViewModel
+import com.jetpackcompose.playground.task_room.presentation.NewTaskScreen
+import com.jetpackcompose.playground.task_room.presentation.TaskScreen
+import com.jetpackcompose.playground.task_room.presentation.TaskViewModel
+import com.jetpackcompose.playground.users.presentation.SearchUserScreen
+import com.jetpackcompose.playground.users.presentation.viewmodel.SerachUserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -55,6 +60,29 @@ sealed class Screen(val route: String) {
     object SearchRepo : Screen("searchRepo")
     object CameraXTest : Screen("CameraXTest")
     object MapsTest : Screen("MapTest")
+    object Task : Screen("TaskTest/{nestedScreen}") {
+
+        fun namedNavArguments() =
+            listOf(navArgument("nestedScreen") { type = NavType.StringType })
+
+        object Main : Screen("Main") {
+            fun navigate(navController: NavController, nav: NavOptions) {
+                navController.navigate(
+                    Task.route.replace("{nestedScreen}", Main.route),
+                    navOptions = nav
+                )
+            }
+        }
+
+        object NewTask : Screen("NewTask") {
+            fun navigate(navController: NavController, nav: NavOptions) {
+                navController.navigate(
+                    Task.route.replace("{nestedScreen}", NewTask.route),
+                    navOptions = nav
+                )
+            }
+        }
+    }
 }
 
 @AndroidEntryPoint
@@ -117,18 +145,28 @@ fun SetNavAppHost(
             composable(Screen.MapsTest.route) {
                 GoogleMapScreen(scope, drawerState)
             }
+            composable(
+                route = Screen.Task.route, arguments = Screen.Task.namedNavArguments()
+            ) { backStackEntry ->
+                val hiltViewModel = hiltViewModel<TaskViewModel>(backStackEntry)
+                val nestedScreen = backStackEntry.arguments?.getString("nestedScreen")
+                when (nestedScreen) {
+                    Screen.Task.Main.route ->
+                        TaskScreen(navController, hiltViewModel, scope, drawerState)
 
+                    Screen.Task.NewTask.route ->
+                        NewTaskScreen(navController, hiltViewModel, scope, drawerState)
+
+                }
+            }
         }
     }
 }
 
-
 @Composable
-fun DrawerContent(
-    navController: NavController, onClickOption: () -> Unit,
-) {
+fun DrawerContent(navController: NavController, onClickOptionCallback: () -> Unit) {
     Text(
-        text = "Test app",
+        text = "Jetpack compose playground app",
         fontSize = 20.sp,
         modifier = Modifier
             .fillMaxWidth(1f)
@@ -139,21 +177,28 @@ fun DrawerContent(
 
     DrawerContentOptionButton({
         GotoSearchUsers(navController, nav)
-        onClickOption()
+        onClickOptionCallback()
     }, "Search users")
 
     DrawerContentOptionButton({
         GotoSearchRepos(navController, nav)
-        onClickOption()
+        onClickOptionCallback()
     }, "Search repos")
+
     DrawerContentOptionButton({
         GotoCameraXTest(navController, nav)
-        onClickOption()
+        onClickOptionCallback()
     }, "Camera X test")
+
+//    DrawerContentOptionButton({
+//        GotoMapsTest(navController, nav)
+//        onClickOptionCallback()
+//    }, "Map test")
+
     DrawerContentOptionButton({
-        GotoCameraXTest(navController, nav)
-        onClickOption()
-    }, "Map test")
+        GotoTaskTest(navController, nav)
+        onClickOptionCallback()
+    }, "Task")
 }
 
 @Composable
@@ -190,6 +235,13 @@ private fun GotoCameraXTest(navController: NavController, nav: NavOptions) {
     navController.navigate(Screen.CameraXTest.route, navOptions = nav)
 }
 
+private fun GotoMapsTest(navController: NavController, nav: NavOptions) {
+    navController.navigate(Screen.MapsTest.route, navOptions = nav)
+}
+
+private fun GotoTaskTest(navController: NavController, nav: NavOptions) {
+    Screen.Task.Main.navigate(navController, nav)
+}
 
 @Preview(showBackground = true)
 @Composable

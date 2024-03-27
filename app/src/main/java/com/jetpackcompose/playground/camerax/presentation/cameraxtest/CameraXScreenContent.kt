@@ -29,9 +29,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
-import com.jetpackcompose.playground.common.presentation.components.MyTopAppBar
+import com.jetpackcompose.playground.common.presentation.components.CustomTopAppBar
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 @Composable
 fun CameraXScreenContent(
@@ -46,14 +45,7 @@ fun CameraXScreenContent(
 
     Scaffold(
         topBar = {
-            val topAppBarTitle = "CameraX test"
-            MyTopAppBar(topAppBarTitle) {
-                scope.launch {
-                    drawerState.apply {
-                        if (isClosed) open() else close()
-                    }
-                }
-            }
+            CustomTopAppBar("CameraX test", scope, drawerState)
         },
         floatingActionButton = {
             ExtendedFloatingActionButton(onClick = {

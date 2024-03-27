@@ -1,6 +1,12 @@
 <resources>
-    <string name="app_name">LearningApp</string>
-    <string name="title_activity_main_compose">MainActivityCompose</string>
+    <string name="app_name" translatable="false">LearningApp</string>
+    <string name="title_activity_main_compose" translatable="false">MainActivityCompose</string>
     <string name="home_search_for">Search for: </string>
     <string name="home_enter_tooltip">Enter %s name</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="add_task">Add task</string>
+    <string name="priority">Priority</string>
+    <string name="add_new_task">Add new task</string>
+    <string name="tasks">Tasks</string>
 </resources>

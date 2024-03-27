@@ -21,15 +21,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.jetpackcompose.playground.common.presentation.components.CustomTopAppBar
 import com.jetpackcompose.playground.common.presentation.components.LoadingProgress
-import com.jetpackcompose.playground.common.presentation.components.MyTopAppBar
 import com.jetpackcompose.playground.common.presentation.components.SearchField
 import com.jetpackcompose.playground.common.presentation.components.SearchResultListItem
 import com.jetpackcompose.playground.common.presentation.components.Spacer
 import com.jetpackcompose.playground.users.presentation.redux.GithubUserState
 import com.jetpackcompose.playground.users.presentation.viewmodel.SerachUserViewModel
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 /*
  * Copyright 2023
@@ -42,14 +41,7 @@ fun SearchUserScreen(
 ) {
     Scaffold(
         topBar = {
-            val topAppBarTitle = "Search for user"
-            MyTopAppBar(topAppBarTitle) {
-                scope.launch {
-                    drawerState.apply {
-                        if (isClosed) open() else close()
-                    }
-                }
-            }
+            CustomTopAppBar("Search for user", scope, drawerState)
         }) { scaffoldPading ->
         Surface(
             modifier = Modifier
@@ -69,9 +61,9 @@ private fun SearchUserScreenContent(viewModel: SerachUserViewModel) {
             .fillMaxSize()
             .background(Color.White)
     ) {
-        val serachText by viewModel.searchText.collectAsState("")
+        val searchText by viewModel.searchText.collectAsState("")
         val gitHubUsers by viewModel.gitHubUsers.collectAsStateWithLifecycle()
-        SearchField(serachText, viewModel::onSearchTextChange)
+        SearchField(searchText, viewModel::onSearchTextChange)
         Spacer()
         ShowUsers(gitHubUsers, viewModel::onErrorAction)
     }

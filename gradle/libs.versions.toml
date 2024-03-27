@@ -22,6 +22,8 @@ retrofit2Version = "2.9.0"
 composeBomVersion = "2024.02.02"
 agpVersion = "8.3.1"
 kotlinVersion = "1.9.0"
+roomCommonVersion = "2.6.1"
+roomKtxVersion = "2.6.1"
 
 [libraries]
 #accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissionsVersion" }
@@ -36,7 +38,7 @@ androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-com
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationComposeVersion" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilComposeVersion" }
 flowredux-compose = { group = "com.freeletics.flowredux", name = "compose", version.ref = "flowreduxJvmVersion" }
-flowredux-jvm = {group = "com.freeletics.flowredux", name = "flowredux-jvm", version.ref = "flowreduxJvmVersion" }
+flowredux-jvm = { group = "com.freeletics.flowredux", name = "flowredux-jvm", version.ref = "flowreduxJvmVersion" }
 espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCoreVersion" }
 ext-junit = { module = "androidx.test.ext:junit", version.ref = "junit" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gsonVersion" }
@@ -59,9 +61,12 @@ compose-ui = { module = "androidx.compose.ui:ui" }
 compose-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling-preview" }
 compose-material3 = { module = "androidx.compose.material3:material3" }
+androidx-room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommonVersion" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtxVersion" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomKtxVersion" }
 
 [bundles]
-compose = ["compose-ui","compose-ui-graphics","compose-ui-tooling","compose-material3"]
+compose = ["compose-ui", "compose-ui-graphics", "compose-ui-tooling", "compose-material3"]
 
 [plugins]
 androidLibrary = { id = "com.android.library", version.ref = "agpVersion" }
