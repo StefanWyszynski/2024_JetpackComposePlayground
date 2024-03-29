@@ -48,7 +48,7 @@ class PermissionsRequester(private var _permissions: List<PermissionInfo>) {
         val permissionPermamentlyDenied = remember { mutableStateOf(false) }
 
         if (notGrantedPermissionsCount > 0) {
-            var callLauncherOnPermissionDialogCallback: (() -> Unit)? = null
+            val callLauncherOnPermissionDialogCallback: (() -> Unit)
 //
             val resultLauncher =
                 rememberLauncherForActivityResult(

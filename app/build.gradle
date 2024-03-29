@@ -5,6 +5,7 @@ plugins {
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
     id 'kotlin-parcelize'
+    id 'io.realm.kotlin'
 }
 
 android {
@@ -134,8 +135,12 @@ dependencies {
     // google maps
     implementation libs.maps.compose
 
-    // room
+    // room db
     implementation libs.androidx.room.common
     implementation libs.androidx.room.ktx
     kapt libs.androidx.room.compiler
+
+    // realm db
+    implementation libs.realm.base
+    implementation libs.kotlin.coroutines
 }

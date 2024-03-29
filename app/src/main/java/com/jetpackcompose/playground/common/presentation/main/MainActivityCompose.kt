@@ -42,7 +42,10 @@ import com.jetpackcompose.playground.common.presentation.theme.LearningAppTheme
 import com.jetpackcompose.playground.maps.presentation.GoogleMapScreen
 import com.jetpackcompose.playground.repos.presentation.SearchRepoScreen
 import com.jetpackcompose.playground.repos.presentation.viewmodel.SerachRepoViewModel
+import com.jetpackcompose.playground.task_room.presentation.NewRealmTaskScreen
 import com.jetpackcompose.playground.task_room.presentation.NewTaskScreen
+import com.jetpackcompose.playground.task_room.presentation.RealmTaskScreen
+import com.jetpackcompose.playground.task_room.presentation.RealmTaskViewModel
 import com.jetpackcompose.playground.task_room.presentation.TaskScreen
 import com.jetpackcompose.playground.task_room.presentation.TaskViewModel
 import com.jetpackcompose.playground.users.presentation.SearchUserScreen
@@ -78,6 +81,30 @@ sealed class Screen(val route: String) {
             fun navigate(navController: NavController, nav: NavOptions) {
                 navController.navigate(
                     Task.route.replace("{nestedScreen}", NewTask.route),
+                    navOptions = nav
+                )
+            }
+        }
+    }
+
+    object RealmTask : Screen("RealmTaskTest/{nestedScreen}") {
+
+        fun namedNavArguments() =
+            listOf(navArgument("nestedScreen") { type = NavType.StringType })
+
+        object Main : Screen("Main") {
+            fun navigate(navController: NavController, nav: NavOptions) {
+                navController.navigate(
+                    RealmTask.route.replace("{nestedScreen}", Main.route),
+                    navOptions = nav
+                )
+            }
+        }
+
+        object NewTask : Screen("NewTask") {
+            fun navigate(navController: NavController, nav: NavOptions) {
+                navController.navigate(
+                    RealmTask.route.replace("{nestedScreen}", NewTask.route),
                     navOptions = nav
                 )
             }
@@ -159,6 +186,21 @@ fun SetNavAppHost(
 
                 }
             }
+            composable(
+                route = Screen.RealmTask.route, arguments = Screen.RealmTask.namedNavArguments()
+            ) { backStackEntry ->
+                val hiltViewModel = hiltViewModel<RealmTaskViewModel>(backStackEntry)
+                val nestedScreen = backStackEntry.arguments?.getString("nestedScreen")
+                when (nestedScreen) {
+                    Screen.RealmTask.Main.route ->
+                        RealmTaskScreen(navController, hiltViewModel, scope, drawerState)
+
+                    Screen.RealmTask.NewTask.route ->
+                        NewRealmTaskScreen(navController, hiltViewModel, scope, drawerState)
+
+                }
+            }
+
         }
     }
 }
@@ -199,6 +241,11 @@ fun DrawerContent(navController: NavController, onClickOptionCallback: () -> Uni
         GotoTaskTest(navController, nav)
         onClickOptionCallback()
     }, "Task")
+
+    DrawerContentOptionButton({
+        GotoRealmTaskTest(navController, nav)
+        onClickOptionCallback()
+    }, "Realm Task")
 }
 
 @Composable
@@ -241,6 +288,10 @@ private fun GotoMapsTest(navController: NavController, nav: NavOptions) {
 
 private fun GotoTaskTest(navController: NavController, nav: NavOptions) {
     Screen.Task.Main.navigate(navController, nav)
+}
+
+private fun GotoRealmTaskTest(navController: NavController, nav: NavOptions) {
+    Screen.RealmTask.Main.navigate(navController, nav)
 }
 
 @Preview(showBackground = true)
