@@ -37,8 +37,8 @@ fun RealmTaskListItem(
     }
     Card(
         elevation = CardDefaults.cardElevation(
-            defaultElevation = 3.dp,
-            hoveredElevation = 5.dp, pressedElevation = 5.dp
+            defaultElevation = 5.dp,
+            hoveredElevation = 8.dp, pressedElevation = 5.dp
         ),
         colors = CardDefaults.cardColors(containerColor = cardColor),
         shape = RoundedCornerShape(8.dp),

@@ -45,9 +45,9 @@ import com.jetpackcompose.playground.repos.presentation.viewmodel.SerachRepoView
 import com.jetpackcompose.playground.task_room.presentation.NewRealmTaskScreen
 import com.jetpackcompose.playground.task_room.presentation.NewTaskScreen
 import com.jetpackcompose.playground.task_room.presentation.RealmTaskScreen
-import com.jetpackcompose.playground.task_room.presentation.RealmTaskViewModel
+import com.jetpackcompose.playground.task_realm.presentation.viewmodel.RealmTaskViewModel
 import com.jetpackcompose.playground.task_room.presentation.TaskScreen
-import com.jetpackcompose.playground.task_room.presentation.TaskViewModel
+import com.jetpackcompose.playground.task_room.presentation.viewmodel.TaskViewModel
 import com.jetpackcompose.playground.users.presentation.SearchUserScreen
 import com.jetpackcompose.playground.users.presentation.viewmodel.SerachUserViewModel
 import dagger.hilt.android.AndroidEntryPoint

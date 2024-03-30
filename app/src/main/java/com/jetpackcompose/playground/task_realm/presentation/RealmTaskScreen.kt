@@ -26,15 +26,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import com.jetpackcompose.playground.R
 import com.jetpackcompose.playground.common.presentation.components.CustomTopAppBar
 import com.jetpackcompose.playground.common.presentation.main.Screen
+import com.jetpackcompose.playground.task_realm.presentation.viewmodel.RealmTaskViewModel
 import com.jetpackcompose.playground.task_room.domain.data.RealmTask
 import com.jetpackcompose.playground.task_room.presentation.components.RealmTaskListItem
 import kotlinx.coroutines.CoroutineScope
@@ -85,7 +88,6 @@ private fun SearchRepoScreenContent(taskViewModel: RealmTaskViewModel) {
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun Tasks(tasks: List<RealmTask>, onDelete: (RealmTask) -> Unit) {
-//    tasks.onSuccess { repos ->
     val taskList = tasks.take(50)
     LazyColumn(modifier = Modifier.fillMaxHeight()) {
         items(taskList.count()) { itemId ->

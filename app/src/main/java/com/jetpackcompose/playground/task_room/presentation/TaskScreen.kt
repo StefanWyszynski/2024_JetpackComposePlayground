@@ -26,9 +26,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
@@ -37,6 +39,7 @@ import com.jetpackcompose.playground.common.presentation.components.CustomTopApp
 import com.jetpackcompose.playground.common.presentation.main.Screen
 import com.jetpackcompose.playground.task_room.domain.data.Task
 import com.jetpackcompose.playground.task_room.presentation.components.TaskListItem
+import com.jetpackcompose.playground.task_room.presentation.viewmodel.TaskViewModel
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
