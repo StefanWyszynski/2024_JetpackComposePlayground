@@ -72,7 +72,9 @@ dependencies {
     implementation libs.material
     implementation libs.constraintlayout
     implementation libs.lifecycle.runtime.ktx
+    // compose
     implementation libs.lifecycle.viewmodel.compose
+    implementation libs.constraintlayout.compose
 
     // collectAsStateWithLifecycle flow in composable
     implementation libs.lifecycle.runtime.compose
