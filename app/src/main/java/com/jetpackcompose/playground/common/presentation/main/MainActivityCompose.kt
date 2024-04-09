@@ -32,13 +32,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.jetpackcompose.playground.camerax.presentation.cameraxtest.CameraXScreenContainer
+import com.jetpackcompose.playground.common.presentation.data.ScreenRoute
 import com.jetpackcompose.playground.common.presentation.theme.LearningAppTheme
+import com.jetpackcompose.playground.compose_game_bench.presentation.GameScreen
+import com.jetpackcompose.playground.compose_game_bench.presentation.viewmodel.GameViewModel
 import com.jetpackcompose.playground.maps.presentation.GoogleMapScreen
 import com.jetpackcompose.playground.repos.presentation.SearchRepoScreen
 import com.jetpackcompose.playground.repos.presentation.viewmodel.SerachRepoViewModel
@@ -58,67 +59,12 @@ import kotlinx.coroutines.launch
  *
  * @author Stefan Wyszynski
  */
-sealed class Screen(val route: String) {
-    object SearchUser : Screen("searchUser")
-    object SearchRepo : Screen("searchRepo")
-    object CameraXTest : Screen("CameraXTest")
-    object MapsTest : Screen("MapTest")
-    object Task : Screen("TaskTest/{nestedScreen}") {
-
-        fun namedNavArguments() =
-            listOf(navArgument("nestedScreen") { type = NavType.StringType })
-
-        object Main : Screen("Main") {
-            fun navigate(navController: NavController, nav: NavOptions) {
-                navController.navigate(
-                    Task.route.replace("{nestedScreen}", Main.route),
-                    navOptions = nav
-                )
-            }
-        }
-
-        object NewTask : Screen("NewTask") {
-            fun navigate(navController: NavController, nav: NavOptions) {
-                navController.navigate(
-                    Task.route.replace("{nestedScreen}", NewTask.route),
-                    navOptions = nav
-                )
-            }
-        }
-    }
-
-    object RealmTask : Screen("RealmTaskTest/{nestedScreen}") {
-
-        fun namedNavArguments() =
-            listOf(navArgument("nestedScreen") { type = NavType.StringType })
-
-        object Main : Screen("Main") {
-            fun navigate(navController: NavController, nav: NavOptions) {
-                navController.navigate(
-                    RealmTask.route.replace("{nestedScreen}", Main.route),
-                    navOptions = nav
-                )
-            }
-        }
-
-        object NewTask : Screen("NewTask") {
-            fun navigate(navController: NavController, nav: NavOptions) {
-                navController.navigate(
-                    RealmTask.route.replace("{nestedScreen}", NewTask.route),
-                    navOptions = nav
-                )
-            }
-        }
-    }
-}
-
 @AndroidEntryPoint
 class MainActivityCompose : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             LearningAppTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
@@ -154,48 +100,53 @@ fun SetNavAppHost(
                 }
             }
         },
+        gesturesEnabled = drawerState.isOpen,
         modifier = Modifier
             .background(Color.Black)
     ) {
-        NavHost(navController = navController, startDestination = Screen.SearchUser.route) {
-            composable(Screen.SearchUser.route) {
+        NavHost(navController = navController, startDestination = ScreenRoute.SearchUser.route) {
+            composable(ScreenRoute.GameScreen.route) {
+                val hiltViewModel = hiltViewModel<GameViewModel>(it)
+                GameScreen(hiltViewModel)
+            }
+            composable(ScreenRoute.SearchUser.route) {
                 val hiltViewModel = hiltViewModel<SerachUserViewModel>(it)
                 SearchUserScreen(hiltViewModel, scope, drawerState)
             }
-            composable(Screen.SearchRepo.route) {
+            composable(ScreenRoute.SearchRepo.route) {
                 val hiltViewModel = hiltViewModel<SerachRepoViewModel>(it)
                 SearchRepoScreen(hiltViewModel, scope, drawerState)
             }
-            composable(Screen.CameraXTest.route) {
+            composable(ScreenRoute.CameraXTest.route) {
                 CameraXScreenContainer(scope, drawerState)
             }
-            composable(Screen.MapsTest.route) {
+            composable(ScreenRoute.MapsTest.route) {
                 GoogleMapScreen(scope, drawerState)
             }
             composable(
-                route = Screen.Task.route, arguments = Screen.Task.namedNavArguments()
+                route = ScreenRoute.Task.route, arguments = ScreenRoute.Task.namedNavArguments()
             ) { backStackEntry ->
                 val hiltViewModel = hiltViewModel<TaskViewModel>(backStackEntry)
                 val nestedScreen = backStackEntry.arguments?.getString("nestedScreen")
                 when (nestedScreen) {
-                    Screen.Task.Main.route ->
+                    ScreenRoute.Task.Main.route ->
                         TaskScreen(navController, hiltViewModel, scope, drawerState)
 
-                    Screen.Task.NewTask.route ->
+                    ScreenRoute.Task.NewTask.route ->
                         NewTaskScreen(navController, hiltViewModel, scope, drawerState)
 
                 }
             }
             composable(
-                route = Screen.RealmTask.route, arguments = Screen.RealmTask.namedNavArguments()
+                route = ScreenRoute.RealmTask.route, arguments = ScreenRoute.RealmTask.namedNavArguments()
             ) { backStackEntry ->
                 val hiltViewModel = hiltViewModel<RealmTaskViewModel>(backStackEntry)
                 val nestedScreen = backStackEntry.arguments?.getString("nestedScreen")
                 when (nestedScreen) {
-                    Screen.RealmTask.Main.route ->
+                    ScreenRoute.RealmTask.Main.route ->
                         RealmTaskScreen(navController, hiltViewModel, scope, drawerState)
 
-                    Screen.RealmTask.NewTask.route ->
+                    ScreenRoute.RealmTask.NewTask.route ->
                         NewRealmTaskScreen(navController, hiltViewModel, scope, drawerState)
 
                 }
@@ -218,14 +169,19 @@ fun DrawerContent(navController: NavController, onClickOptionCallback: () -> Uni
     val nav = NavOptions.Builder().setLaunchSingleTop(true).build()
 
     DrawerContentOptionButton({
+        GotoGameScreen(navController, nav)
+        onClickOptionCallback()
+    }, "3D game - drawing playground")
+
+    DrawerContentOptionButton({
         GotoSearchUsers(navController, nav)
         onClickOptionCallback()
-    }, "Search users")
+    }, "Search github users")
 
     DrawerContentOptionButton({
         GotoSearchRepos(navController, nav)
         onClickOptionCallback()
-    }, "Search repos")
+    }, "Search github repos")
 
     DrawerContentOptionButton({
         GotoCameraXTest(navController, nav)
@@ -271,27 +227,31 @@ fun Modifier.typicalButton() = this
     .clip(RoundedCornerShape(20.dp))
 
 private fun GotoSearchUsers(navController: NavController, nav: NavOptions) {
-    navController.navigate(Screen.SearchUser.route, navOptions = nav)
+    navController.navigate(ScreenRoute.SearchUser.route, navOptions = nav)
 }
 
 private fun GotoSearchRepos(navController: NavController, nav: NavOptions) {
-    navController.navigate(Screen.SearchRepo.route, navOptions = nav)
+    navController.navigate(ScreenRoute.SearchRepo.route, navOptions = nav)
 }
 
 private fun GotoCameraXTest(navController: NavController, nav: NavOptions) {
-    navController.navigate(Screen.CameraXTest.route, navOptions = nav)
+    navController.navigate(ScreenRoute.CameraXTest.route, navOptions = nav)
 }
 
 private fun GotoMapsTest(navController: NavController, nav: NavOptions) {
-    navController.navigate(Screen.MapsTest.route, navOptions = nav)
+    navController.navigate(ScreenRoute.MapsTest.route, navOptions = nav)
+}
+
+private fun GotoGameScreen(navController: NavController, nav: NavOptions) {
+    navController.navigate(ScreenRoute.GameScreen.route, navOptions = nav)
 }
 
 private fun GotoTaskTest(navController: NavController, nav: NavOptions) {
-    Screen.Task.Main.navigate(navController, nav)
+    ScreenRoute.Task.Main.navigate(navController, nav)
 }
 
 private fun GotoRealmTaskTest(navController: NavController, nav: NavOptions) {
-    Screen.RealmTask.Main.navigate(navController, nav)
+    ScreenRoute.RealmTask.Main.navigate(navController, nav)
 }
 
 @Preview(showBackground = true)

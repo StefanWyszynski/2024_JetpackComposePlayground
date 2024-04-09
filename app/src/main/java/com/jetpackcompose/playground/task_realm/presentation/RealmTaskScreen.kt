@@ -36,7 +36,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import com.jetpackcompose.playground.R
 import com.jetpackcompose.playground.common.presentation.components.CustomTopAppBar
-import com.jetpackcompose.playground.common.presentation.main.Screen
+import com.jetpackcompose.playground.common.presentation.data.ScreenRoute
 import com.jetpackcompose.playground.task_realm.presentation.viewmodel.RealmTaskViewModel
 import com.jetpackcompose.playground.task_room.domain.data.RealmTask
 import com.jetpackcompose.playground.task_room.presentation.components.RealmTaskListItem
@@ -56,7 +56,7 @@ fun RealmTaskScreen(
         floatingActionButton = {
             ExtendedFloatingActionButton(onClick = {
                 val nav = NavOptions.Builder().build()
-                Screen.RealmTask.NewTask.navigate(navController, nav)
+                ScreenRoute.RealmTask.NewTask.navigate(navController, nav)
             }) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add task")
                 Text(text = "Add task")

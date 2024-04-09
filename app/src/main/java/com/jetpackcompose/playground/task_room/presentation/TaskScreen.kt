@@ -36,7 +36,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import com.jetpackcompose.playground.R
 import com.jetpackcompose.playground.common.presentation.components.CustomTopAppBar
-import com.jetpackcompose.playground.common.presentation.main.Screen
+import com.jetpackcompose.playground.common.presentation.data.ScreenRoute
 import com.jetpackcompose.playground.task_room.domain.data.Task
 import com.jetpackcompose.playground.task_room.presentation.components.TaskListItem
 import com.jetpackcompose.playground.task_room.presentation.viewmodel.TaskViewModel
@@ -56,7 +56,7 @@ fun TaskScreen(
         floatingActionButton = {
             ExtendedFloatingActionButton(onClick = {
                 val nav = NavOptions.Builder().build()
-                Screen.Task.NewTask.navigate(navController, nav)
+                ScreenRoute.Task.NewTask.navigate(navController, nav)
             }) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add task")
                 Text(text = "Add task")
