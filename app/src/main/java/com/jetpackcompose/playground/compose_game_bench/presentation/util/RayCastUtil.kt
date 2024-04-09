@@ -63,13 +63,13 @@ class RayCastUtil {
                 Color.Blue, skyBlue, false, worldTextureOffset
             )
 
-            val red = Color(0xFF000000 + ((colorIntensity shl 16)))
+            val white = Color(0xFF000000 + ((colorIntensity shl 16) or (colorIntensity shl 8) or colorIntensity))
             // draw wall
             drawColumn(
                 textureXOffset,
                 xoffset, (screenInfo.screenHeightHalf - wallHeight).toFloat(),
                 xoffset, (screenInfo.screenHeightHalf + wallHeight).toFloat(),
-                red, red, true, worldTextureOffset
+                white, white, true, worldTextureOffset
             )
 
             val green = Color(0xFF000000 + ((colorIntensity shl 8)))
