@@ -147,7 +147,7 @@ private fun DrawScope.drawFloorAndCeiling(
     val lineEnd =
         getScaledAndClampedLinePoint(x2, y2, scaleW, scaleH, maxHeight)
     drawLine(
-        brush = Brush.verticalGradient(listOf(colorFar, colorNear)),
+        brush = Brush.verticalGradient(listOf(colorFar, colorNear), startY = lineStart.y, endY = lineEnd.y),
         start = lineStart,
         end = lineEnd,
         strokeWidth = scaleW,
@@ -234,7 +234,7 @@ private fun PlayerControlJoystickLayout(playerDirection: MutableState<PointF>) {
         verticalArrangement = Arrangement.Center
     ) {
         Icon(painterResource(id = R.drawable.drag_joystick),
-            tint = Color.Black,
+            tint = Color.Red,
             contentDescription = "Arrow",
             modifier = Modifier
                 .size(64.dp)
