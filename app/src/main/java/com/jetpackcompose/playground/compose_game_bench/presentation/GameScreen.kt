@@ -1,33 +1,25 @@
 package com.jetpackcompose.playground.compose_game_bench.presentation
 
+import android.graphics.Point
+import android.graphics.PointF
 import android.view.MotionEvent
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.shape.CutCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,32 +34,29 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.core.math.MathUtils
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jetpackcompose.playground.R
-import com.jetpackcompose.playground.compose_game_bench.presentation.data.PlayerPointerAction
-import com.jetpackcompose.playground.compose_game_bench.presentation.data.PlayerState
-import com.jetpackcompose.playground.compose_game_bench.presentation.data.ScreenState
-import com.jetpackcompose.playground.compose_game_bench.presentation.util.RayCastUtil
+import com.jetpackcompose.playground.compose_game_bench.data.ScreenState
 import com.jetpackcompose.playground.compose_game_bench.presentation.viewmodel.GameViewModel
 import kotlinx.coroutines.delay
-
 
 @Composable
 fun GameScreen(
     viewModel: GameViewModel
 ) {
-    val playerState = viewModel.playerState.collectAsStateWithLifecycle()
     val screenInfo = viewModel.screenInfo.collectAsStateWithLifecycle()
 
-    val playerPointerAction = remember { mutableStateOf(PlayerPointerAction.NONE) }
+    val playerDirection = remember { mutableStateOf(PointF()) }
     var deltaTime by remember { mutableStateOf(0f) }
 
     var lastFrameTime by remember { mutableStateOf(System.currentTimeMillis()) }
@@ -77,37 +66,30 @@ fun GameScreen(
             val currentTime = System.currentTimeMillis()
             deltaTime = (currentTime - lastFrameTime) / 1000f
             lastFrameTime = currentTime
+            viewModel.rayCast()
             delay(32)
         }
     }
+
     DrawGameScreen(
         modifier = Modifier.fillMaxSize(),
-        playerState,
-        screenInfo,
-        viewModel.map,
-        playerPointerAction
+        screenInfo.value,
+        playerDirection,
+        viewModel
     )
 
-    viewModel.handlePlayerPointerAction(playerPointerAction.value, deltaTime)
+    viewModel.handlePlayerMovement(playerDirection.value, deltaTime)
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun DrawGameScreen(
-    modifier: Modifier,
-    playerState: State<PlayerState>,
-    screenInfo: State<ScreenState>,
-    map: List<List<Int>>,
-    playerPointerAction: MutableState<PlayerPointerAction>,
+    modifier: Modifier, screenInfo: ScreenState, playerDirection: MutableState<PointF>,
+    viewModel: GameViewModel
 ) {
     val size = remember {
         mutableStateOf(IntSize(0, 0))
     }
-    val screenColumns by remember(screenInfo) {
-        val toList = (0..screenInfo.value.screenWidth).toList()
-        mutableStateOf(toList)
-    }
-    val wall = ImageBitmap.imageResource(id = R.drawable.wall)
+    val wallTexture = ImageBitmap.imageResource(id = R.drawable.wall)
     Box(modifier = modifier.fillMaxSize()) {
 
         Column(verticalArrangement = Arrangement.Top) {
@@ -121,49 +103,25 @@ fun DrawGameScreen(
 //                .wrapContentHeight()
             ) {
                 Canvas(modifier = modifier) {
-                    RayCastUtil().rayCasting(
-                        screenColumns, playerState, screenInfo.value, map
-                    ) { textureXOffset: Int, x1: Float, y1: Float, x2: Float, y2: Float, colorFar: Color, colorNear: Color, drawTextured: Boolean, worldTextureOffset: Float ->
+                    viewModel.drawRaycastedDataToScreen() { textureXOffset: Int, x1: Float, y1: Float,
+                                                            x2: Float, y2: Float,
+                                                            colorFar: Color, colorNear: Color,
+                                                            drawTextured: Boolean,
+                                                            worldTextureOffset: Float ->
                         val maxWidth = size.value.width
                         val maxHeight = size.value.height
 
-                        val scaleW = maxWidth / (screenInfo.value.screenWidth.toFloat())
-                        val scaleH = maxHeight / (screenInfo.value.screenHeight.toFloat())
+                        val scaleW = maxWidth / (screenInfo.screenWidth.toFloat())
+                        val scaleH = maxHeight / (screenInfo.screenHeight.toFloat())
 
                         if (drawTextured) {
-
-                            // get scaled line start
-                            val lineStart = getScaledLinePoint(x1, y1, scaleW, scaleH, maxHeight)
-
-                            // get scaled line end
-                            val lineEnd = getScaledLinePoint(x2, y2, scaleW, scaleH, maxHeight)
-                            val textureX = (worldTextureOffset * wall.width).toInt() % wall.width
-                            drawImage(
-                                wall,
-                                srcOffset = IntOffset(textureX, 0),
-                                srcSize = IntSize(1, wall.height),
-                                dstOffset = IntOffset(lineStart.x.toInt(), lineStart.y.toInt()),
-                                dstSize = IntSize(
-                                    scaleW.toInt(), (lineEnd.y - lineStart.y).toInt()
-                                ),
-                                colorFilter = ColorFilter.tint(
-                                    colorFar, blendMode = BlendMode.Multiply
-                                )
+                            drawTexturedWall(
+                                x1, y1, scaleW, scaleH,
+                                x2, y2, worldTextureOffset, wallTexture, colorFar
                             )
                         } else {
-                            // get scaled line start
-                            val lineStart =
-                                getScaledAndClampedLinePoint(x1, y1, scaleW, scaleH, maxHeight)
-
-                            // get scaled line end
-                            val lineEnd =
-                                getScaledAndClampedLinePoint(x2, y2, scaleW, scaleH, maxHeight)
-                            drawLine(
-                                brush = Brush.verticalGradient(listOf(colorFar, colorNear)),
-                                start = lineStart,
-                                end = lineEnd,
-                                strokeWidth = scaleW,
-                                cap = StrokeCap.Square
+                            drawFloorAndCeiling(
+                                x1, y1, scaleW, scaleH, maxHeight, x2, y2, colorFar, colorNear
                             )
                         }
                     }
@@ -171,65 +129,123 @@ fun DrawGameScreen(
             }
 
         }
-        Column(modifier.fillMaxSize()) {
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            drawButtonsLayout(playerPointerAction)
+        Column(modifier.fillMaxSize(), verticalArrangement = Arrangement.Bottom) {
+            PlayerControlJoystickLayout(playerDirection)
         }
     }
 }
 
+private fun DrawScope.drawFloorAndCeiling(
+    x1: Float, y1: Float, scaleW: Float, scaleH: Float, maxHeight: Int, x2: Float,
+    y2: Float, colorFar: Color, colorNear: Color
+) {
+    // get scaled line start
+    val lineStart =
+        getScaledAndClampedLinePoint(x1, y1, scaleW, scaleH, maxHeight)
+
+    // get scaled line end
+    val lineEnd =
+        getScaledAndClampedLinePoint(x2, y2, scaleW, scaleH, maxHeight)
+    drawLine(
+        brush = Brush.verticalGradient(listOf(colorFar, colorNear)),
+        start = lineStart,
+        end = lineEnd,
+        strokeWidth = scaleW,
+        cap = StrokeCap.Square
+    )
+}
+
+private fun DrawScope.drawTexturedWall(
+    x1: Float, y1: Float, scaleW: Float, scaleH: Float, x2: Float,
+    y2: Float, worldTextureOffset: Float, wallTexture: ImageBitmap, colorFar: Color
+) {
+    // get scaled line start
+    val lineStart = getScaledLinePoint(x1, y1, scaleW, scaleH)
+
+    // get scaled line end
+    val lineEnd = getScaledLinePoint(x2, y2, scaleW, scaleH)
+    val textureX = (worldTextureOffset * wallTexture.width).toInt() % wallTexture.width
+    drawImage(
+        wallTexture,
+        srcOffset = IntOffset(textureX, 0),
+        srcSize = IntSize(1, wallTexture.height),
+        dstOffset = IntOffset(lineStart.x.toInt(), lineStart.y.toInt()),
+        dstSize = IntSize(
+            scaleW.toInt(), (lineEnd.y - lineStart.y).toInt()
+        ),
+        colorFilter = ColorFilter.tint(
+            colorFar, blendMode = BlendMode.Multiply
+        )
+    )
+}
+
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
-private fun drawButtonsLayout(playerPointerAction: MutableState<PlayerPointerAction>) {
-    LazyVerticalGrid(columns = GridCells.Fixed(3),
-        verticalArrangement = Arrangement.Center,
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
-        modifier = Modifier.wrapContentHeight(),
-        content = {
-            item {
+private fun PlayerControlJoystickLayout(playerDirection: MutableState<PointF>) {
+    var joystickRestCenter by remember {
+        mutableStateOf(Point(0, 0))
+    }
+    var distanceToJoystickRestCenter by remember {
+        mutableStateOf(PointF(0f, 0f))
+    }
 
-                Text(text = "")
-            }
-            item() {
-                AddPlayerActionButtonButton(
-                    Modifier.fillMaxSize(1f),
-                    playerPointerAction,
-                    PlayerPointerAction.MOVE_FORWARD,
-                    Icons.Default.KeyboardArrowUp
-                )
-            }
-            item {
+    var isJoystickPressed by remember { mutableStateOf(false) }
 
-                Text(text = "")
+    val scaleJoystickIcon by animateFloatAsState(
+        targetValue = if (isJoystickPressed) 1.5f else 1f,
+        animationSpec = tween(500, easing = LinearOutSlowInEasing)
+    )
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp)
+            .onSizeChanged {
+                joystickRestCenter = Point(it.width / 2, it.height / 2)
             }
-            item() {
+            .pointerInteropFilter { event ->
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        distanceToJoystickRestCenter = PointF()
+                        isJoystickPressed = true
+                    }
 
-                AddPlayerActionButtonButton(
-                    Modifier.fillMaxSize(1f),
-                    playerPointerAction,
-                    PlayerPointerAction.ROTATE_LEFT,
-                    Icons.Default.KeyboardArrowLeft
-                )
-            }
-            item() {
-                AddPlayerActionButtonButton(
-                    Modifier.fillMaxSize(1f),
-                    playerPointerAction,
-                    PlayerPointerAction.MOVE_BACKWARD,
-                    Icons.Default.KeyboardArrowDown
-                )
-            }
+                    MotionEvent.ACTION_MOVE -> {
+                        distanceToJoystickRestCenter = PointF(
+                            (event.x - joystickRestCenter.x),
+                            (event.y - joystickRestCenter.y)
+                        )
+                        playerDirection.value = PointF(
+                            distanceToJoystickRestCenter.x / joystickRestCenter.x,
+                            -(distanceToJoystickRestCenter.y) / joystickRestCenter.y
+                        )
+                    }
 
-            item() {
-                AddPlayerActionButtonButton(
-                    Modifier.fillMaxSize(1f),
-                    playerPointerAction,
-                    PlayerPointerAction.ROTATE_RIGHT,
-                    Icons.Default.KeyboardArrowRight
-                )
-            }
-        })
+                    MotionEvent.ACTION_UP -> {
+                        distanceToJoystickRestCenter = PointF()
+                        isJoystickPressed = false
+                        playerDirection.value = PointF()
+                    }
+                }
+                true
+            },
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Icon(painterResource(id = R.drawable.drag_joystick),
+            tint = Color.Black,
+            contentDescription = "Arrow",
+            modifier = Modifier
+                .size(64.dp)
+                .graphicsLayer {
+                    val maxX = size.width
+                    val maxY = size.height
+                    translationX = MathUtils.clamp(distanceToJoystickRestCenter.x, -maxX, maxX)
+                    translationY = MathUtils.clamp(distanceToJoystickRestCenter.y, -maxY, maxY)
+                    scaleX = scaleJoystickIcon
+                    scaleY = scaleJoystickIcon
+                }
+        )
+    }
 }
 
 /**
@@ -247,41 +263,7 @@ private fun getScaledAndClampedLinePoint(
 /**
  * scale point x, y, by scaleW and scaleH and clamp to range 0...maxHeight
  */
-private fun getScaledLinePoint(
-    x: Float, y: Float, scaleW: Float, scaleH: Float, maxHeight: Int
-): Offset {
+private fun getScaledLinePoint(x: Float, y: Float, scaleW: Float, scaleH: Float): Offset {
     val lineStart = Offset(x * scaleW, (y * scaleH))
     return lineStart
-}
-
-@Composable
-@OptIn(ExperimentalComposeUiApi::class)
-private fun AddPlayerActionButtonButton(
-    modifier: Modifier,
-    playerPointerAction: MutableState<PlayerPointerAction>,
-    actionOnDown: PlayerPointerAction,
-    image: ImageVector
-) {
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(8.dp)
-            .background(color = Color.Green, shape = CutCornerShape(5.dp))
-            .pointerInteropFilter { event ->
-                when (event.action) {
-                    MotionEvent.ACTION_DOWN -> {
-                        playerPointerAction.value = actionOnDown
-                    }
-
-                    MotionEvent.ACTION_UP -> {
-                        playerPointerAction.value = PlayerPointerAction.NONE
-                    }
-                }
-                true
-            }, contentAlignment = Alignment.Center
-    ) {
-        Icon(
-            image, contentDescription = "Arrow", modifier = modifier.size(64.dp)
-        )
-    }
 }

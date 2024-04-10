@@ -1,4 +1,4 @@
-package com.jetpackcompose.playground.compose_game_bench.presentation.data
+package com.jetpackcompose.playground.compose_game_bench.data
 
 import androidx.compose.runtime.Stable
 
@@ -16,8 +16,8 @@ data class ScreenState(
     ) {
         screenWidth = w
         screenHeight = h
-        screenWidthHalf = screenWidth / 2f;
-        screenHeightHalf = screenHeight / 2f;
-        incrementAngle = player.fov / screenWidth.toDouble();
+        screenWidthHalf = screenWidth / 2f
+        screenHeightHalf = screenHeight / 2f
+        incrementAngle = player.fov / screenWidth.toDouble()
     }
 }

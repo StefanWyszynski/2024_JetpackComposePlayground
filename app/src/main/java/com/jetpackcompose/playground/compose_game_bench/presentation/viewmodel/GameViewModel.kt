@@ -1,21 +1,27 @@
 package com.jetpackcompose.playground.compose_game_bench.presentation.viewmodel
 
+import android.graphics.PointF
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
-import com.jetpackcompose.playground.compose_game_bench.presentation.data.PlayerState
-import com.jetpackcompose.playground.compose_game_bench.presentation.data.ScreenState
-import com.jetpackcompose.playground.compose_game_bench.presentation.data.PlayerPointerAction
+import androidx.lifecycle.viewModelScope
+import com.jetpackcompose.playground.compose_game_bench.data.PlayerState
+import com.jetpackcompose.playground.compose_game_bench.data.RaycastScreenColumnInfo
+import com.jetpackcompose.playground.compose_game_bench.data.ScreenState
+import com.jetpackcompose.playground.compose_game_bench.domain.RayCastUseCaseImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.math.cos
-import kotlin.math.floor
-import kotlin.math.sin
 
 
 @HiltViewModel
-class GameViewModel @Inject constructor() : ViewModel() {
+class GameViewModel @Inject constructor(var rayCastInteractor: RayCastUseCaseImpl) :
+    ViewModel() {
+
+    private var _screenColumnsOffsets = listOf<Int>()
+    private var _screenColumnsData = listOf<RaycastScreenColumnInfo>()
 
     val screenInfo = MutableStateFlow(ScreenState())
 
@@ -29,11 +35,13 @@ class GameViewModel @Inject constructor() : ViewModel() {
         listOf(1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1),
         listOf(1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1),
         listOf(1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1),
-        listOf(1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1),
-        listOf(1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-        listOf(1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-        listOf(1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-        listOf(1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+        listOf(1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1),
+        listOf(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+        listOf(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+        listOf(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+        listOf(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+        listOf(1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+        listOf(1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
         listOf(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
         listOf(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
         listOf(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
@@ -49,6 +57,8 @@ class GameViewModel @Inject constructor() : ViewModel() {
         _playerState.update {
             it.copy(halfFov = it.fov / 2f, x = 2.0, y = 2.0)
         }
+
+        _screenColumnsOffsets = (0..screenInfo.value.screenWidth).toList()
     }
 
     fun setPlayerHealth(health: Float) {
@@ -57,73 +67,69 @@ class GameViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun movePlayerForward(deltatime: Float) {
-        movePlayer(deltatime, 1f)
-    }
-
-    fun movePlayerBackward(deltatime: Float) {
-        movePlayer(deltatime, -1f)
-    }
-
-    private fun movePlayer(deltatime: Float, directionSign: Float) {
-        val player = _playerState.value
-        val playerCos = cos(Math.toRadians(player.angle)) * player.moveSpeed * deltatime
-        val playerSin = sin(Math.toRadians(player.angle)) * player.moveSpeed * deltatime
-        val newX = player.x + playerCos * directionSign
-        val newY = player.y + playerSin * directionSign
-
-        var mapX = floor(newX + playerCos * player.radius * directionSign).toInt()
-        var mapY = floor(newY + playerSin * player.radius * directionSign).toInt()
-        if (mapX < 0) {
-            mapX = map[0].size + mapX
-        }
-        if (mapY < 0) {
-            mapY = map.size + mapY
-        }
-
-        // Collision detection
-        if (map[mapY][floor(player.x).toInt()] == 0) {
-            _playerState.update {
-                it.copy(y = newY)
-            }
-        }
-        if (map[floor(player.y).toInt()][mapX] == 0) {
-            _playerState.update {
-                it.copy(x = newX)
-            }
+    fun rayCast() {
+        viewModelScope.launch {
+            _screenColumnsData = rayCastInteractor.rayCastingScreenColumnsInfo(
+                _screenColumnsOffsets, playerState.value, screenInfo.value, map
+            )
         }
     }
 
-    fun rotatePlayerLeft(deltatime: Float) {
-        _playerState.update {
-            it.copy(angle = (it.angle - (it.rotateSpeed * deltatime)) % 360)
+    fun drawRaycastedDataToScreen(
+        drawColumn: (
+            textureXOffset: Int, x1: Float, y1: Float, x2: Float, y2: Float,
+            colorFar: Color, colorNear: Color, drawTextured: Boolean, worldTextureOffset: Float
+        ) -> Unit
+    ) {
+        for (line in _screenColumnsData) {
+            val wallHeight = line.wallHeight
+            val colorIntensity = line.colorIntensity
+            val xoffset = line.xOffset
+            val worldTextureOffset = line.worldTextureOffset
+
+            val textureXOffset = 0
+            val skyBlue = Color(0xFF000000 + colorIntensity)
+            val darkToWhiteColor =
+                Color(
+                    0xFF000000 +
+                            ((colorIntensity shl 16) or
+                                    (colorIntensity shl 8) or
+                                    colorIntensity)
+                )
+
+            // draw ceiling
+            drawColumn(
+                textureXOffset,
+                xoffset, 0f, xoffset,
+                (screenInfo.value.screenHeightHalf - wallHeight).toFloat(),
+                Color.Blue, skyBlue, false, worldTextureOffset
+            )
+
+            // draw wall
+            drawColumn(
+                textureXOffset,
+                xoffset, (screenInfo.value.screenHeightHalf - wallHeight).toFloat(),
+                xoffset, (screenInfo.value.screenHeightHalf + wallHeight).toFloat(),
+                darkToWhiteColor, darkToWhiteColor, true, worldTextureOffset
+            )
+
+            // draw floor
+            drawColumn(
+                textureXOffset,
+                xoffset, (screenInfo.value.screenHeightHalf + wallHeight).toFloat(),
+                xoffset, screenInfo.value.screenHeight.toFloat(),
+                darkToWhiteColor, Color.White, false, worldTextureOffset
+            )
         }
     }
 
-    fun rotatePlayerRight(deltatime: Float) {
-        _playerState.update {
-            it.copy(angle = (it.angle + (it.rotateSpeed * deltatime)) % 360)
+    fun handlePlayerMovement(playerPointerAction: PointF, deltaTime: Float) {
+        if (playerPointerAction.x != 0.0f) {
+            playerState.value.rotatePlayer(deltaTime, playerPointerAction.x)
         }
-    }
 
-    fun handlePlayerPointerAction(playerPointerAction: PlayerPointerAction, deltaTime: Float) {
-        when (playerPointerAction) {
-            PlayerPointerAction.NONE -> {}
-            PlayerPointerAction.MOVE_FORWARD -> {
-                movePlayerForward(deltaTime)
-            }
-
-            PlayerPointerAction.MOVE_BACKWARD -> {
-                movePlayerBackward(deltaTime)
-            }
-
-            PlayerPointerAction.ROTATE_LEFT -> {
-                rotatePlayerLeft(deltaTime)
-            }
-
-            PlayerPointerAction.ROTATE_RIGHT -> {
-                rotatePlayerRight(deltaTime)
-            }
+        if (playerPointerAction.y != 0.0f) {
+            playerState.value.movePlayer(deltaTime, playerPointerAction.y, map)
         }
     }
 }
