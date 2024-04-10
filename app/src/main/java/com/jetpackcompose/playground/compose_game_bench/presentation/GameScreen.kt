@@ -111,8 +111,8 @@ fun DrawGameScreen(
                         val maxWidth = size.value.width
                         val maxHeight = size.value.height
 
-                        val scaleW = maxWidth / (screenInfo.screenWidth.toFloat())
-                        val scaleH = maxHeight / (screenInfo.screenHeight.toFloat())
+                        val scaleW = maxWidth.toFloat() / (screenInfo.screenWidth.toFloat())
+                        val scaleH = maxHeight.toFloat() / (screenInfo.screenHeight.toFloat())
 
                         if (drawTextured) {
                             drawTexturedWall(
@@ -164,7 +164,9 @@ private fun DrawScope.drawTexturedWall(
 
     // get scaled line end
     val lineEnd = getScaledLinePoint(x2, y2, scaleW, scaleH)
-    val textureX = (worldTextureOffset * wallTexture.width).toInt() % wallTexture.width
+    val scaleAspectRatio = scaleW / scaleH
+    val textureX =
+        ((worldTextureOffset * scaleAspectRatio) * wallTexture.width).toInt() % wallTexture.width
     drawImage(
         wallTexture,
         srcOffset = IntOffset(textureX, 0),
