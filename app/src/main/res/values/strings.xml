@@ -9,4 +9,7 @@
     <string name="priority">Priority</string>
     <string name="add_new_task">Add new task</string>
     <string name="tasks">Tasks</string>
+    <string name="camerax_test">CameraX test</string>
+    <string name="search_for_user">Search for user</string>
+    <string name="search_for_repo">Search for repo</string>
 </resources>

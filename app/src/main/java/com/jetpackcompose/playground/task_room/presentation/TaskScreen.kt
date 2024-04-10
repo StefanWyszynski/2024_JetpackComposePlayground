@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -26,33 +25,26 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
-import com.jetpackcompose.playground.R
 import com.jetpackcompose.playground.common.presentation.components.CustomTopAppBar
+import com.jetpackcompose.playground.common.presentation.data.CustomTopAppBarData
 import com.jetpackcompose.playground.common.presentation.data.ScreenRoute
 import com.jetpackcompose.playground.task_room.domain.data.Task
 import com.jetpackcompose.playground.task_room.presentation.components.TaskListItem
 import com.jetpackcompose.playground.task_room.presentation.viewmodel.TaskViewModel
-import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun TaskScreen(
     navController: NavHostController,
     taskViewModel: TaskViewModel,
-    scope: CoroutineScope,
-    drawerState: DrawerState
+    customTopAppBarData: CustomTopAppBarData
 ) {
     Scaffold(
-        topBar = {
-            CustomTopAppBar(stringResource(R.string.tasks), scope, drawerState)
-        },
+        topBar = { CustomTopAppBar(customTopAppBarData) },
         floatingActionButton = {
             ExtendedFloatingActionButton(onClick = {
                 val nav = NavOptions.Builder().build()

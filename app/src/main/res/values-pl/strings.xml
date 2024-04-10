@@ -8,4 +8,7 @@
     <string name="priority">Priorytet</string>
     <string name="add_new_task">Dodaj nowe zadanie</string>
     <string name="tasks">Zadania</string>
+    <string name="camerax_test">CameraX test</string>
+    <string name="search_for_user">Wyszukaj użytkownika</string>
+    <string name="search_for_repo">Wyszukaj repozytorium</string>
 </resources>

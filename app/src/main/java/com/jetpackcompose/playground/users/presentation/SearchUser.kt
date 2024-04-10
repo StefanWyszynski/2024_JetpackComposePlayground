@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
-import androidx.compose.material3.DrawerState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -26,9 +25,9 @@ import com.jetpackcompose.playground.common.presentation.components.LoadingProgr
 import com.jetpackcompose.playground.common.presentation.components.SearchField
 import com.jetpackcompose.playground.common.presentation.components.SearchResultListItem
 import com.jetpackcompose.playground.common.presentation.components.Spacer
+import com.jetpackcompose.playground.common.presentation.data.CustomTopAppBarData
 import com.jetpackcompose.playground.users.presentation.redux.GithubUserState
 import com.jetpackcompose.playground.users.presentation.viewmodel.SerachUserViewModel
-import kotlinx.coroutines.CoroutineScope
 
 /*
  * Copyright 2023
@@ -37,11 +36,11 @@ import kotlinx.coroutines.CoroutineScope
  */
 @Composable
 fun SearchUserScreen(
-    viewModel: SerachUserViewModel, scope: CoroutineScope, drawerState: DrawerState
+    viewModel: SerachUserViewModel, customTopAppBarData: CustomTopAppBarData
 ) {
     Scaffold(
         topBar = {
-            CustomTopAppBar("Search for user", scope, drawerState)
+            CustomTopAppBar(customTopAppBarData)
         }) { scaffoldPading ->
         Surface(
             modifier = Modifier

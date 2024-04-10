@@ -3,7 +3,6 @@ package com.jetpackcompose.playground.maps.presentation
 import android.Manifest
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.DrawerState
 import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,27 +17,25 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.rememberCameraPositionState
-import com.jetpackcompose.playground.camerax.presentation.cameraxtest.PermissionDialog
 import com.thwackstudio.permissions_util.domain.PermissionInfo
 import com.thwackstudio.permissions_util.domain.PermissionsContainer
 import com.thwackstudio.permissions_util.domain.PermissionsDialogHelper
 import com.thwackstudio.permissions_util.presentation.DefaultPermissionDialog
 import com.thwackstudio.permissions_util.presentation.rememberPermissionsRequester
-import kotlinx.coroutines.CoroutineScope
 
 @Composable
-fun GoogleMapScreen(scope: CoroutineScope, drawerState: DrawerState) {
+fun GoogleMapScreen() {
     val permissionsGrantBuilder = rememberPermissionsBuilder()
     val permissionsRequester = rememberPermissionsRequester(permissionsGrantBuilder)
 
     if (permissionsRequester.isAllPermissionsGranted()) {
-        GoogleMapTest(scope, drawerState)
+        GoogleMapTest()
     } else {
         MapNoPermissionScreen() {
         }
 
         permissionsRequester.RequestMultiplePermissions(onShowPermissionDialog = { permissionDialogHelper: PermissionsDialogHelper ->
-        DefaultPermissionDialog(permissionsDialogHelper = permissionDialogHelper)
+            DefaultPermissionDialog(permissionsDialogHelper = permissionDialogHelper)
 //            PermissionDialog(permissionDialogHelper)
         })
     }
@@ -64,7 +61,7 @@ private fun rememberPermissionsBuilder() = remember {
 }
 
 @Composable
-fun GoogleMapTest(scope: CoroutineScope, drawerState: DrawerState) {
+fun GoogleMapTest() {
     Box(modifier = Modifier.fillMaxSize()) {
         var uiSettings by remember { mutableStateOf(MapUiSettings()) }
         val properties by remember { mutableStateOf(MapProperties(mapType = MapType.SATELLITE)) }

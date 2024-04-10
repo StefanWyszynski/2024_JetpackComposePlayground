@@ -20,10 +20,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -35,18 +37,21 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.jetpackcompose.playground.R
 import com.jetpackcompose.playground.camerax.presentation.cameraxtest.CameraXScreenContainer
+import com.jetpackcompose.playground.common.presentation.data.CustomTopAppBarData
 import com.jetpackcompose.playground.common.presentation.data.ScreenRoute
 import com.jetpackcompose.playground.common.presentation.theme.LearningAppTheme
+import com.jetpackcompose.playground.common.presentation.utils.topAppBarToogleVisibility
 import com.jetpackcompose.playground.compose_game_bench.presentation.GameScreen
 import com.jetpackcompose.playground.compose_game_bench.presentation.viewmodel.GameViewModel
 import com.jetpackcompose.playground.maps.presentation.GoogleMapScreen
 import com.jetpackcompose.playground.repos.presentation.SearchRepoScreen
 import com.jetpackcompose.playground.repos.presentation.viewmodel.SerachRepoViewModel
+import com.jetpackcompose.playground.task_realm.presentation.viewmodel.RealmTaskViewModel
 import com.jetpackcompose.playground.task_room.presentation.NewRealmTaskScreen
 import com.jetpackcompose.playground.task_room.presentation.NewTaskScreen
 import com.jetpackcompose.playground.task_room.presentation.RealmTaskScreen
-import com.jetpackcompose.playground.task_realm.presentation.viewmodel.RealmTaskViewModel
 import com.jetpackcompose.playground.task_room.presentation.TaskScreen
 import com.jetpackcompose.playground.task_room.presentation.viewmodel.TaskViewModel
 import com.jetpackcompose.playground.users.presentation.SearchUserScreen
@@ -86,7 +91,8 @@ fun SetNavAppHost(
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-
+    val toppAppBarToogleCallback = remember { topAppBarToogleVisibility(scope, drawerState) }
+    val customTopAppBarData = CustomTopAppBarData(openIconClick = toppAppBarToogleCallback)
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -110,18 +116,21 @@ fun SetNavAppHost(
                 GameScreen(hiltViewModel)
             }
             composable(ScreenRoute.SearchUser.route) {
+                customTopAppBarData.title = stringResource(R.string.search_for_user)
                 val hiltViewModel = hiltViewModel<SerachUserViewModel>(it)
-                SearchUserScreen(hiltViewModel, scope, drawerState)
+                SearchUserScreen(hiltViewModel, customTopAppBarData)
             }
             composable(ScreenRoute.SearchRepo.route) {
+                customTopAppBarData.title = stringResource(R.string.search_for_repo)
                 val hiltViewModel = hiltViewModel<SerachRepoViewModel>(it)
-                SearchRepoScreen(hiltViewModel, scope, drawerState)
+                SearchRepoScreen(hiltViewModel, customTopAppBarData)
             }
             composable(ScreenRoute.CameraXTest.route) {
-                CameraXScreenContainer(scope, drawerState)
+                customTopAppBarData.title = stringResource(R.string.camerax_test)
+                CameraXScreenContainer(customTopAppBarData)
             }
             composable(ScreenRoute.MapsTest.route) {
-                GoogleMapScreen(scope, drawerState)
+                GoogleMapScreen()
             }
             composable(
                 route = ScreenRoute.Task.route, arguments = ScreenRoute.Task.namedNavArguments()
@@ -129,25 +138,34 @@ fun SetNavAppHost(
                 val hiltViewModel = hiltViewModel<TaskViewModel>(backStackEntry)
                 val nestedScreen = backStackEntry.arguments?.getString("nestedScreen")
                 when (nestedScreen) {
-                    ScreenRoute.Task.Main.route ->
-                        TaskScreen(navController, hiltViewModel, scope, drawerState)
+                    ScreenRoute.Task.Main.route -> {
+                        customTopAppBarData.title = stringResource(R.string.tasks)
+                        TaskScreen(navController, hiltViewModel, customTopAppBarData)
+                    }
 
-                    ScreenRoute.Task.NewTask.route ->
-                        NewTaskScreen(navController, hiltViewModel, scope, drawerState)
+                    ScreenRoute.Task.NewTask.route -> {
+                        customTopAppBarData.title = stringResource(R.string.add_new_task)
+                        NewTaskScreen(navController, hiltViewModel, customTopAppBarData)
+                    }
 
                 }
             }
             composable(
-                route = ScreenRoute.RealmTask.route, arguments = ScreenRoute.RealmTask.namedNavArguments()
+                route = ScreenRoute.RealmTask.route,
+                arguments = ScreenRoute.RealmTask.namedNavArguments()
             ) { backStackEntry ->
                 val hiltViewModel = hiltViewModel<RealmTaskViewModel>(backStackEntry)
                 val nestedScreen = backStackEntry.arguments?.getString("nestedScreen")
                 when (nestedScreen) {
-                    ScreenRoute.RealmTask.Main.route ->
-                        RealmTaskScreen(navController, hiltViewModel, scope, drawerState)
+                    ScreenRoute.RealmTask.Main.route -> {
+                        customTopAppBarData.title = stringResource(R.string.tasks)
+                        RealmTaskScreen(navController, hiltViewModel, customTopAppBarData)
+                    }
 
-                    ScreenRoute.RealmTask.NewTask.route ->
-                        NewRealmTaskScreen(navController, hiltViewModel, scope, drawerState)
+                    ScreenRoute.RealmTask.NewTask.route -> {
+                        customTopAppBarData.title = stringResource(R.string.add_new_task)
+                        NewRealmTaskScreen(navController, hiltViewModel, customTopAppBarData)
+                    }
 
                 }
             }

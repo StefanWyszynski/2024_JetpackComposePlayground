@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -30,12 +29,11 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import com.jetpackcompose.playground.common.presentation.components.CustomTopAppBar
-import kotlinx.coroutines.CoroutineScope
+import com.jetpackcompose.playground.common.presentation.data.CustomTopAppBarData
 
 @Composable
 fun CameraXScreenContent(
-    scope: CoroutineScope,
-    drawerState: DrawerState
+    customTopAppBarData: CustomTopAppBarData
 ) {
     val context = LocalContext.current
     val owner = LocalLifecycleOwner.current
@@ -45,7 +43,7 @@ fun CameraXScreenContent(
 
     Scaffold(
         topBar = {
-            CustomTopAppBar("CameraX test", scope, drawerState)
+            CustomTopAppBar(customTopAppBarData)
         },
         floatingActionButton = {
             ExtendedFloatingActionButton(onClick = {

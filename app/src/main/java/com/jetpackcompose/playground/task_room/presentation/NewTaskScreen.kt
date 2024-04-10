@@ -19,7 +19,6 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -47,10 +46,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.jetpackcompose.playground.R
 import com.jetpackcompose.playground.common.presentation.components.CustomTopAppBar
+import com.jetpackcompose.playground.common.presentation.data.CustomTopAppBarData
 import com.jetpackcompose.playground.task_room.domain.data.Priority
 import com.jetpackcompose.playground.task_room.domain.data.Task
 import com.jetpackcompose.playground.task_room.presentation.viewmodel.TaskViewModel
-import kotlinx.coroutines.CoroutineScope
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -59,8 +58,7 @@ import java.util.Date
 fun NewTaskScreen(
     navController: NavHostController,
     taskViewModel: TaskViewModel,
-    scope: CoroutineScope,
-    drawerState: DrawerState
+    customTopAppBarData: CustomTopAppBarData
 ) {
     val datePickerState =
         rememberDatePickerState(initialSelectedDateMillis = System.currentTimeMillis())
@@ -92,31 +90,27 @@ fun NewTaskScreen(
     }
 
     AddTaskContent(
-        scope, drawerState, taskTitle, isDatePickerDialogVisible,
-        navController, taskDate, taskViewModel
+        taskTitle, isDatePickerDialogVisible,
+        navController, taskDate, taskViewModel, customTopAppBarData
     )
 }
 
 @Composable
 private fun AddTaskContent(
-    scope: CoroutineScope,
-    drawerState: DrawerState,
     taskTitle: MutableState<String>,
     isDatePickerDialogVisible: MutableState<Boolean>,
     navController: NavHostController,
     taskDate: MutableState<String>,
-    taskViewModel: TaskViewModel
+    taskViewModel: TaskViewModel,
+    customTopAppBarData: CustomTopAppBarData
 ) {
     val options = Priority.values().map { it.toString() }.toList()
 
     val taskPriority = remember { mutableStateOf(Priority.LOW.name) }
-
     val dropDownExposed = remember { mutableStateOf(false) }
 
-    Scaffold(
-        topBar = {
-            CustomTopAppBar(stringResource(R.string.add_new_task), scope, drawerState)
-        }) { scaffoldPading ->
+    Scaffold(topBar = { CustomTopAppBar(customTopAppBarData) })
+    { scaffoldPading ->
         Surface(
             modifier = Modifier
                 .fillMaxSize()

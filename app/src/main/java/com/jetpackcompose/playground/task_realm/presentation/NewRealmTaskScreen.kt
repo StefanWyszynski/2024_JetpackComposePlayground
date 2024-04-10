@@ -18,7 +18,6 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -46,18 +45,17 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.jetpackcompose.playground.R
 import com.jetpackcompose.playground.common.presentation.components.CustomTopAppBar
+import com.jetpackcompose.playground.common.presentation.data.CustomTopAppBarData
 import com.jetpackcompose.playground.task_realm.presentation.viewmodel.RealmTaskViewModel
 import com.jetpackcompose.playground.task_room.domain.data.Priority
 import com.jetpackcompose.playground.task_room.domain.data.RealmTask
-import kotlinx.coroutines.CoroutineScope
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewRealmTaskScreen(
     navController: NavHostController,
     taskViewModel: RealmTaskViewModel,
-    scope: CoroutineScope,
-    drawerState: DrawerState
+    customTopAppBarData: CustomTopAppBarData
 ) {
     val datePickerState =
         rememberDatePickerState(initialSelectedDateMillis = System.currentTimeMillis())
@@ -88,32 +86,27 @@ fun NewRealmTaskScreen(
             onDismissRequest = { isDatePickerDialogVisible.value = false })
     }
 
-    AddTaskContent(
-        scope, drawerState, taskTitle, isDatePickerDialogVisible,
-        navController, taskDate, taskViewModel
+    AddRealmTaskContent(
+        taskTitle, isDatePickerDialogVisible,
+        navController, taskDate, taskViewModel, customTopAppBarData
     )
 }
 
 @Composable
-private fun AddTaskContent(
-    scope: CoroutineScope,
-    drawerState: DrawerState,
+private fun AddRealmTaskContent(
     taskTitle: MutableState<String>,
     isDatePickerDialogVisible: MutableState<Boolean>,
     navController: NavHostController,
     taskDate: MutableState<String>,
-    taskViewModel: RealmTaskViewModel
+    taskViewModel: RealmTaskViewModel,
+    customTopAppBarData: CustomTopAppBarData
 ) {
     val options = Priority.values().map { it.toString() }.toList()
-
     val taskPriority = remember { mutableStateOf(Priority.LOW.name) }
-
     val dropDownExposed = remember { mutableStateOf(false) }
 
-    Scaffold(
-        topBar = {
-            CustomTopAppBar(stringResource(R.string.add_new_task), scope, drawerState)
-        }) { scaffoldPading ->
+    Scaffold(topBar = { CustomTopAppBar(customTopAppBarData) })
+    { scaffoldPading ->
         Surface(
             modifier = Modifier
                 .fillMaxSize()

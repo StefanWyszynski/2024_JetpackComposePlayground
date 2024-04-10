@@ -1,22 +1,21 @@
 package com.jetpackcompose.playground.camerax.presentation.cameraxtest
 
 import android.Manifest
-import androidx.compose.material3.DrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import com.jetpackcompose.playground.common.presentation.data.CustomTopAppBarData
 import com.thwackstudio.permissions_util.domain.PermissionInfo
-import com.thwackstudio.permissions_util.domain.PermissionsDialogHelper
 import com.thwackstudio.permissions_util.domain.PermissionsContainer
+import com.thwackstudio.permissions_util.domain.PermissionsDialogHelper
 import com.thwackstudio.permissions_util.presentation.rememberPermissionsRequester
-import kotlinx.coroutines.CoroutineScope
 
 @Composable
-fun CameraXScreenContainer(scope: CoroutineScope, drawerState: DrawerState) {
+fun CameraXScreenContainer(customTopAppBarData: CustomTopAppBarData) {
     val permissionsGrantBuilder = rememberPermissionsBuilder()
     val permissionsRequester = rememberPermissionsRequester(permissionsGrantBuilder)
 
     if (permissionsRequester.isAllPermissionsGranted()) {
-        CameraXScreenContent(scope, drawerState)
+        CameraXScreenContent(customTopAppBarData)
     } else {
         NoPermissionScreen() {
         }
