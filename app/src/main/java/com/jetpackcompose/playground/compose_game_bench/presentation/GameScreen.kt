@@ -49,6 +49,7 @@ import com.jetpackcompose.playground.R
 import com.jetpackcompose.playground.compose_game_bench.data.ScreenState
 import com.jetpackcompose.playground.compose_game_bench.presentation.viewmodel.GameViewModel
 import kotlinx.coroutines.delay
+import kotlin.math.roundToInt
 
 @Composable
 fun GameScreen(
@@ -111,7 +112,7 @@ fun DrawGameScreen(
                         val maxWidth = size.value.width
                         val maxHeight = size.value.height
 
-                        val scaleW = maxWidth.toFloat() / (screenInfo.screenWidth.toFloat())
+                        val scaleW = (maxWidth.toFloat() / (screenInfo.screenWidth.toFloat())).roundToInt().toFloat()
                         val scaleH = maxHeight.toFloat() / (screenInfo.screenHeight.toFloat())
 
                         if (drawTextured) {
