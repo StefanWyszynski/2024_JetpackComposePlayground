@@ -122,7 +122,8 @@ fun DrawGameScreen(
                             )
                         } else {
                             drawFloorAndCeiling(
-                                x1, y1, scaleW, scaleH, maxHeight, x2, y2, colorFar, colorNear
+                                x1, y1, scaleW, scaleH, maxHeight, x2, y2, colorFar, colorNear,
+                                screenInfo.screenHeightHalf
                             )
                         }
                     }
@@ -138,7 +139,7 @@ fun DrawGameScreen(
 
 private fun DrawScope.drawFloorAndCeiling(
     x1: Float, y1: Float, scaleW: Float, scaleH: Float, maxHeight: Int, x2: Float,
-    y2: Float, colorFar: Color, colorNear: Color
+    y2: Float, colorFar: Color, colorNear: Color, screenHeightHalf: Float
 ) {
     // get scaled line start
     val lineStart =
@@ -148,10 +149,10 @@ private fun DrawScope.drawFloorAndCeiling(
     val lineEnd =
         getScaledAndClampedLinePoint(x2, y2, scaleW, scaleH, maxHeight)
     drawLine(
-        brush = Brush.verticalGradient(listOf(colorFar, colorNear), startY = lineStart.y, endY = lineEnd.y),
+        brush = Brush.verticalGradient(listOf(colorFar, colorNear), startY = lineStart.y, endY = maxHeight.toFloat()),
         start = lineStart,
         end = lineEnd,
-        strokeWidth = scaleW,
+        strokeWidth = scaleW+1f,
         cap = StrokeCap.Square
     )
 }

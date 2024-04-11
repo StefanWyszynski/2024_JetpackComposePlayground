@@ -30,12 +30,12 @@ class RayCastUtil @Inject constructor() {
             var rayAngle = (player.angle - player.halfFov)
             rayAngle += screenInfo.incrementAngle * columnX
 
-            val collInfo = RaycastScreenColumnInfo(0.0, 0, 0f, 0f)
+            val collInfo = RaycastScreenColumnInfo()
             // Ray data
             val distanceToWall = castRayInMap(player, rayAngle, screenInfo, map, collInfo)
 
             // Wall height
-            val wallHeight = floor(screenInfo.screenHeightHalf / distanceToWall)
+            val wallHeight = (screenInfo.screenHeightHalf / distanceToWall)
             val colorIntensity = RayCastMathUtils.calculateColorIntensityByDistance(distanceToWall, player.maxViewDistance)
             val xoffset = columnX.toFloat()
 
@@ -76,6 +76,7 @@ class RayCastUtil @Inject constructor() {
 
 
         collInfo.worldTextureOffset = (rayX + rayY).toFloat()
+        collInfo.wallHitScale = wall
         val xPow = (player.x - rayX)
         val yPow = (player.y - rayY)
         var distanceToWall = sqrt(xPow * xPow + yPow * yPow)

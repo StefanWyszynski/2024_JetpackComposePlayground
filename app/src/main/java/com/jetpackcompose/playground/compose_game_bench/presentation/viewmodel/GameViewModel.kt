@@ -32,16 +32,16 @@ class GameViewModel @Inject constructor(var rayCastInteractor: RayCastUseCaseImp
         listOf(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
         listOf(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
         listOf(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-        listOf(1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1),
+        listOf(1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1),
         listOf(1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1),
-        listOf(1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1),
-        listOf(1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1),
+        listOf(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1),
+        listOf(1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1),
+        listOf(1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1),
         listOf(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+        listOf(1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1),
+        listOf(1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+        listOf(1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1),
         listOf(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-        listOf(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-        listOf(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-        listOf(1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-        listOf(1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
         listOf(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
         listOf(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
         listOf(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
@@ -98,25 +98,27 @@ class GameViewModel @Inject constructor(var rayCastInteractor: RayCastUseCaseImp
                 )
 
             // draw ceiling
+            val wallHitScale = if (line.wallHitScale == 0) 1 else line.wallHitScale
+            val wallHeightFromScreenCenter =
+                (screenInfo.value.screenHeightHalf - (wallHeight * wallHitScale)).toFloat()
+
+
+            // draw sky
             drawColumn(
-                textureXOffset,
-                xoffset, 0f, xoffset,
-                (screenInfo.value.screenHeightHalf - wallHeight).toFloat(),
-                Color.Blue, skyBlue, false, worldTextureOffset
+                textureXOffset, xoffset, 0f, xoffset, wallHeightFromScreenCenter,
+                Color(0xFFA0A0FF), skyBlue, false, worldTextureOffset
             )
 
             // draw wall
             drawColumn(
-                textureXOffset,
-                xoffset, (screenInfo.value.screenHeightHalf - wallHeight).toFloat(),
+                textureXOffset, xoffset, wallHeightFromScreenCenter,
                 xoffset, (screenInfo.value.screenHeightHalf + wallHeight).toFloat(),
                 darkToWhiteColor, darkToWhiteColor, true, worldTextureOffset
             )
 
             // draw floor
             drawColumn(
-                textureXOffset,
-                xoffset, (screenInfo.value.screenHeightHalf + wallHeight).toFloat(),
+                textureXOffset, xoffset, (screenInfo.value.screenHeightHalf + wallHeight).toFloat(),
                 xoffset, screenInfo.value.screenHeight.toFloat(),
                 darkToWhiteColor, Color.White, false, worldTextureOffset
             )
