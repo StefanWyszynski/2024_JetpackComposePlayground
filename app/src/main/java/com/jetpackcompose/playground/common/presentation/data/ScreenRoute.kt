@@ -63,4 +63,5 @@ sealed class ScreenRoute(val route: String) {
             }
         }
     }
+    object CryptoUtilTest : ScreenRoute("CryptoUtilTest")
 }

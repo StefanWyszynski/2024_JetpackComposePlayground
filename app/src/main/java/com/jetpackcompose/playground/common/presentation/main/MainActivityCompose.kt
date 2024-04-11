@@ -45,6 +45,8 @@ import com.jetpackcompose.playground.common.presentation.theme.LearningAppTheme
 import com.jetpackcompose.playground.common.presentation.utils.topAppBarToogleVisibility
 import com.jetpackcompose.playground.compose_game_bench.presentation.GameScreen
 import com.jetpackcompose.playground.compose_game_bench.presentation.viewmodel.GameViewModel
+import com.jetpackcompose.playground.crypto.presentation.CryptoUtilTestScreen
+import com.jetpackcompose.playground.crypto.presentation.viewmodel.CryptoUtilTestViewModel
 import com.jetpackcompose.playground.maps.presentation.GoogleMapScreen
 import com.jetpackcompose.playground.repos.presentation.SearchRepoScreen
 import com.jetpackcompose.playground.repos.presentation.viewmodel.SerachRepoViewModel
@@ -170,6 +172,10 @@ fun SetNavAppHost(
                 }
             }
 
+            composable(ScreenRoute.CryptoUtilTest.route) {
+                val hiltViewModel = hiltViewModel<CryptoUtilTestViewModel>(it)
+                CryptoUtilTestScreen(hiltViewModel)
+            }
         }
     }
 }
@@ -220,6 +226,11 @@ fun DrawerContent(navController: NavController, onClickOptionCallback: () -> Uni
         GotoRealmTaskTest(navController, nav)
         onClickOptionCallback()
     }, "Realm Task")
+
+    DrawerContentOptionButton({
+        GotoCryptoUtilTest(navController, nav)
+        onClickOptionCallback()
+    }, "Crypto Util test")
 }
 
 @Composable
@@ -270,6 +281,10 @@ private fun GotoTaskTest(navController: NavController, nav: NavOptions) {
 
 private fun GotoRealmTaskTest(navController: NavController, nav: NavOptions) {
     ScreenRoute.RealmTask.Main.navigate(navController, nav)
+}
+
+private fun GotoCryptoUtilTest(navController: NavController, nav: NavOptions) {
+    navController.navigate(ScreenRoute.CryptoUtilTest.route, navOptions = nav)
 }
 
 @Preview(showBackground = true)
