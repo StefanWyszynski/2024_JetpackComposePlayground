@@ -12,6 +12,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import com.thwackstudio.permissions_util.presentation.PermissionsRequester
 import com.thwackstudio.permissions_util.presentation.lastPermissionRequestLaunchedAt
 
 fun isPermissionGranted(context: Context, permissionName: String) = permissionName.isNotEmpty() &&
@@ -31,14 +32,14 @@ internal object PermissionHelperUtils {
     internal fun <T, R> CallPermissionLauncherUsingDisposableEffect(
         resultLauncher: ManagedActivityResultLauncher<T, R>,
         permissions: T,
-        launcherCalled: MutableState<Boolean>
+        permProcessState: MutableState<PermissionsRequester.PermissionProcessState>
     ) {
         val lifecycleOwner = LocalLifecycleOwner.current
         DisposableEffect(key1 = lifecycleOwner, effect = {
             val observer = LifecycleEventObserver { _, event ->
                 if (event == Lifecycle.Event.ON_START) {
                     lastPermissionRequestLaunchedAt = System.currentTimeMillis()
-                    launcherCalled.value = true
+                    permProcessState.value = PermissionsRequester.PermissionProcessState.CALL_PERMISSION_LAUNCHER_IN_RATIONALE_DIALOG
                     resultLauncher.launch(permissions)
                 }
             }
