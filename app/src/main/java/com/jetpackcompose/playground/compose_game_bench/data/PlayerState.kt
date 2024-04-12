@@ -14,10 +14,10 @@ data class PlayerState(
     var moveSpeed: Double = 3.0,
     var rotateSpeed: Double = 100.0,
     val radius: Double = 5.0,
-    val maxViewDistance: Double  = 8.0
+    val maxViewDistance: Double = 8.0
 ) {
 
-    fun movePlayer(deltatime: Float, moveDirection: Float, map: List<List<Int>> ) {
+    fun movePlayer(deltatime: Float, moveDirection: Float, map: List<List<Int>>) {
 
         val playerCos = cos(Math.toRadians(angle)) * moveSpeed * deltatime
         val playerSin = sin(Math.toRadians(angle)) * moveSpeed * deltatime

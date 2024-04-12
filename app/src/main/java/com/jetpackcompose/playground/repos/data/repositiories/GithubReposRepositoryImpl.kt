@@ -1,11 +1,11 @@
 package com.jetpackcompose.playground.repos.data.repositiories
 
-import com.jetpackcompose.playground.utils.NetworkOperation
-import com.jetpackcompose.playground.utils.safeApiCallRunner
 import com.jetpackcompose.playground.common.data.api.GitHubApiService
 import com.jetpackcompose.playground.repos.data.dto.mapToDomain
 import com.jetpackcompose.playground.repos.domain.model.GithubRepo
 import com.jetpackcompose.playground.repos.domain.repositories.GithubReposRepository
+import com.jetpackcompose.playground.utils.NetworkOperation
+import com.jetpackcompose.playground.utils.safeApiCallRunner
 import javax.inject.Inject
 
 /*
@@ -13,7 +13,8 @@ import javax.inject.Inject
  *
  * @author Stefan Wyszynski
  */
-class GithubReposRepositoryImpl @Inject constructor(private var gitHubApiService: GitHubApiService) : GithubReposRepository {
+class GithubReposRepositoryImpl @Inject constructor(private var gitHubApiService: GitHubApiService) :
+    GithubReposRepository {
 
     suspend override fun searchRepos(repoName: String): NetworkOperation<List<GithubRepo>> {
         return safeApiCallRunner(

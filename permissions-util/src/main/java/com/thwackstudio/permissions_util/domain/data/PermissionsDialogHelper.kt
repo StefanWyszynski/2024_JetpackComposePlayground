@@ -1,4 +1,4 @@
-package com.thwackstudio.permissions_util.domain
+package com.thwackstudio.permissions_util.domain.data
 
 interface PermissionsDialogHelper {
     fun arePermissionsPermamentyDenied(): Boolean

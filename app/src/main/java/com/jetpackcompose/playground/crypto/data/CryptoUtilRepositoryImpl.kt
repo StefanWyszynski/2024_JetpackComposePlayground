@@ -4,8 +4,7 @@ import com.jetpackcompose.playground.crypto.data.util.CryptoBuilder
 import com.jetpackcompose.playground.crypto.domain.repository.CryptoUtilRepository
 import javax.inject.Inject
 
-class CryptoUtilRepositoryImpl @Inject constructor(): CryptoUtilRepository
-{
+class CryptoUtilRepositoryImpl @Inject constructor() : CryptoUtilRepository {
     override fun encryptFromString(data: String): ByteArray? {
         return CryptoBuilder().build().encryptFromString(data)
     }

@@ -32,7 +32,11 @@ class SerachUserViewModel @Inject constructor(
     var searchText: StateFlow<String> = _searchText.asStateFlow()
 
     var gitHubUsers = stateMachine.state
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(1000), GithubUserState.ContentState())
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(1000),
+            GithubUserState.ContentState()
+        )
 
     init {
         viewModelScope.launch {

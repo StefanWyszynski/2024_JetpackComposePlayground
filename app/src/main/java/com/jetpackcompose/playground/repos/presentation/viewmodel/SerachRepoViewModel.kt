@@ -2,9 +2,9 @@ package com.jetpackcompose.playground.repos.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jetpackcompose.playground.utils.NetworkOperation
 import com.jetpackcompose.playground.repos.domain.model.GithubRepo
 import com.jetpackcompose.playground.repos.domain.use_case.GithubSearchRepoUseCase
+import com.jetpackcompose.playground.utils.NetworkOperation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview

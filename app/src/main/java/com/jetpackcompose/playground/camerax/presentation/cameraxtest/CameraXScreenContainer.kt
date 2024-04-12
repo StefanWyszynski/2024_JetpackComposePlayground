@@ -4,9 +4,9 @@ import android.Manifest
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import com.jetpackcompose.playground.common.presentation.data.CustomTopAppBarData
-import com.thwackstudio.permissions_util.domain.PermissionInfo
-import com.thwackstudio.permissions_util.domain.PermissionsContainer
-import com.thwackstudio.permissions_util.domain.PermissionsDialogHelper
+import com.thwackstudio.permissions_util.domain.data.PermissionInfo
+import com.thwackstudio.permissions_util.domain.data.PermissionsContainer
+import com.thwackstudio.permissions_util.domain.data.PermissionsDialogHelper
 import com.thwackstudio.permissions_util.presentation.rememberPermissionsRequester
 
 @Composable

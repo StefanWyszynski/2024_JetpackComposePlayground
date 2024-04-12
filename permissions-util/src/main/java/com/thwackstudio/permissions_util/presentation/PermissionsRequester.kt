@@ -11,11 +11,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
-import com.thwackstudio.permissions_util.domain.PermissionInfo
-import com.thwackstudio.permissions_util.domain.PermissionsContainer
-import com.thwackstudio.permissions_util.domain.PermissionsDialogHelper
+import com.thwackstudio.permissions_util.domain.data.PermissionInfo
+import com.thwackstudio.permissions_util.domain.data.PermissionsContainer
+import com.thwackstudio.permissions_util.domain.data.PermissionsDialogHelper
 import com.thwackstudio.permissions_util.presentation.utils.ExtensionUtils
 import com.thwackstudio.permissions_util.presentation.utils.PermissionHelperUtils
+import com.thwackstudio.permissions_util.presentation.utils.isPermissionGranted
 import kotlinx.coroutines.launch
 
 internal const val PERMISSIONS_CLICK_DELAY_MS = 200
@@ -39,7 +40,7 @@ class PermissionsRequester(private var _permissions: List<PermissionInfo>) {
         val notGrantedPermissionsCount =
             _permissions.getNotDeniedAndNotGrantedPermissions(context).count()
         val launcherAlreadyCalled = remember { mutableStateOf(false) }
-        val showPermissionDialogsCount = remember { mutableStateOf(0) }
+        val showRationaleDialogsCount = remember { mutableStateOf(0) }
         if (isAllPermissionsGranted()) {
             return
         }
@@ -56,60 +57,52 @@ class PermissionsRequester(private var _permissions: List<PermissionInfo>) {
                     onResult = { permissions ->
                         scope.launch {
                             launcherAlreadyCalled.value = false
-                            for (key in permissions.keys) {
-                                val granted = permissions[key]
-                                granted?.let {
-                                    if (granted) {
-                                        _permissions.find { it.permissionName == key }?.permissionDeniedByUser =
-                                            false
-                                    }
-                                }
-                            }
+                            resetGrantedPermissionsInfoStatus(permissions)
                             allPermissionsGranted = permissions.values.all { isGranted ->
                                 isGranted
                             }
                             permissionPermamentlyDenied.value = (!allPermissionsGranted) &&
                                     isLaunchedToFastMeansSystemIsPermamentyDeniedPermissions()
                             if (!allPermissionsGranted || permissionPermamentlyDenied.value) {
-                                showPermissionDialogsCount.value =
+                                showRationaleDialogsCount.value =
                                     _permissions.getNotDeniedAndNotGrantedPermissions(
                                         context
                                     ).count()
                             } else {
-                                showPermissionDialogsCount.value = 0
+                                showRationaleDialogsCount.value = 0
                             }
 
                         }
                     })
 
 
-            callLauncherOnPermissionDialogCallback = {
-                launcherAlreadyCalled.value = true
-                resultLauncher.launch(getPermissionsToLauncher(context))
-            }
             if (!launcherAlreadyCalled.value &&
-                showPermissionDialogsCount.value == 0 &&
+                showRationaleDialogsCount.value == 0 &&
                 !allPermissionsGranted && !permissionPermamentlyDenied.value
             ) {
-                PermissionHelperUtils.CallPermissionLauncherOnDisposableEffect(
+                PermissionHelperUtils.CallPermissionLauncherUsingDisposableEffect(
                     resultLauncher,
                     getPermissionsToLauncher(context),
                     launcherAlreadyCalled
                 )
-            }
-
-            if (showPermissionDialogsCount.value > 0) {
-                val permissions = _permissions.getNotDeniedAndNotGrantedPermissions(context)
-                for (permission in permissions) {
-                    val customPermissionDialog = rememberPermissionDialogHelper(
-                        permissionPermamentlyDenied,
-                        permission, showSystemSettings,
-                        launchRequestLauncher = {
-                            callLauncherOnPermissionDialogCallback?.invoke()
-                        },
-                        showPermissionDialogsCount
-                    )
-                    onShowPermissionDialog(customPermissionDialog)
+            } else {
+                if (showRationaleDialogsCount.value > 0) {
+                    callLauncherOnPermissionDialogCallback = {
+                        launcherAlreadyCalled.value = true
+                        resultLauncher.launch(getPermissionsToLauncher(context))
+                    }
+                    val permissions = _permissions.getNotDeniedAndNotGrantedPermissions(context)
+                    for (permission in permissions) {
+                        val customPermissionDialog = rememberPermissionDialogHelper(
+                            permissionPermamentlyDenied,
+                            permission, showSystemSettings,
+                            launchRequestLauncher = {
+                                callLauncherOnPermissionDialogCallback.invoke()
+                            },
+                            showRationaleDialogsCount
+                        )
+                        onShowPermissionDialog(customPermissionDialog)
+                    }
                 }
             }
             if (showSystemSettings.value) {
@@ -119,15 +112,32 @@ class PermissionsRequester(private var _permissions: List<PermissionInfo>) {
         }
     }
 
+    private fun resetGrantedPermissionsInfoStatus(permissions: Map<String, @JvmSuppressWildcards Boolean>) {
+        for (key in permissions.keys) {
+            val granted = permissions[key]
+            granted?.let {
+                if (granted) {
+                    _permissions.find { it.name == key }?.isDeniedByUserInRationaleDialog =
+                        false
+                }
+            }
+        }
+    }
+
     private fun getPermissionsToLauncher(context: Context) =
         _permissions.getNotDeniedAndNotGrantedPermissions(context)
-            .map { it.permissionName }.toList().toTypedArray()
+            .map { it.name }.toList().toTypedArray()
 
     private fun isLaunchedToFastMeansSystemIsPermamentyDeniedPermissions() =
         (System.currentTimeMillis() - PERMISSIONS_CLICK_DELAY_MS < lastPermissionRequestLaunchedAt)
 
     fun List<PermissionInfo>.getNotDeniedAndNotGrantedPermissions(context: Context): List<PermissionInfo> {
-        return this.filter { !it.permissionDeniedByUser && !it.isPermissionGranted(context) }
+        return this.filter {
+            !it.isDeniedByUserInRationaleDialog && !isPermissionGranted(
+                context,
+                it.name
+            )
+        }
     }
 
     @Composable
@@ -172,7 +182,7 @@ class PermissionsRequester(private var _permissions: List<PermissionInfo>) {
                 }
 
                 override fun onDeny() {
-                    permission.permissionDeniedByUser = true
+                    permission.isDeniedByUserInRationaleDialog = true
                     showPermissionDialogsCount.value--
                 }
 
@@ -198,7 +208,7 @@ class PermissionsRequester(private var _permissions: List<PermissionInfo>) {
         if (_permissions.isEmpty()) {
             return true
         }
-        allPermissionsGranted = _permissions.all { it.isPermissionGranted(context) }
+        allPermissionsGranted = _permissions.all { isPermissionGranted(context, it.name) }
         return allPermissionsGranted
     }
 }

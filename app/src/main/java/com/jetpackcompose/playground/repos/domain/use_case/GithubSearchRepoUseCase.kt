@@ -1,8 +1,8 @@
 package com.jetpackcompose.playground.repos.domain.use_case
 
-import com.jetpackcompose.playground.utils.NetworkOperation
 import com.jetpackcompose.playground.repos.domain.model.GithubRepo
 import com.jetpackcompose.playground.repos.domain.repositories.GithubReposRepository
+import com.jetpackcompose.playground.utils.NetworkOperation
 import javax.inject.Inject
 
 /*

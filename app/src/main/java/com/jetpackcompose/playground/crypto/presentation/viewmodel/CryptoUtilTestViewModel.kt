@@ -7,9 +7,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class CryptoUtilTestViewModel @Inject constructor(private var cryptoUtilEncryptUseCase: CryptoUtilEncryptUseCase,
-                                                  private var cryptoUtilDecryptUseCase: CryptoUtilDecryptUseCase
-): ViewModel() {
+class CryptoUtilTestViewModel @Inject constructor(
+    private var cryptoUtilEncryptUseCase: CryptoUtilEncryptUseCase,
+    private var cryptoUtilDecryptUseCase: CryptoUtilDecryptUseCase
+) : ViewModel() {
     fun encryptFromString(data: String): ByteArray? {
         return cryptoUtilEncryptUseCase(data)
     }

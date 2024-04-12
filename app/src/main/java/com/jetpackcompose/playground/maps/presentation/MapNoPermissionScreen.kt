@@ -17,7 +17,9 @@ import androidx.compose.ui.graphics.Color
 @Composable
 fun MapNoPermissionScreen(requestPermission: () -> Unit) {
     Column(
-        modifier = Modifier.fillMaxSize().background(Color.White),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {

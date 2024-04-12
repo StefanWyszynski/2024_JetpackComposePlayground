@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import com.thwackstudio.permissions_util.domain.PermissionsDialogHelper
+import com.thwackstudio.permissions_util.domain.data.PermissionsDialogHelper
 
 @Composable
 fun PermissionDialog(permissionDialogHelper: PermissionsDialogHelper) {

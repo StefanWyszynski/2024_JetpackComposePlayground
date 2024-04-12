@@ -6,7 +6,8 @@ import com.jetpackcompose.playground.compose_game_bench.domain.usecase.RayCastUs
 import com.jetpackcompose.playground.compose_game_bench.domain.util.RayCastUtil
 import javax.inject.Inject
 
-class RayCastUseCaseImpl @Inject constructor(private val rayCastUtil: RayCastUtil) : RayCastUseCase {
+class RayCastUseCaseImpl @Inject constructor(private val rayCastUtil: RayCastUtil) :
+    RayCastUseCase {
     override fun rayCastingScreenColumnsInfo(
         screenColumns: List<Int>,
         playerState: PlayerState,

@@ -1,6 +1,7 @@
 package com.jetpackcompose.playground.compose_game_bench.presentation.viewmodel
 
 import android.graphics.PointF
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -23,7 +24,7 @@ class GameViewModel @Inject constructor(var rayCastInteractor: RayCastUseCaseImp
     private var _screenColumnsOffsets = listOf<Int>()
     private var _screenColumnsData = listOf<RaycastScreenColumnInfo>()
 
-    val screenInfo = MutableStateFlow(ScreenState())
+    val screenInfo = mutableStateOf(ScreenState())
 
     private val _playerState = MutableStateFlow(PlayerState())
     val playerState = _playerState.asStateFlow()
@@ -49,10 +50,12 @@ class GameViewModel @Inject constructor(var rayCastInteractor: RayCastUseCaseImp
 
     init {
         // Calculated data
-        screenInfo.value.updateA(
-            screenInfo.value.screenWidth,
-            screenInfo.value.screenHeight,
-            _playerState.value
+        screenInfo.value = ScreenState(
+            screenWidth = screenInfo.value.screenWidth,
+            screenHeight = screenInfo.value.screenHeight,
+            screenWidthHalf = screenInfo.value.screenWidth / 2f,
+            screenHeightHalf = screenInfo.value.screenHeight / 2f,
+            incrementAngle = _playerState.value.fov / screenInfo.value.screenWidth.toDouble()
         )
         _playerState.update {
             it.copy(halfFov = it.fov / 2f, x = 2.0, y = 2.0)
@@ -77,7 +80,7 @@ class GameViewModel @Inject constructor(var rayCastInteractor: RayCastUseCaseImp
 
     fun drawRaycastedDataToScreen(
         drawColumn: (
-            textureXOffset: Int, x1: Float, y1: Float, x2: Float, y2: Float,
+            x1: Float, y1: Float, x2: Float, y2: Float,
             colorFar: Color, colorNear: Color, drawTextured: Boolean, worldTextureOffset: Float
         ) -> Unit
     ) {
@@ -87,7 +90,6 @@ class GameViewModel @Inject constructor(var rayCastInteractor: RayCastUseCaseImp
             val xoffset = line.xOffset
             val worldTextureOffset = line.worldTextureOffset
 
-            val textureXOffset = 0
             val skyBlue = Color(0xFF000000 + colorIntensity)
             val darkToWhiteColor =
                 Color(
@@ -105,20 +107,20 @@ class GameViewModel @Inject constructor(var rayCastInteractor: RayCastUseCaseImp
 
             // draw sky
             drawColumn(
-                textureXOffset, xoffset, 0f, xoffset, wallHeightFromScreenCenter,
+                xoffset, 0f, xoffset, wallHeightFromScreenCenter,
                 Color(0xFFA0A0FF), skyBlue, false, worldTextureOffset
             )
 
             // draw wall
             drawColumn(
-                textureXOffset, xoffset, wallHeightFromScreenCenter,
+                xoffset, wallHeightFromScreenCenter,
                 xoffset, (screenInfo.value.screenHeightHalf + wallHeight).toFloat(),
                 darkToWhiteColor, darkToWhiteColor, true, worldTextureOffset
             )
 
             // draw floor
             drawColumn(
-                textureXOffset, xoffset, (screenInfo.value.screenHeightHalf + wallHeight).toFloat(),
+                xoffset, (screenInfo.value.screenHeightHalf + wallHeight).toFloat(),
                 xoffset, screenInfo.value.screenHeight.toFloat(),
                 darkToWhiteColor, Color.White, false, worldTextureOffset
             )

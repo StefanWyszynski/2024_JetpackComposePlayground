@@ -44,7 +44,6 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.core.math.MathUtils
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jetpackcompose.playground.R
 import com.jetpackcompose.playground.compose_game_bench.data.ScreenState
 import com.jetpackcompose.playground.compose_game_bench.presentation.viewmodel.GameViewModel
@@ -52,10 +51,10 @@ import kotlinx.coroutines.delay
 import kotlin.math.roundToInt
 
 @Composable
-fun GameScreen(
-    viewModel: GameViewModel
-) {
-    val screenInfo = viewModel.screenInfo.collectAsStateWithLifecycle()
+fun GameScreen(viewModel: GameViewModel) {
+    val screenInfo by remember {
+        viewModel.screenInfo
+    }
 
     val playerDirection = remember { mutableStateOf(PointF()) }
     var deltaTime by remember { mutableStateOf(0f) }
@@ -74,7 +73,7 @@ fun GameScreen(
 
     DrawGameScreen(
         modifier = Modifier.fillMaxSize(),
-        screenInfo.value,
+        screenInfo,
         playerDirection,
         viewModel
     )
@@ -104,7 +103,7 @@ fun DrawGameScreen(
 //                .wrapContentHeight()
             ) {
                 Canvas(modifier = modifier) {
-                    viewModel.drawRaycastedDataToScreen() { textureXOffset: Int, x1: Float, y1: Float,
+                    viewModel.drawRaycastedDataToScreen() { x1: Float, y1: Float,
                                                             x2: Float, y2: Float,
                                                             colorFar: Color, colorNear: Color,
                                                             drawTextured: Boolean,
@@ -112,7 +111,9 @@ fun DrawGameScreen(
                         val maxWidth = size.value.width
                         val maxHeight = size.value.height
 
-                        val scaleW = (maxWidth.toFloat() / (screenInfo.screenWidth.toFloat())).roundToInt().toFloat()
+                        val scaleW =
+                            (maxWidth.toFloat() / (screenInfo.screenWidth.toFloat())).roundToInt()
+                                .toFloat()
                         val scaleH = maxHeight.toFloat() / (screenInfo.screenHeight.toFloat())
 
                         if (drawTextured) {
@@ -149,10 +150,14 @@ private fun DrawScope.drawFloorAndCeiling(
     val lineEnd =
         getScaledAndClampedLinePoint(x2, y2, scaleW, scaleH, maxHeight)
     drawLine(
-        brush = Brush.verticalGradient(listOf(colorFar, colorNear), startY = lineStart.y, endY = maxHeight.toFloat()),
+        brush = Brush.verticalGradient(
+            listOf(colorFar, colorNear),
+            startY = lineStart.y,
+            endY = maxHeight.toFloat()
+        ),
         start = lineStart,
         end = lineEnd,
-        strokeWidth = scaleW+1f,
+        strokeWidth = scaleW + 1f,
         cap = StrokeCap.Square
     )
 }
@@ -237,7 +242,7 @@ private fun PlayerControlJoystickLayout(playerDirection: MutableState<PointF>) {
     ) {
         Icon(painterResource(id = R.drawable.drag_joystick),
             tint = Color.Red,
-            contentDescription = "Arrow",
+            contentDescription = "Joystick",
             modifier = Modifier
                 .size(64.dp)
                 .graphicsLayer {

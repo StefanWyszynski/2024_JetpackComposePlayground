@@ -7,9 +7,9 @@ class CryptoBuilder() {
 
     private val encryptOptions = EncryptOptions()
 
-     fun setAlgorithm(algorithm: String ) : CryptoBuilder {
+    fun setAlgorithm(algorithm: String): CryptoBuilder {
 
-         encryptOptions.algorithm = algorithm
+        encryptOptions.algorithm = algorithm
 //         val KEY_ALGORITHM_3DES = "DESede"
 //         val KEY_ALGORITHM_AES = "AES"
 //         val KEY_ALGORITHM_EC = "EC"
@@ -19,10 +19,10 @@ class CryptoBuilder() {
 //         val KEY_ALGORITHM_HMAC_SHA384 = "HmacSHA384"
 //         val KEY_ALGORITHM_HMAC_SHA512 = "HmacSHA512"
 //         val KEY_ALGORITHM_RSA = "RSA"
-         return this
-     }
+        return this
+    }
 
-    fun setBlockMode(blockMode: String ) : CryptoBuilder {
+    fun setBlockMode(blockMode: String): CryptoBuilder {
 
         encryptOptions.blockMode = blockMode
 //        val BLOCK_MODE_CBC = "CBC"
@@ -32,7 +32,7 @@ class CryptoBuilder() {
         return this
     }
 
-    fun setPadding(padding: String ) : CryptoBuilder {
+    fun setPadding(padding: String): CryptoBuilder {
 
         encryptOptions.padding = padding
 //        val ENCRYPTION_PADDING_NONE = "NoPadding"
