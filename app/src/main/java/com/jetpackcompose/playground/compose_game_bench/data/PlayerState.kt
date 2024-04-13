@@ -5,11 +5,11 @@ import kotlin.math.floor
 import kotlin.math.sin
 
 data class PlayerState(
-    var fov: Float = 60f,
-    var halfFov: Float = 30f,
+    var fov: Double = 60.0,
+    var halfFov: Double = 30.0,
     var x: Double = 0.0,
     var y: Double = 0.0,
-    var angle: Double = 90.0,
+    var angle: Double = 0.0,
     var health: Float = 100f,
     var moveSpeed: Double = 3.0,
     var rotateSpeed: Double = 100.0,
@@ -18,7 +18,6 @@ data class PlayerState(
 ) {
 
     fun movePlayer(deltatime: Float, moveDirection: Float, map: List<List<Int>>) {
-
         val playerCos = cos(Math.toRadians(angle)) * moveSpeed * deltatime
         val playerSin = sin(Math.toRadians(angle)) * moveSpeed * deltatime
         val newX = x + playerCos * moveDirection

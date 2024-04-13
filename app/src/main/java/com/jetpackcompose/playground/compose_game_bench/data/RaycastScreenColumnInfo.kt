@@ -4,6 +4,6 @@ data class RaycastScreenColumnInfo(
     var wallHeight: Double = 0.0,
     var colorIntensity: Int = 0,
     var xOffset: Float = 0f,
-    var worldTextureOffset: Float = 0f,
-    var wallHitScale: Int = 0
+    var worldTextureOffset: Double = 0.0,
+    var hitWallNumber: Int = 0
 )

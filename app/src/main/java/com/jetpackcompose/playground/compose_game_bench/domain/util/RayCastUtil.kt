@@ -78,14 +78,25 @@ class RayCastUtil @Inject constructor() {
         }
 
 
-        collInfo.worldTextureOffset = (rayX + rayY).toFloat()
-        collInfo.wallHitScale = wall
+        collInfo.worldTextureOffset = (rayX + rayY)
+        collInfo.hitWallNumber = wall
         val xPow = (player.x - rayX)
         val yPow = (player.y - rayY)
         var distanceToWall = sqrt(xPow * xPow + yPow * yPow)
         // Fish eye fix
-        distanceToWall = distanceToWall * cos(Math.toRadians(rayAngle - player.angle))
+        distanceToWall *= fishEyeFixFactor(rayAngle - player.angle)
         return distanceToWall
+    }
+
+    fun fishEyeFixFactor(angle: Double): Double {
+        var normalizedAngle = angle
+        while (normalizedAngle < -180) {
+            normalizedAngle += 360
+        }
+        while (normalizedAngle >= 180) {
+            normalizedAngle -= 360
+        }
+        return cos(Math.toRadians(normalizedAngle))
     }
 
     fun myFizzBuzzImplForFun(n: Int): MutableList<String> {

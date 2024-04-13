@@ -45,7 +45,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.core.math.MathUtils
 import com.jetpackcompose.playground.R
-import com.jetpackcompose.playground.compose_game_bench.data.ScreenState
+import com.jetpackcompose.playground.compose_game_bench.presentation.data.DrawLineData
 import com.jetpackcompose.playground.compose_game_bench.presentation.viewmodel.GameViewModel
 import kotlinx.coroutines.delay
 import kotlin.math.roundToInt
@@ -70,26 +70,39 @@ fun GameScreen(viewModel: GameViewModel) {
             delay(32)
         }
     }
-
-    DrawGameScreen(
-        modifier = Modifier.fillMaxSize(),
-        screenInfo,
-        playerDirection,
-        viewModel
-    )
+    val wall1 = ImageBitmap.imageResource(id = R.drawable.wall)
+    val wall2 = ImageBitmap.imageResource(id = R.drawable.wall2)
 
     viewModel.handlePlayerMovement(playerDirection.value, deltaTime)
+    DrawGameScreen(
+        modifier = Modifier.fillMaxSize(),
+        playerDirection,
+        { size ->
+            viewModel.drawRaycastedDataToScreen() { drawData: DrawLineData ->
+                val scaleW = (size.width.toFloat() / (screenInfo.screenWidth.toFloat()))
+                    .roundToInt().toFloat()
+                val scaleH = size.height.toFloat() / (screenInfo.screenHeight.toFloat())
+                if (drawData.drawTextured) {
+                    drawTexturedWall(
+                        drawData, scaleW, scaleH, if (drawData.hitWall == 1) wall1 else wall2
+                    )
+                } else {
+                    drawFloorAndCeiling(drawData, scaleW, scaleH, size.height)
+                }
+            }
+        }
+    )
+
 }
 
 @Composable
 fun DrawGameScreen(
-    modifier: Modifier, screenInfo: ScreenState, playerDirection: MutableState<PointF>,
-    viewModel: GameViewModel
+    modifier: Modifier, playerDirection: MutableState<PointF>,
+    onDraw: DrawScope.(IntSize) -> Unit
 ) {
     val size = remember {
         mutableStateOf(IntSize(0, 0))
     }
-    val wallTexture = ImageBitmap.imageResource(id = R.drawable.wall)
     Box(modifier = modifier.fillMaxSize()) {
 
         Column(verticalArrangement = Arrangement.Top) {
@@ -99,35 +112,11 @@ fun DrawGameScreen(
                 }
                 .fillMaxWidth()
                 .fillMaxHeight()
-//                .aspectRatio(screenInfo.value.screenWidth.toFloat() / screenInfo.value.screenHeight.toFloat())
+//                .aspectRatio(screenInfo.screenWidth.toFloat() / screenInfo.screenHeight.toFloat())
 //                .wrapContentHeight()
             ) {
                 Canvas(modifier = modifier) {
-                    viewModel.drawRaycastedDataToScreen() { x1: Float, y1: Float,
-                                                            x2: Float, y2: Float,
-                                                            colorFar: Color, colorNear: Color,
-                                                            drawTextured: Boolean,
-                                                            worldTextureOffset: Float ->
-                        val maxWidth = size.value.width
-                        val maxHeight = size.value.height
-
-                        val scaleW =
-                            (maxWidth.toFloat() / (screenInfo.screenWidth.toFloat())).roundToInt()
-                                .toFloat()
-                        val scaleH = maxHeight.toFloat() / (screenInfo.screenHeight.toFloat())
-
-                        if (drawTextured) {
-                            drawTexturedWall(
-                                x1, y1, scaleW, scaleH,
-                                x2, y2, worldTextureOffset, wallTexture, colorFar
-                            )
-                        } else {
-                            drawFloorAndCeiling(
-                                x1, y1, scaleW, scaleH, maxHeight, x2, y2, colorFar, colorNear,
-                                screenInfo.screenHeightHalf
-                            )
-                        }
-                    }
+                    onDraw(size.value)
                 }
             }
 
@@ -139,53 +128,50 @@ fun DrawGameScreen(
 }
 
 private fun DrawScope.drawFloorAndCeiling(
-    x1: Float, y1: Float, scaleW: Float, scaleH: Float, maxHeight: Int, x2: Float,
-    y2: Float, colorFar: Color, colorNear: Color, screenHeightHalf: Float
+    drawData: DrawLineData, scaleW: Float, scaleH: Float, maxHeight: Int
 ) {
-    // get scaled line start
-    val lineStart =
-        getScaledAndClampedLinePoint(x1, y1, scaleW, scaleH, maxHeight)
+    with(drawData) {
+        // get scaled line start
+        val lineStart = getScaledAndClampedLinePoint(lineLeft, lineTop, scaleW, scaleH, maxHeight)
 
-    // get scaled line end
-    val lineEnd =
-        getScaledAndClampedLinePoint(x2, y2, scaleW, scaleH, maxHeight)
-    drawLine(
-        brush = Brush.verticalGradient(
-            listOf(colorFar, colorNear),
-            startY = lineStart.y,
-            endY = maxHeight.toFloat()
-        ),
-        start = lineStart,
-        end = lineEnd,
-        strokeWidth = scaleW + 1f,
-        cap = StrokeCap.Square
-    )
+        // get scaled line end
+        val lineEnd = getScaledAndClampedLinePoint(lineLeft, lineBottom, scaleW, scaleH, maxHeight)
+        drawLine(
+            brush = Brush.verticalGradient(
+                listOf(colorStart, colorEnd),
+                startY = lineStart.y,
+                endY = maxHeight.toFloat()
+            ),
+            start = lineStart,
+            end = lineEnd,
+            strokeWidth = scaleW + 1f,
+            cap = StrokeCap.Square
+        )
+    }
 }
 
-private fun DrawScope.drawTexturedWall(
-    x1: Float, y1: Float, scaleW: Float, scaleH: Float, x2: Float,
-    y2: Float, worldTextureOffset: Float, wallTexture: ImageBitmap, colorFar: Color
+fun DrawScope.drawTexturedWall(
+    drawData: DrawLineData, scaleW: Float, scaleH: Float,
+    wallTexture: ImageBitmap
 ) {
-    // get scaled line start
-    val lineStart = getScaledLinePoint(x1, y1, scaleW, scaleH)
+    with(drawData) {
+        // get scaled line start
+        val lineStart = getScaledLinePoint(lineLeft, lineTop, scaleW, scaleH)
 
-    // get scaled line end
-    val lineEnd = getScaledLinePoint(x2, y2, scaleW, scaleH)
-    val scaleAspectRatio = scaleW / scaleH
-    val textureX =
-        ((worldTextureOffset * scaleAspectRatio) * wallTexture.width).toInt() % wallTexture.width
-    drawImage(
-        wallTexture,
-        srcOffset = IntOffset(textureX, 0),
-        srcSize = IntSize(1, wallTexture.height),
-        dstOffset = IntOffset(lineStart.x.toInt(), lineStart.y.toInt()),
-        dstSize = IntSize(
-            scaleW.toInt(), (lineEnd.y - lineStart.y).toInt()
-        ),
-        colorFilter = ColorFilter.tint(
-            colorFar, blendMode = BlendMode.Multiply
+        // get scaled line end
+        val lineEnd = getScaledLinePoint(lineLeft, lineBottom, scaleW, scaleH)
+        val scaleAspectRatio = scaleW/scaleH
+        val scaleTextureCoordinate = worldTextureOffset * scaleAspectRatio
+        val textureX = (scaleTextureCoordinate * wallTexture.width).roundToInt() % wallTexture.width
+        drawImage(
+            wallTexture,
+            srcOffset = IntOffset(textureX, 0),
+            srcSize = IntSize(1, wallTexture.height),
+            dstOffset = IntOffset(lineStart.x.toInt(), lineStart.y.toInt()),
+            dstSize = IntSize(scaleW.toInt(), (lineEnd.y - lineStart.y).toInt()),
+            colorFilter = ColorFilter.tint(colorStart, blendMode = BlendMode.Multiply)
         )
-    )
+    }
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -272,7 +258,7 @@ private fun getScaledAndClampedLinePoint(
 /**
  * scale point x, y, by scaleW and scaleH and clamp to range 0...maxHeight
  */
-private fun getScaledLinePoint(x: Float, y: Float, scaleW: Float, scaleH: Float): Offset {
+fun getScaledLinePoint(x: Float, y: Float, scaleW: Float, scaleH: Float): Offset {
     val lineStart = Offset(x * scaleW, (y * scaleH))
     return lineStart
 }

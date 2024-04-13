@@ -8,7 +8,6 @@ data class ScreenState(
     val screenHeight: Int = 100,
     val screenWidthHalf: Float = 0f,
     val screenHeightHalf: Float = 0f,
-    val incrementAngle: Double = 0.0,
+    val incrementAngle: Double = 60.0 / screenWidth.toDouble(),
     val raycastingPrecision: Double = 64.0
-) {
-}
+)

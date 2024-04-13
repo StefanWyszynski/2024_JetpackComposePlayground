@@ -83,6 +83,10 @@ dependencies {
 
     // junit
     testImplementation libs.junit
+    testImplementation "com.google.truth:truth:1.0.1"
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12'
+
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
 
