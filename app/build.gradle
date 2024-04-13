@@ -81,14 +81,34 @@ dependencies {
 
     implementation libs.activity.compose
 
-    // junit
-    testImplementation libs.junit
-    testImplementation "com.google.truth:truth:1.0.1"
+// Required -- JUnit 4 framework
+    testImplementation libs.test.junit
+    testImplementation libs.test.truth
+    testImplementation libs.test.ext.junit
     testImplementation 'junit:junit:4.12'
-    testImplementation 'junit:junit:4.12'
+    androidTestImplementation libs.test.ext.junit
+    // Optional -- Mockk framework
+    testImplementation libs.test.mockk
 
-    androidTestImplementation libs.ext.junit
-    androidTestImplementation libs.espresso.core
+    // Optional -- Mockito framework
+    testImplementation libs.test.mockito.core
+    // Optional -- mockito-kotlin
+    testImplementation libs.test.mockito.kotlin
+
+    // Optional -- Robolectric environment
+    testImplementation libs.androidx.core
+
+    androidTestImplementation "androidx.test:runner:1.5.2"
+    androidTestImplementation "androidx.test:rules:1.5.0"
+
+    // Optional -- Mockito framework
+    androidTestImplementation libs.test.mockito.core
+    // Optional -- mockito-kotlin
+    androidTestImplementation libs.test.mockito.kotlin
+
+    // expresso
+    androidTestImplementation libs.test.espresso.core
+    androidTestImplementation libs.test.truth
 
     // jetpack compose test
     androidTestImplementation platform('androidx.compose:compose-bom:2024.02.02')

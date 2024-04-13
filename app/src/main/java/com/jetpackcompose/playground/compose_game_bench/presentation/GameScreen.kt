@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -169,7 +170,8 @@ fun DrawScope.drawTexturedWall(
             srcSize = IntSize(1, wallTexture.height),
             dstOffset = IntOffset(lineStart.x.toInt(), lineStart.y.toInt()),
             dstSize = IntSize(scaleW.toInt(), (lineEnd.y - lineStart.y).toInt()),
-            colorFilter = ColorFilter.tint(colorStart, blendMode = BlendMode.Multiply)
+            colorFilter = ColorFilter.tint(colorStart, blendMode = BlendMode.Multiply),
+            filterQuality = FilterQuality.Low
         )
     }
 }
@@ -249,8 +251,8 @@ private fun PlayerControlJoystickLayout(playerDirection: MutableState<PointF>) {
 private fun getScaledAndClampedLinePoint(
     x: Float, y: Float, scaleW: Float, scaleH: Float, maxHeight: Int
 ): Offset {
-    val scaledY1 = (y * scaleH).toInt()
-    val clampScaledY = MathUtils.clamp(scaledY1, 0, maxHeight).toFloat()
+    val scaledY1 = (y * scaleH)
+    val clampScaledY = MathUtils.clamp(scaledY1, 0f, maxHeight.toFloat())
     val lineStart = Offset(x * scaleW, clampScaledY)
     return lineStart
 }
@@ -259,6 +261,6 @@ private fun getScaledAndClampedLinePoint(
  * scale point x, y, by scaleW and scaleH and clamp to range 0...maxHeight
  */
 fun getScaledLinePoint(x: Float, y: Float, scaleW: Float, scaleH: Float): Offset {
-    val lineStart = Offset(x * scaleW, (y * scaleH))
+    val lineStart = Offset((x * scaleW), (y * scaleH))
     return lineStart
 }

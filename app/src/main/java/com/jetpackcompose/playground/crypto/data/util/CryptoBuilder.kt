@@ -1,9 +1,10 @@
 package com.jetpackcompose.playground.crypto.data.util
 
 import com.jetpackcompose.playground.crypto.data.EncryptOptions
+import javax.inject.Inject
 
 
-class CryptoBuilder() {
+open class CryptoBuilder @Inject constructor() {
 
     private val encryptOptions = EncryptOptions()
 

@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.math.roundToInt
 
 @HiltViewModel
 class GameViewModel @Inject constructor(var rayCastInteractor: RayCastUseCaseImpl) :
@@ -95,15 +94,15 @@ class GameViewModel @Inject constructor(var rayCastInteractor: RayCastUseCaseImp
                 )
 
             // draw ceiling
-            val wallHeightFromScreenCenter =
-                (screenInfo.value.screenHeightHalf - wallHeight //* hitWall
-                        ).roundToInt().toFloat()
+//            val wallTop = (screenInfo.value.screenHeightHalf - wallHeight * line.hitWallNumber)
+            val wallTop = (screenInfo.value.screenHeightHalf - wallHeight)
+            val wallBottom = (screenInfo.value.screenHeightHalf + wallHeight)
 
             // draw sky
             drawLineData.apply {
                 lineLeft = line.xOffset
                 lineTop = 0f
-                lineBottom = wallHeightFromScreenCenter
+                lineBottom = wallTop
                 drawTextured = false
                 this.worldTextureOffset = line.worldTextureOffset
                 colorStart = Color(0xFFA0A0FF)
@@ -114,8 +113,8 @@ class GameViewModel @Inject constructor(var rayCastInteractor: RayCastUseCaseImp
 
             // draw wall
             drawLineData.apply {
-                lineTop = wallHeightFromScreenCenter
-                lineBottom = (screenInfo.value.screenHeightHalf + wallHeight)
+                lineTop = wallTop
+                lineBottom = wallBottom
                 colorStart = darkToWhiteColor
                 colorEnd = darkToWhiteColor
                 drawTextured = true
@@ -125,7 +124,7 @@ class GameViewModel @Inject constructor(var rayCastInteractor: RayCastUseCaseImp
 
             // draw floor
             drawLineData.apply {
-                lineTop = (screenInfo.value.screenHeightHalf + wallHeight)
+                lineTop = wallBottom
                 lineBottom = screenInfo.value.screenHeight.toFloat()
                 colorStart = darkToWhiteColor
                 colorEnd = Color.White

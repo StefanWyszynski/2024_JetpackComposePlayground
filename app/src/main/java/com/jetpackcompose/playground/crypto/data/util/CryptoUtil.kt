@@ -11,7 +11,7 @@ import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.IvParameterSpec
 
-class CryptoUtil(private val encryptOptions: EncryptOptions) {
+open class CryptoUtil(private val encryptOptions: EncryptOptions) {
 
     private val transformation: String
 
