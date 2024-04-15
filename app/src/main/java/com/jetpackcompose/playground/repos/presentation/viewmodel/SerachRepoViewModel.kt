@@ -6,6 +6,7 @@ import com.jetpackcompose.playground.repos.domain.model.GithubRepo
 import com.jetpackcompose.playground.repos.domain.use_case.GithubSearchRepoUseCase
 import com.jetpackcompose.playground.utils.NetworkOperation
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -51,10 +52,10 @@ class SerachRepoViewModel @Inject constructor(
         _searchText.value = text
     }
 
-    fun searchRepos(repoName: String) {
+    fun searchRepos(repoName: String, dispatcher: CoroutineDispatcher = Dispatchers.IO) {
         viewModelScope.launch {
             _gitHubRepos.value = NetworkOperation.Loading()
-            launch(Dispatchers.IO) {
+            launch(dispatcher) {
                 _gitHubRepos.value = githubSearchRepoUseCase(repoName)
             }
         }
