@@ -6,7 +6,7 @@ import com.jetpackcompose.playground.compose_game_bench.data.ScreenState
 
 interface RayCastUseCase {
     fun rayCastingScreenColumnsInfo(
-        screenColumns: List<Int>,
+        screenColumns: List<RaycastScreenColumnInfo>,
         playerState: PlayerState,
         screenInfo: ScreenState,
         map: List<List<Int>>

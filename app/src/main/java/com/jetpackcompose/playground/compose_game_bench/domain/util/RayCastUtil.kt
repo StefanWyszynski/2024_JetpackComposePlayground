@@ -4,6 +4,7 @@ import com.jetpackcompose.playground.compose_game_bench.data.PlayerState
 import com.jetpackcompose.playground.compose_game_bench.data.RaycastScreenColumnInfo
 import com.jetpackcompose.playground.compose_game_bench.data.ScreenState
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -16,40 +17,57 @@ import kotlin.math.sqrt
 
 class RayCastUtil @Inject constructor() {
 
+    private var deferedList = mutableListOf<Deferred<RaycastScreenColumnInfo>>()
+
     fun rayCastingScreenColumnsInfo(
-        screenColumns: List<Int>, playerState: PlayerState, screenInfo: ScreenState,
+        screenColumns: List<RaycastScreenColumnInfo>,
+        playerState: PlayerState,
+        screenInfo: ScreenState,
         map: List<List<Int>>
     ) = runBlocking {
         rayTraceColumnsAsync(screenColumns, playerState, screenInfo, map).awaitAll()
     }
 
     fun CoroutineScope.rayTraceColumnsAsync(
-        screenColumns: List<Int>, player: PlayerState, screenInfo: ScreenState, map: List<List<Int>>
-    ) = screenColumns.map { columnX ->
-        async(Dispatchers.Default) {
-            var rayAngle = (player.angle - player.halfFov)
-            rayAngle += screenInfo.incrementAngle * columnX
-
-            val collInfo = RaycastScreenColumnInfo()
-            // Ray data
-            val distanceToWall = castRayInMap(player, rayAngle, screenInfo, map, collInfo)
-
-            // Wall height
-            val wallHeight = (screenInfo.screenHeightHalf / distanceToWall)
-            val colorIntensity = RayCastMathUtils.calculateColorIntensityByDistance(
-                distanceToWall,
-                player.maxViewDistance
-            )
-            val xoffset = columnX.toFloat()
-
-            collInfo.xOffset = xoffset
-            collInfo.colorIntensity = colorIntensity
-            collInfo.wallHeight = wallHeight
-            collInfo
+        screenColumns: List<RaycastScreenColumnInfo>,
+        player: PlayerState,
+        screenInfo: ScreenState,
+        map: List<List<Int>>
+    ): List<Deferred<RaycastScreenColumnInfo>> {
+        var cleared = false
+        if (deferedList.size != screenColumns.size) {
+            deferedList.clear()
+            cleared = true
         }
+        for (collInfo in screenColumns) {
+            val item = async(Dispatchers.Default) {
+                var rayAngle = (player.angle - player.halfFov)
+                rayAngle += screenInfo.incrementAngle * collInfo.xOffset.toDouble()
+
+                // Ray data
+                val distanceToWall = castRayInMap(player, rayAngle, screenInfo, map, collInfo)
+
+                // Wall height
+                val wallHeight = (screenInfo.screenHeightHalf / distanceToWall)
+                val colorIntensity = RayCastMathUtils.calculateColorIntensityByDistance(
+                    distanceToWall,
+                    player.maxViewDistance
+                )
+                collInfo.colorIntensity = colorIntensity
+                collInfo.wallHeight = wallHeight
+                collInfo
+            }
+
+            if (cleared)
+                deferedList.add(item)
+            else {
+                deferedList[collInfo.xOffset] = item
+            }
+        }
+        return deferedList
     }
 
-    fun castRayInMap(
+    inline fun castRayInMap(
         player: PlayerState, rayAngle: Double, screenInfo: ScreenState, map: List<List<Int>>,
         collInfo: RaycastScreenColumnInfo
     ): Double {
@@ -88,7 +106,7 @@ class RayCastUtil @Inject constructor() {
         return distanceToWall
     }
 
-    fun fishEyeFixFactor(angle: Double): Double {
+    inline fun fishEyeFixFactor(angle: Double): Double {
         var normalizedAngle = angle
         while (normalizedAngle < -180) {
             normalizedAngle += 360

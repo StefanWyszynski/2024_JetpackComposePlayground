@@ -68,7 +68,7 @@ fun GameScreen(viewModel: GameViewModel) {
             deltaTime = (currentTime - lastFrameTime) / 1000f
             lastFrameTime = currentTime
             viewModel.rayCast()
-            delay(32)
+            delay(16)
         }
     }
     val wall1 = ImageBitmap.imageResource(id = R.drawable.wall)
@@ -151,7 +151,7 @@ private fun DrawScope.drawFloorAndCeiling(
     }
 }
 
-fun DrawScope.drawTexturedWall(
+inline fun DrawScope.drawTexturedWall(
     drawData: DrawLineData, scaleW: Float, scaleH: Float,
     wallTexture: ImageBitmap
 ) {
@@ -248,7 +248,7 @@ private fun PlayerControlJoystickLayout(playerDirection: MutableState<PointF>) {
 /**
  * scale point x, y, by scaleW and scaleH and clamp to range 0...maxHeight
  */
-private fun getScaledAndClampedLinePoint(
+inline fun getScaledAndClampedLinePoint(
     x: Float, y: Float, scaleW: Float, scaleH: Float, maxHeight: Int
 ): Offset {
     val scaledY1 = (y * scaleH)
@@ -260,7 +260,7 @@ private fun getScaledAndClampedLinePoint(
 /**
  * scale point x, y, by scaleW and scaleH and clamp to range 0...maxHeight
  */
-fun getScaledLinePoint(x: Float, y: Float, scaleW: Float, scaleH: Float): Offset {
+inline fun getScaledLinePoint(x: Float, y: Float, scaleW: Float, scaleH: Float): Offset {
     val lineStart = Offset((x * scaleW), (y * scaleH))
     return lineStart
 }

@@ -21,7 +21,7 @@ import javax.inject.Inject
 class GameViewModel @Inject constructor(var rayCastInteractor: RayCastUseCaseImpl) :
     ViewModel() {
 
-    private var _screenColumnsOffsets = listOf<Int>()
+    private var _screenColumnsOffsets = listOf<RaycastScreenColumnInfo>()
     private var _screenColumnsData = listOf<RaycastScreenColumnInfo>()
 
     val screenInfo = mutableStateOf(ScreenState())
@@ -61,7 +61,7 @@ class GameViewModel @Inject constructor(var rayCastInteractor: RayCastUseCaseImp
             it.copy(halfFov = (it.fov / 2.0), x = 2.0, y = 2.0)
         }
 
-        _screenColumnsOffsets = (0..screenInfo.value.screenWidth).toList()
+        _screenColumnsOffsets = (0..screenInfo.value.screenWidth).toList().map { RaycastScreenColumnInfo(xOffset = it) }
     }
 
     fun setPlayerHealth(health: Float) {
@@ -100,7 +100,7 @@ class GameViewModel @Inject constructor(var rayCastInteractor: RayCastUseCaseImp
 
             // draw sky
             drawLineData.apply {
-                lineLeft = line.xOffset
+                lineLeft = line.xOffset.toFloat()
                 lineTop = 0f
                 lineBottom = wallTop
                 drawTextured = false
