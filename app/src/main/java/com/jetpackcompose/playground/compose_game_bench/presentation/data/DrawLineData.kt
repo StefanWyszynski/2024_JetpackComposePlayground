@@ -6,7 +6,6 @@ data class DrawLineData(
     var lineTop: Float = 0f,
     var lineBottom: Float = 0f,
     var lineLeft: Float = 0f,
-    var drawTextured: Boolean = false,
     var worldTextureOffset: Double = 0.0,
     var colorStart: Color = Color.White,
     var colorEnd: Color = Color.White,

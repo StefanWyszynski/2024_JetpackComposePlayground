@@ -13,7 +13,7 @@ class RayCastUtilTest {
 
     // Given
     val rayAngle = 0.0
-    val screenInfo = ScreenState()
+    val screenState = ScreenState()
     val map1 = listOf(
         listOf(1, 1, 1, 1),
         listOf(1, 0, 0, 1),
@@ -32,7 +32,8 @@ class RayCastUtilTest {
     @Test
     fun `castRayInMap should return specific value when player in map range`() {
         // When
-        val distanceToWall = RayCastUtil().castRayInMap(player, rayAngle, screenInfo, map1, collInfo)
+        val distanceToWall =
+            RayCastUtil().castRayInMapToFindWalls(player, rayAngle, screenState, map1, collInfo)
 
         // Then
         // assertEquals(1.0, distanceToWall, 0.01)
@@ -42,7 +43,7 @@ class RayCastUtilTest {
     @Test
     fun `castRayInMap should return proper worldTextureOffset value when player in map range`() {
         // When
-        RayCastUtil().castRayInMap(player, rayAngle, screenInfo, map1, collInfo)
+        RayCastUtil().castRayInMapToFindWalls(player, rayAngle, screenState, map1, collInfo)
 
         // Then
         // assertEquals(5.0f, collInfo.worldTextureOffset, 0.1f)
@@ -51,7 +52,7 @@ class RayCastUtilTest {
 
     @Test
     fun `castRayInMap should return proper wallHitScale value when player in map range`() {
-        RayCastUtil().castRayInMap(player, rayAngle, screenInfo, map1, collInfo)
+        RayCastUtil().castRayInMapToFindWalls(player, rayAngle, screenState, map1, collInfo)
 
         // assertEquals(1, collInfo.wallHitScale)
         assertThat(collInfo.hitWallNumber).isEqualTo(1)
@@ -62,7 +63,7 @@ class RayCastUtilTest {
         player = PlayerState(x = -200.0, y = -200.0)
 
         assertThrows(ArrayIndexOutOfBoundsException::class.java) {
-            RayCastUtil().castRayInMap(player, rayAngle, screenInfo, map1, collInfo)
+            RayCastUtil().castRayInMapToFindWalls(player, rayAngle, screenState, map1, collInfo)
         }
     }
 }

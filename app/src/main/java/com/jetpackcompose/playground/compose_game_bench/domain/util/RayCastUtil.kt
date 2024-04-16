@@ -1,8 +1,11 @@
 package com.jetpackcompose.playground.compose_game_bench.domain.util
 
+import androidx.core.graphics.ColorUtils
+import androidx.core.math.MathUtils
 import com.jetpackcompose.playground.compose_game_bench.data.PlayerState
 import com.jetpackcompose.playground.compose_game_bench.data.RaycastScreenColumnInfo
 import com.jetpackcompose.playground.compose_game_bench.data.ScreenState
+import com.jetpackcompose.playground.compose_game_bench.presentation.data.GameData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -10,6 +13,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
+import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.floor
 import kotlin.math.sin
@@ -22,52 +26,82 @@ class RayCastUtil @Inject constructor() {
     fun rayCastingScreenColumnsInfo(
         screenColumns: List<RaycastScreenColumnInfo>,
         playerState: PlayerState,
-        screenInfo: ScreenState,
-        map: List<List<Int>>
+        gameData: GameData,
+        textureWidth: Int,
+        textureHeight: Int
     ) = runBlocking {
-        rayTraceColumnsAsync(screenColumns, playerState, screenInfo, map).awaitAll()
+        rayTraceColumnsAsync(
+            screenColumns, playerState,
+            gameData,
+            textureWidth,
+            textureHeight
+        ).awaitAll()
     }
 
     fun CoroutineScope.rayTraceColumnsAsync(
         screenColumns: List<RaycastScreenColumnInfo>,
         player: PlayerState,
-        screenInfo: ScreenState,
-        map: List<List<Int>>
+        gameData: GameData,
+        textureWidth: Int,
+        textureHeight: Int
     ): List<Deferred<RaycastScreenColumnInfo>> {
         var cleared = false
         if (deferedList.size != screenColumns.size) {
             deferedList.clear()
             cleared = true
         }
-        for (collInfo in screenColumns) {
-            val item = async(Dispatchers.Default) {
-                var rayAngle = (player.angle - player.halfFov)
-                rayAngle += screenInfo.incrementAngle * collInfo.xOffset.toDouble()
+        val screenState = gameData.screenState
+        val gameMap = gameData.gameMap
+        val texturesData = gameData.textures
+        val halfFov = gameData.screenState.halfFov
+        if (texturesData.size >= 2) {
+            for (screenColumn in screenColumns) {
+                val item = async(Dispatchers.Default) {
+                    var rayAngle = (player.angle - halfFov)
+                    rayAngle += screenState.incrementAngle * screenColumn.xOffset.toDouble()
 
-                // Ray data
-                val distanceToWall = castRayInMap(player, rayAngle, screenInfo, map, collInfo)
+                    val distanceToWall =
+                        castRayInMapToFindWalls(
+                            player,
+                            rayAngle,
+                            screenState,
+                            gameMap,
+                            screenColumn
+                        )
 
-                // Wall height
-                val wallHeight = (screenInfo.screenHeightHalf / distanceToWall)
-                val colorIntensity = RayCastMathUtils.calculateColorIntensityByDistance(
-                    distanceToWall,
-                    player.maxViewDistance
-                )
-                collInfo.colorIntensity = colorIntensity
-                collInfo.wallHeight = wallHeight
-                collInfo
-            }
+                    val wallHeight = (screenState.screenHeightHalf / distanceToWall)
+                    val colorIntensity = RayCastMathUtils.calculateColorIntensityByDistance(
+                        distanceToWall, player.maxViewDistance
+                    )
+                    screenColumn.colorIntensity = colorIntensity
+                    screenColumn.wallHeight = wallHeight
 
-            if (cleared)
-                deferedList.add(item)
-            else {
-                deferedList[collInfo.xOffset] = item
+                    drawFloorAndCeil(
+                        screenState,
+                        player,
+                        screenColumn.xOffset,
+                        wallHeight,
+                        rayAngle,
+                        textureWidth,
+                        textureHeight,
+                        gameData.screenPixelsBuffer,
+                        texturesData
+                    )
+
+                    screenColumn
+                }
+
+                if (cleared)
+                    deferedList.add(item)
+                else {
+                    deferedList[screenColumn.xOffset] = item
+                }
             }
         }
         return deferedList
     }
 
-    inline fun castRayInMap(
+    inline fun castRayInMapToFindWalls(
         player: PlayerState, rayAngle: Double, screenInfo: ScreenState, map: List<List<Int>>,
         collInfo: RaycastScreenColumnInfo
     ): Double {
@@ -84,37 +118,77 @@ class RayCastUtil @Inject constructor() {
             rayX += rayCos
             rayY += raySin
 
-            var mapX = floor(rayX).toInt()
-            var mapY = floor(rayY).toInt()
-            if (mapX < 0) {
-                mapX = map[0].size + mapX
-            }
-            if (mapY < 0) {
-                mapY = map.size + mapY
+            val mapX = floor(rayX).toInt()
+            val mapY = floor(rayY).toInt()
+            if (mapX < 0 || mapY < 0 || mapX > map[0].size || mapY > map.size) {
+                break
             }
             wall = map[mapY][mapX]
         }
 
-
+        collInfo.rayAngle = rayAngle
         collInfo.worldTextureOffset = (rayX + rayY)
         collInfo.hitWallNumber = wall
         val xPow = (player.x - rayX)
         val yPow = (player.y - rayY)
         var distanceToWall = sqrt(xPow * xPow + yPow * yPow)
-        // Fish eye fix
-        distanceToWall *= fishEyeFixFactor(rayAngle - player.angle)
-        return distanceToWall
-    }
 
-    inline fun fishEyeFixFactor(angle: Double): Double {
-        var normalizedAngle = angle
+        var normalizedAngle = rayAngle - player.angle
         while (normalizedAngle < -180) {
             normalizedAngle += 360
         }
         while (normalizedAngle >= 180) {
             normalizedAngle -= 360
         }
-        return cos(Math.toRadians(normalizedAngle))
+        distanceToWall *= cos(Math.toRadians(normalizedAngle))
+        return distanceToWall
+    }
+
+    fun drawFloorAndCeil(
+        screenState: ScreenState, playerState: PlayerState,
+        x1: Int, wallHeight: Double, rayAngle: Double,
+        texWidth: Int, texHeight: Int,
+        screenPixelsBuffer: IntArray, texturesData: ArrayList<IntArray>
+    ) {
+        val start = (screenState.screenHeightHalf + wallHeight - 10).toInt()
+        val directionCos = cos(Math.toRadians(rayAngle))
+        val directionSin = sin(Math.toRadians(rayAngle))
+        val playerAngle = playerState.angle
+        val darkColor = (0xFF000000).toInt()
+        val x = playerAngle - rayAngle
+        var normalizedAngle = x
+        while (normalizedAngle < -180) {
+            normalizedAngle += 360
+        }
+        while (normalizedAngle >= 180) {
+            normalizedAngle -= 360
+        }
+        val angleCos = cos(Math.toRadians(normalizedAngle))
+        for (y in start until screenState.screenHeight) {
+            var distToPixel =
+                screenState.screenHeight / (2 * y - screenState.screenHeight).toDouble()
+            distToPixel /= angleCos
+            val colorAtDistance =
+                MathUtils.clamp(distToPixel / playerState.maxViewDistance, 0.0, 1.0)
+
+            val tilex = (distToPixel * directionCos) + playerState.x
+            val tiley = (distToPixel * directionSin) + playerState.y
+
+            val texture_x = abs((Math.floor(tilex * texWidth)) % texWidth).toInt()
+            val texture_y = abs((Math.floor(tiley * texHeight)) % texHeight).toInt()
+
+            val floorColor = texturesData[0][texture_x + texture_y * texWidth]
+            val ceilColor = texturesData[1][texture_x + texture_y * texWidth]
+
+            val floorColorAtDist =
+                ColorUtils.blendARGB(floorColor, darkColor, colorAtDistance.toFloat())
+            val ceilColorAtDist =
+                ColorUtils.blendARGB(ceilColor, darkColor, colorAtDistance.toFloat())
+
+            screenPixelsBuffer[x1 + y * screenState.screenWidth] = floorColorAtDist
+            screenPixelsBuffer[x1 + (screenState.screenHeight - y - 1) * screenState.screenWidth] =
+                ceilColorAtDist
+        }
     }
 
     fun myFizzBuzzImplForFun(n: Int): MutableList<String> {

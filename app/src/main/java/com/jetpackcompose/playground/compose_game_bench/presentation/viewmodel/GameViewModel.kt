@@ -1,16 +1,17 @@
 package com.jetpackcompose.playground.compose_game_bench.presentation.viewmodel
 
 import android.graphics.PointF
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jetpackcompose.playground.compose_game_bench.data.PlayerState
 import com.jetpackcompose.playground.compose_game_bench.data.RaycastScreenColumnInfo
-import com.jetpackcompose.playground.compose_game_bench.data.ScreenState
 import com.jetpackcompose.playground.compose_game_bench.domain.RayCastUseCaseImpl
 import com.jetpackcompose.playground.compose_game_bench.presentation.data.DrawLineData
+import com.jetpackcompose.playground.compose_game_bench.presentation.data.GameData
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -21,47 +22,22 @@ import javax.inject.Inject
 class GameViewModel @Inject constructor(var rayCastInteractor: RayCastUseCaseImpl) :
     ViewModel() {
 
+    lateinit var gameData: GameData
     private var _screenColumnsOffsets = listOf<RaycastScreenColumnInfo>()
     private var _screenColumnsData = listOf<RaycastScreenColumnInfo>()
-
-    val screenInfo = mutableStateOf(ScreenState())
 
     private val _playerState = MutableStateFlow(PlayerState())
     val playerState = _playerState.asStateFlow()
 
-    var map: List<List<Int>> = listOf(
-        listOf(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-        listOf(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-        listOf(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-        listOf(1, 0, 0, 1, 0, 2, 1, 0, 0, 0, 0, 0, 0, 1),
-        listOf(1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1),
-        listOf(1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 1, 1, 0, 1),
-        listOf(1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1),
-        listOf(1, 0, 0, 2, 0, 2, 2, 0, 0, 0, 0, 0, 0, 1),
-        listOf(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-        listOf(1, 0, 0, 2, 2, 2, 0, 0, 2, 2, 2, 0, 0, 1),
-        listOf(1, 0, 0, 2, 2, 2, 0, 0, 2, 2, 2, 0, 0, 1),
-        listOf(1, 0, 0, 2, 2, 2, 0, 0, 2, 2, 2, 0, 0, 1),
-        listOf(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-        listOf(1, 0, 0, 2, 0, 2, 0, 0, 2, 0, 2, 0, 0, 1),
-        listOf(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-        listOf(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
-    )
-
     init {
-        // Calculated data
-        screenInfo.value = ScreenState(
-            screenWidth = screenInfo.value.screenWidth,
-            screenHeight = screenInfo.value.screenHeight,
-            screenWidthHalf = screenInfo.value.screenWidth / 2f,
-            screenHeightHalf = screenInfo.value.screenHeight / 2f,
-            incrementAngle = _playerState.value.fov / screenInfo.value.screenWidth.toDouble()
-        )
+        gameData = GameData()
         _playerState.update {
-            it.copy(halfFov = (it.fov / 2.0), x = 2.0, y = 2.0)
+            it.copy(x = 2.0, y = 2.0)
         }
 
-        _screenColumnsOffsets = (0..screenInfo.value.screenWidth).toList().map { RaycastScreenColumnInfo(xOffset = it) }
+        _screenColumnsOffsets =
+            (0..(gameData.screenState.screenWidth - 1)).toList()
+                .map { RaycastScreenColumnInfo(xOffset = it) }
     }
 
     fun setPlayerHealth(health: Float) {
@@ -70,21 +46,22 @@ class GameViewModel @Inject constructor(var rayCastInteractor: RayCastUseCaseImp
         }
     }
 
-    fun rayCast() {
+    fun rayCast(textureWidth: Int, textureHeight: Int) {
         viewModelScope.launch {
             _screenColumnsData = rayCastInteractor.rayCastingScreenColumnsInfo(
-                _screenColumnsOffsets, playerState.value, screenInfo.value, map
+                _screenColumnsOffsets, playerState.value, gameData, textureWidth, textureHeight
             )
         }
     }
 
-    fun drawRaycastedDataToScreen(drawColumn: (drawData: DrawLineData) -> Unit) {
+    fun drawRaycastedWallsToScreen(drawColumn: (drawData: DrawLineData) -> Unit) {
         val drawLineData = DrawLineData()
+        val screenState = gameData.screenState
+
         for (line in _screenColumnsData) {
             val wallHeight = line.wallHeight.toFloat()
             val colorIntensity = line.colorIntensity
 
-            val skyBlue = Color(0xFF000000 + colorIntensity)
             val darkToWhiteColor =
                 Color(
                     0xFF000000 +
@@ -92,55 +69,36 @@ class GameViewModel @Inject constructor(var rayCastInteractor: RayCastUseCaseImp
                                     (colorIntensity shl 8) or
                                     colorIntensity)
                 )
-
-            // draw ceiling
-//            val wallTop = (screenInfo.value.screenHeightHalf - wallHeight * line.hitWallNumber)
-            val wallTop = (screenInfo.value.screenHeightHalf - wallHeight)
-            val wallBottom = (screenInfo.value.screenHeightHalf + wallHeight)
-
-            // draw sky
+            val wallTop = (screenState.screenHeightHalf - wallHeight)
+            val wallBottom = (screenState.screenHeightHalf + wallHeight)
             drawLineData.apply {
                 lineLeft = line.xOffset.toFloat()
-                lineTop = 0f
-                lineBottom = wallTop
-                drawTextured = false
-                this.worldTextureOffset = line.worldTextureOffset
-                colorStart = Color(0xFFA0A0FF)
-                colorEnd = skyBlue
-                this.hitWall = line.hitWallNumber
-            }
-            drawColumn(drawLineData)
-
-            // draw wall
-            drawLineData.apply {
                 lineTop = wallTop
                 lineBottom = wallBottom
+                this.worldTextureOffset = line.worldTextureOffset
                 colorStart = darkToWhiteColor
                 colorEnd = darkToWhiteColor
-                drawTextured = true
+                this.hitWall = line.hitWallNumber
             }
 
-            drawColumn(drawLineData)
-
-            // draw floor
-            drawLineData.apply {
-                lineTop = wallBottom
-                lineBottom = screenInfo.value.screenHeight.toFloat()
-                colorStart = darkToWhiteColor
-                colorEnd = Color.White
-                drawTextured = false
-            }
             drawColumn(drawLineData)
         }
     }
 
     fun handlePlayerMovement(playerPointerAction: PointF, deltaTime: Float) {
-        if (playerPointerAction.x != 0.0f) {
-            playerState.value.rotatePlayer(deltaTime, playerPointerAction.x)
-        }
-
-        if (playerPointerAction.y != 0.0f) {
-            playerState.value.movePlayer(deltaTime, playerPointerAction.y, map)
-        }
+        playerState.value.handlePlayerMovement(playerPointerAction.x, playerPointerAction.y, deltaTime, gameData.gameMap)
     }
+
+    suspend fun convertImageBitmapToIntArray(image: ImageBitmap): IntArray {
+        val texArrayAsync = viewModelScope.async {
+            val textureWidth = image.width
+            val textureHeight = image.height
+
+            val textureArray = IntArray(textureWidth * textureHeight)
+            image.readPixels(textureArray, 0, 0, textureWidth, textureHeight, 0, textureWidth)
+            textureArray
+        }
+        return texArrayAsync.await()
+    }
+
 }

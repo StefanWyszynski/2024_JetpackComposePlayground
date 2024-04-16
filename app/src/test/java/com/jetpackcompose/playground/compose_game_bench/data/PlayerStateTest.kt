@@ -6,6 +6,16 @@ import org.junit.Test
 class PlayerStateTest {
 
     val deltaTime = 1f
+    val map = listOf(
+        listOf(1, 1, 1, 1, 1, 1, 1, 1),
+        listOf(1, 0, 0, 0, 0, 0, 0, 1),
+        listOf(1, 0, 0, 0, 0, 0, 0, 1),
+        listOf(1, 0, 0, 0, 0, 0, 0, 1),
+        listOf(1, 0, 0, 0, 0, 0, 0, 1),
+        listOf(1, 0, 0, 0, 0, 0, 0, 1),
+        listOf(1, 0, 0, 0, 0, 0, 0, 1),
+        listOf(1, 1, 1, 1, 1, 1, 1, 1)
+    )
 
     @Test
     fun `move player position changed`() {
@@ -18,19 +28,9 @@ class PlayerStateTest {
             moveSpeed = 1.0,
             radius = 1.0
         )
-        val map = listOf(
-            listOf(1, 1, 1, 1, 1, 1, 1, 1),
-            listOf(1, 0, 0, 0, 0, 0, 0, 1),
-            listOf(1, 0, 0, 0, 0, 0, 0, 1),
-            listOf(1, 0, 0, 0, 0, 0, 0, 1),
-            listOf(1, 0, 0, 0, 0, 0, 0, 1),
-            listOf(1, 0, 0, 0, 0, 0, 0, 1),
-            listOf(1, 0, 0, 0, 0, 0, 0, 1),
-            listOf(1, 1, 1, 1, 1, 1, 1, 1)
-        )
 
         // When
-        player.movePlayer(deltaTime, moveDirection, map)
+        player.handlePlayerMovement(0f, moveDirection, deltaTime, map)
 
         // Then
         assertEquals(5.0, player.x, 0.1)
@@ -39,7 +39,7 @@ class PlayerStateTest {
         player.angle = 180.0
 
         // When
-        player.movePlayer(deltaTime, moveDirection, map)
+        player.handlePlayerMovement(0f, moveDirection, deltaTime, map)
 
         // Then
         assertEquals(4.0, player.x, 0.1)
@@ -50,16 +50,16 @@ class PlayerStateTest {
     fun `rotate player angle changed`() {
         // Given
         val player = PlayerState(angle = 0.0, rotateSpeed = 90.0)
-        val rotateDirection = 1f
 
         // When
-        player.rotatePlayer(deltaTime, rotateDirection)
+        player.handlePlayerMovement(1f, 0f, deltaTime, map)
 
         // Then
         assertEquals(90.0, player.angle, 0.1)
 
+        // Given
         // When
-        player.rotatePlayer(deltaTime, -rotateDirection)
+        player.handlePlayerMovement(-1f, 0f, deltaTime, map)
 
         // Then
         assertEquals(0.0, player.angle, 0.1)

@@ -7,7 +7,6 @@ import com.jetpackcompose.playground.task_room.domain.data.Priority
 import com.jetpackcompose.playground.task_room.domain.data.RealmTask
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.After

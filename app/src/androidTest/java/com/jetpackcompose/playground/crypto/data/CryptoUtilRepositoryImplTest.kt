@@ -10,7 +10,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class CryptoUtilRepositoryImplTest {
 
-    lateinit var cryptoUtilRepository : CryptoUtilRepositoryImpl
+    lateinit var cryptoUtilRepository: CryptoUtilRepositoryImpl
 
     @Before
     fun setUp() {

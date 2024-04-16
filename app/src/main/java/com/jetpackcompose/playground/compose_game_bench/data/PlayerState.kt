@@ -1,12 +1,11 @@
 package com.jetpackcompose.playground.compose_game_bench.data
 
+import android.graphics.PointF
 import kotlin.math.cos
 import kotlin.math.floor
 import kotlin.math.sin
 
 data class PlayerState(
-    var fov: Double = 60.0,
-    var halfFov: Double = 30.0,
     var x: Double = 0.0,
     var y: Double = 0.0,
     var angle: Double = 0.0,
@@ -17,7 +16,7 @@ data class PlayerState(
     val maxViewDistance: Double = 8.0
 ) {
 
-    fun movePlayer(deltatime: Float, moveDirection: Float, map: List<List<Int>>) {
+    private fun movePlayer(deltatime: Float, moveDirection: Float, map: List<List<Int>>) {
         val playerCos = cos(Math.toRadians(angle)) * moveSpeed * deltatime
         val playerSin = sin(Math.toRadians(angle)) * moveSpeed * deltatime
         val newX = x + playerCos * moveDirection
@@ -41,7 +40,17 @@ data class PlayerState(
         }
     }
 
-    fun rotatePlayer(deltatime: Float, rotateDirection: Float) {
+    private fun rotatePlayer(deltatime: Float, rotateDirection: Float) {
         angle = (angle + (rotateSpeed * rotateDirection * deltatime)) % 360
+    }
+
+    fun handlePlayerMovement(x: Float, y: Float, deltaTime: Float, map: List<List<Int>>) {
+        if (x != 0.0f) {
+            rotatePlayer(deltaTime, x)
+        }
+
+        if (y != 0.0f) {
+            movePlayer(deltaTime, y, map)
+        }
     }
 }

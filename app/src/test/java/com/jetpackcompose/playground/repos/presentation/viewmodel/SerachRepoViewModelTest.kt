@@ -4,6 +4,7 @@ import com.jetpackcompose.playground.repos.domain.model.GithubRepo
 import com.jetpackcompose.playground.repos.domain.use_case.GithubSearchRepoUseCase
 import com.jetpackcompose.playground.utils.NetworkOperation
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -16,6 +17,7 @@ import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnitRunner
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
 class SerachRepoViewModelTest {
 
@@ -25,6 +27,7 @@ class SerachRepoViewModelTest {
 
     private lateinit var githubSearchViewModel: SerachRepoViewModel
     val testDispatcher = UnconfinedTestDispatcher()
+
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
