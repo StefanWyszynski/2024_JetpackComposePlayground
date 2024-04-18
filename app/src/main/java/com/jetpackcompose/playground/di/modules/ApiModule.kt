@@ -1,23 +1,15 @@
 package com.jetpackcompose.playground.di.modules
 
-import android.content.Context
 import android.util.Log
-import androidx.room.Room
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import com.google.gson.JsonSyntaxException
 import com.jetpackcompose.playground.common.data.api.GitHubApiService
-import com.jetpackcompose.playground.common.data.database.AppDatabase
-import com.jetpackcompose.playground.task_room.data.TaskDao
-import com.jetpackcompose.playground.task_room.domain.data.RealmTask
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import io.realm.kotlin.Realm
-import io.realm.kotlin.RealmConfiguration
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -26,9 +18,9 @@ import javax.inject.Singleton
 
 
 /*
- * Copyright 2023
+ * Copyright 2024
  *
- * @author Stefan Wyszynski
+ * @author Stefan Wyszyński
  */
 @Module
 @InstallIn(SingletonComponent::class)
@@ -87,29 +79,6 @@ class ApiModule {
     @Singleton
     fun provideGitHubApiService(retrofit: Retrofit): GitHubApiService {
         return retrofit.create(GitHubApiService::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun provideAppDatabase(@ApplicationContext appContext: Context): AppDatabase {
-        return Room.databaseBuilder(
-            appContext,
-            AppDatabase::class.java,
-            "room_database"
-        ).build()
-    }
-
-    @Provides
-    @Singleton
-    fun provideDao(appDatabase: AppDatabase): TaskDao {
-        return appDatabase.taskDao()
-    }
-
-    @Provides
-    @Singleton
-    fun provideRealmDatabase(): Realm {
-        val config = RealmConfiguration.create(schema = setOf(RealmTask::class))
-        return Realm.open(config)
     }
 
     companion object {

@@ -4,9 +4,9 @@ import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
 
 /*
- * Copyright 2023
+ * Copyright 2024
  *
- * @author Stefan Wyszynski
+ * @author Stefan Wyszyński
  */
 @HiltAndroidApp
 class ComposeApplication : Application() {

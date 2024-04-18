@@ -29,9 +29,9 @@ import com.jetpackcompose.playground.repos.presentation.viewmodel.SerachRepoView
 import com.jetpackcompose.playground.utils.NetworkOperation
 
 /*
- * Copyright 2023
+ * Copyright 2024
  *
- * @author Stefan Wyszynski
+ * @author Stefan Wyszyński
  */
 @Composable
 fun SearchRepoScreen(

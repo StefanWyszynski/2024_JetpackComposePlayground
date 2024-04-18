@@ -30,9 +30,9 @@ import com.jetpackcompose.playground.users.presentation.redux.GithubUserState
 import com.jetpackcompose.playground.users.presentation.viewmodel.SerachUserViewModel
 
 /*
- * Copyright 2023
+ * Copyright 2024
  *
- * @author Stefan Wyszynski
+ * @author Stefan Wyszyński
  */
 @Composable
 fun SearchUserScreen(

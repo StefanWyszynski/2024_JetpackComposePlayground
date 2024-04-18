@@ -4,9 +4,9 @@ import com.google.gson.annotations.SerializedName
 import com.jetpackcompose.playground.repos.domain.model.GithubRepo
 
 /*
- * Copyright 2023
+ * Copyright 2024
  *
- * @author Stefan Wyszynski
+ * @author Stefan Wyszyński
  */
 data class GithubReposSearchDto(
     @SerializedName("total_count")

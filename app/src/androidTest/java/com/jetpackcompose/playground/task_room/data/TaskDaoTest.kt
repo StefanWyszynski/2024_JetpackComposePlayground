@@ -1,34 +1,41 @@
 package com.jetpackcompose.playground.task_room.data
 
-import androidx.room.Room
-import androidx.test.core.app.ApplicationProvider
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import com.google.common.truth.Truth
 import com.jetpackcompose.playground.common.data.database.AppDatabase
+import com.jetpackcompose.playground.di.modules.DatabaseModule
 import com.jetpackcompose.playground.task_room.domain.data.Priority
 import com.jetpackcompose.playground.task_room.domain.data.Task
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 import java.util.Date
+import javax.inject.Inject
 
-@RunWith(AndroidJUnit4::class)
+
+@HiltAndroidTest
+@UninstallModules(DatabaseModule::class)
 @SmallTest
 class TaskDaoTest {
 
-    private lateinit var appDatabase: AppDatabase
+
+    @get:Rule
+    var hiltRule = HiltAndroidRule(this)
+
+    @Inject
+    lateinit var appDatabase: AppDatabase
+
     private lateinit var taskDao: TaskDao
 
     @Before
     fun setUp() {
-        appDatabase = Room.inMemoryDatabaseBuilder(
-            ApplicationProvider.getApplicationContext(),
-            AppDatabase::class.java
-        ).allowMainThreadQueries().build()
+        hiltRule.inject()
         taskDao = appDatabase.taskDao()
     }
 

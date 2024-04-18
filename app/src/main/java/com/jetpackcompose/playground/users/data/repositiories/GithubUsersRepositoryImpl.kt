@@ -9,9 +9,9 @@ import com.jetpackcompose.playground.utils.safeApiCallRunner
 import javax.inject.Inject
 
 /*
- * Copyright 2023
+ * Copyright 2024
  *
- * @author Stefan Wyszynski
+ * @author Stefan Wyszyński
  */
 class GithubUsersRepositoryImpl @Inject constructor(private var gitHubApiService: GitHubApiService) :
     GithubUsersRepository {

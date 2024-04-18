@@ -6,9 +6,9 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 
 /*
- * Copyright 2023
+ * Copyright 2024
  *
- * @author Stefan Wyszynski
+ * @author Stefan Wyszyński
  */
 sealed class ScreenRoute(val route: String) {
     object GameScreen : ScreenRoute("GameScreen")

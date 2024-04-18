@@ -6,9 +6,9 @@ import com.jetpackcompose.playground.utils.NetworkOperation
 import javax.inject.Inject
 
 /*
- * Copyright 2023
+ * Copyright 2024
  *
- * @author Stefan Wyszynski
+ * @author Stefan Wyszyński
  */
 class GithubSearchRepoUseCase @Inject constructor(private val githubRepository: GithubReposRepository) {
     suspend operator fun invoke(repoName: String): NetworkOperation<List<GithubRepo>> {

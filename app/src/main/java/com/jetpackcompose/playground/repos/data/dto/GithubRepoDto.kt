@@ -4,9 +4,9 @@ import com.google.gson.annotations.SerializedName
 import com.jetpackcompose.playground.users.data.dto.GithubUserDto
 
 /*
- * Copyright 2023
+ * Copyright 2024
  *
- * @author Stefan Wyszynski
+ * @author Stefan Wyszyński
  */
 data class GithubRepoDto(
     @SerializedName("id")

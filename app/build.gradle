@@ -19,7 +19,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.jetpackcompose.playground.HiltTestRunner"
         vectorDrawables {
             useSupportLibrary true
         }
@@ -114,7 +114,6 @@ dependencies {
 
 
     kapt libs.hilt.compiler
-//    kapt "com.google.dagger:hilt-android-compiler:2.50"
 
     // retrofit 2
     implementation libs.retrofit2.retrofit
@@ -179,4 +178,21 @@ dependencies {
     // jetpack compose test
     androidTestImplementation platform('androidx.compose:compose-bom:2024.02.02')
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
+
+
+
+    // For Robolectric tests.
+//    testImplementation 'com.google.dagger:hilt-android-testing:2.44'
+//    // ...with Kotlin.
+//    kaptTest 'com.google.dagger:hilt-android-compiler:2.44'
+//    // ...with Java.
+//    testAnnotationProcessor 'com.google.dagger:hilt-android-compiler:2.44'
+
+
+    // For instrumented tests.
+    androidTestImplementation libs.test.hilt.android.testing
+    // ...with Kotlin.
+    kaptAndroidTest 'com.google.dagger:hilt-android-compiler:2.50'
+    // ...with Java.
+    androidTestAnnotationProcessor 'com.google.dagger:hilt-android-compiler:2.50'
 }

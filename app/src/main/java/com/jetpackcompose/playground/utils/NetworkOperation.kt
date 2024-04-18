@@ -3,9 +3,9 @@ package com.jetpackcompose.playground.utils
 import androidx.compose.runtime.Composable
 
 /*
- * Copyright 2023
+ * Copyright 2024
  *
- * @author Stefan Wyszynski
+ * @author Stefan Wyszyński
  */
 sealed interface NetworkOperation<T> {
 

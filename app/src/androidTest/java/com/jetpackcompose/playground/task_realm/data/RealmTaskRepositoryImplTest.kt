@@ -1,34 +1,39 @@
 package com.jetpackcompose.playground.task_realm.data
 
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import com.google.common.truth.Truth
+import com.jetpackcompose.playground.di.modules.DatabaseModule
 import com.jetpackcompose.playground.task_room.domain.data.Priority
 import com.jetpackcompose.playground.task_room.domain.data.RealmTask
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
 import io.realm.kotlin.Realm
-import io.realm.kotlin.RealmConfiguration
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 import java.util.Date
+import javax.inject.Inject
 
-@RunWith(AndroidJUnit4::class)
+@HiltAndroidTest
+@UninstallModules(DatabaseModule::class)
 @SmallTest
 class RealmTaskRepositoryImplTest {
 
-    private lateinit var realm: Realm
+    @get:Rule
+    var hiltRule = HiltAndroidRule(this)
+
+    @Inject
+    lateinit var realm: Realm
+
     private lateinit var repository: RealmTaskRepositoryImpl
 
     @Before
     fun setUp() {
-        val config = RealmConfiguration.Builder(schema = setOf(RealmTask::class))
-            .inMemory()
-            .name("test-realm")
-            .build()
-        realm = Realm.open(config)
+        hiltRule.inject()
         repository = RealmTaskRepositoryImpl(realm)
     }
 

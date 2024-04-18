@@ -3,9 +3,9 @@ package com.jetpackcompose.playground.users.data.dto
 import com.google.gson.annotations.SerializedName
 
 /*
- * Copyright 2023
+ * Copyright 2024
  *
- * @author Stefan Wyszynski
+ * @author Stefan Wyszyński
  */
 data class GithubUserDto(
 

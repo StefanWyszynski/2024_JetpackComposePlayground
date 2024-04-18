@@ -6,9 +6,9 @@ import kotlinx.coroutines.withContext
 import retrofit2.Response
 
 /*
- * Copyright 2023
+ * Copyright 2024
  *
- * @author Stefan Wyszynski
+ * @author Stefan Wyszyński
  */
 @Suppress("UNCHECKED_CAST")
 suspend fun <T, R> safeApiCallRunner(

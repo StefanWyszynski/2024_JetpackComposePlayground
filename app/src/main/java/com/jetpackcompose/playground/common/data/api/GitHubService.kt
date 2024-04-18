@@ -10,9 +10,9 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 /*
- * Copyright 2023
+ * Copyright 2024
  *
- * @author Stefan Wyszynski
+ * @author Stefan Wyszyński
  */
 interface GitHubApiService {
     @Headers("Accept: application/vnd.github.mercy-preview+json")

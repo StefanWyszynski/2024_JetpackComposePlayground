@@ -6,9 +6,9 @@ import com.jetpackcompose.playground.utils.NetworkOperation
 import javax.inject.Inject
 
 /*
- * Copyright 2023
+ * Copyright 2024
  *
- * @author Stefan Wyszynski
+ * @author Stefan Wyszyński
  */
 class GithubSearchUserUseCase @Inject constructor(private val githubRepository: GithubUsersRepository) {
 
