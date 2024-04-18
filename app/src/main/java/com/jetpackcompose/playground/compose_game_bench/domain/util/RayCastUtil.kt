@@ -2,7 +2,7 @@ package com.jetpackcompose.playground.compose_game_bench.domain.util
 
 import androidx.core.graphics.ColorUtils
 import androidx.core.math.MathUtils
-import com.jetpackcompose.playground.compose_game_bench.data.PlayerState
+import com.jetpackcompose.playground.compose_game_bench.data.Player
 import com.jetpackcompose.playground.compose_game_bench.data.RaycastScreenColumnInfo
 import com.jetpackcompose.playground.compose_game_bench.data.ScreenState
 import com.jetpackcompose.playground.compose_game_bench.presentation.data.GameData
@@ -25,13 +25,13 @@ class RayCastUtil @Inject constructor() {
 
     fun rayCastingScreenColumnsInfo(
         screenColumns: List<RaycastScreenColumnInfo>,
-        playerState: PlayerState,
+        player: Player,
         gameData: GameData,
         textureWidth: Int,
         textureHeight: Int
     ) = runBlocking {
         rayTraceColumnsAsync(
-            screenColumns, playerState,
+            screenColumns, player,
             gameData,
             textureWidth,
             textureHeight
@@ -40,7 +40,7 @@ class RayCastUtil @Inject constructor() {
 
     fun CoroutineScope.rayTraceColumnsAsync(
         screenColumns: List<RaycastScreenColumnInfo>,
-        player: PlayerState,
+        player: Player,
         gameData: GameData,
         textureWidth: Int,
         textureHeight: Int
@@ -102,7 +102,7 @@ class RayCastUtil @Inject constructor() {
     }
 
     inline fun castRayInMapToFindWalls(
-        player: PlayerState, rayAngle: Double, screenInfo: ScreenState, map: List<List<Int>>,
+        player: Player, rayAngle: Double, screenInfo: ScreenState, map: List<List<Int>>,
         collInfo: RaycastScreenColumnInfo
     ): Double {
         var rayX = player.x
@@ -145,7 +145,7 @@ class RayCastUtil @Inject constructor() {
     }
 
     fun drawFloorAndCeil(
-        screenState: ScreenState, playerState: PlayerState,
+        screenState: ScreenState, player: Player,
         x1: Int, wallHeight: Double, rayAngle: Double,
         texWidth: Int, texHeight: Int,
         screenPixelsBuffer: IntArray, texturesData: ArrayList<IntArray>
@@ -153,7 +153,7 @@ class RayCastUtil @Inject constructor() {
         val start = (screenState.screenHeightHalf + wallHeight - 10).toInt()
         val directionCos = cos(Math.toRadians(rayAngle))
         val directionSin = sin(Math.toRadians(rayAngle))
-        val playerAngle = playerState.angle
+        val playerAngle = player.angle
         val darkColor = (0xFF000000).toInt()
         val x = playerAngle - rayAngle
         var normalizedAngle = x
@@ -169,10 +169,10 @@ class RayCastUtil @Inject constructor() {
                 screenState.screenHeight / (2 * y - screenState.screenHeight).toDouble()
             distToPixel /= angleCos
             val colorAtDistance =
-                MathUtils.clamp(distToPixel / playerState.maxViewDistance, 0.0, 1.0)
+                MathUtils.clamp(distToPixel / player.maxViewDistance, 0.0, 1.0)
 
-            val tilex = (distToPixel * directionCos) + playerState.x
-            val tiley = (distToPixel * directionSin) + playerState.y
+            val tilex = (distToPixel * directionCos) + player.x
+            val tiley = (distToPixel * directionSin) + player.y
 
             val texture_x = abs((Math.floor(tilex * texWidth)) % texWidth).toInt()
             val texture_y = abs((Math.floor(tiley * texHeight)) % texHeight).toInt()

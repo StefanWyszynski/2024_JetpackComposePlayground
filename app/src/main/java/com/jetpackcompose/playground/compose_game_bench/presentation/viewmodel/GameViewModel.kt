@@ -5,7 +5,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jetpackcompose.playground.compose_game_bench.data.PlayerState
+import com.jetpackcompose.playground.compose_game_bench.data.Player
 import com.jetpackcompose.playground.compose_game_bench.data.RaycastScreenColumnInfo
 import com.jetpackcompose.playground.compose_game_bench.domain.RayCastUseCaseImpl
 import com.jetpackcompose.playground.compose_game_bench.presentation.data.DrawLineData
@@ -26,12 +26,12 @@ class GameViewModel @Inject constructor(var rayCastInteractor: RayCastUseCaseImp
     private var _screenColumnsOffsets = listOf<RaycastScreenColumnInfo>()
     private var _screenColumnsData = listOf<RaycastScreenColumnInfo>()
 
-    private val _playerState = MutableStateFlow(PlayerState())
-    val playerState = _playerState.asStateFlow()
+    private val _player = MutableStateFlow(Player())
+    val playerState = _player.asStateFlow()
 
     init {
         gameData = GameData()
-        _playerState.update {
+        _player.update {
             it.copy(x = 2.0, y = 2.0)
         }
 
@@ -41,7 +41,7 @@ class GameViewModel @Inject constructor(var rayCastInteractor: RayCastUseCaseImp
     }
 
     fun setPlayerHealth(health: Float) {
-        _playerState.update {
+        _player.update {
             it.copy(health = health)
         }
     }

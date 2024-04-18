@@ -1,7 +1,7 @@
 package com.jetpackcompose.playground.compose_game_bench.domain.util
 
 import com.google.common.truth.Truth.assertThat
-import com.jetpackcompose.playground.compose_game_bench.data.PlayerState
+import com.jetpackcompose.playground.compose_game_bench.data.Player
 import com.jetpackcompose.playground.compose_game_bench.data.RaycastScreenColumnInfo
 import com.jetpackcompose.playground.compose_game_bench.data.ScreenState
 //import org.junit.Assert.assertEquals
@@ -20,12 +20,12 @@ class RayCastUtilTest {
         listOf(1, 0, 0, 1),
         listOf(1, 1, 1, 1)
     )
-    var player = PlayerState(x = 2.0, y = 2.0)
+    var player = Player(x = 2.0, y = 2.0)
     var collInfo = RaycastScreenColumnInfo()
 
     @Before
     fun start() {
-        player = PlayerState(x = 2.0, y = 2.0)
+        player = Player(x = 2.0, y = 2.0)
         collInfo = RaycastScreenColumnInfo()
     }
 
@@ -60,7 +60,7 @@ class RayCastUtilTest {
 
     @Test
     fun `castRayInMap should cast exception when player outside map`() {
-        player = PlayerState(x = -200.0, y = -200.0)
+        player = Player(x = -200.0, y = -200.0)
 
         assertThrows(ArrayIndexOutOfBoundsException::class.java) {
             RayCastUtil().castRayInMapToFindWalls(player, rayAngle, screenState, map1, collInfo)
