@@ -39,6 +39,11 @@ class TaskDaoTest {
         taskDao = appDatabase.taskDao()
     }
 
+    @After
+    fun tearDown() {
+        appDatabase.close()
+    }
+
     @Test
     fun insertTaskTest() = runTest {
 
@@ -57,7 +62,7 @@ class TaskDaoTest {
         )
         taskDao.insertTask(task2)
         // Observe the tasks
-        val tasks = taskDao.getAllTask().first()
+        val tasks = taskDao.getAllTasks().first()
 
         // Check if data is correct
         Truth.assertThat(tasks).contains(task1)
@@ -77,13 +82,8 @@ class TaskDaoTest {
         taskDao.deleteTask(task)
 
         // Observe the tasks
-        val tasks = taskDao.getAllTask().first()
+        val tasks = taskDao.getAllTasks().first()
         // Check if data is correct
         Truth.assertThat(tasks).isEmpty()
-    }
-
-    @After
-    fun tearDown() {
-        appDatabase.close()
     }
 }

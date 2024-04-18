@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class TaskRepositoryImpl @Inject constructor(private val taskDao: TaskDao) : TaskRepository {
     override suspend fun getAllTasks(): Flow<List<Task>> {
-        return taskDao.getAllTask()
+        return taskDao.getAllTasks()
     }
 
     override suspend fun insertTask(task: Task) {

@@ -41,7 +41,7 @@ import com.jetpackcompose.playground.R
 import com.jetpackcompose.playground.camerax.presentation.cameraxtest.CameraXScreenContainer
 import com.jetpackcompose.playground.common.presentation.data.CustomTopAppBarData
 import com.jetpackcompose.playground.common.presentation.data.ScreenRoute
-import com.jetpackcompose.playground.common.presentation.theme.LearningAppTheme
+import com.jetpackcompose.playground.common.presentation.theme.JetpackComposePlaygroundAppTheme
 import com.jetpackcompose.playground.common.presentation.utils.topAppBarToogleVisibility
 import com.jetpackcompose.playground.compose_game_bench.presentation.GameScreen
 import com.jetpackcompose.playground.compose_game_bench.presentation.viewmodel.GameViewModel
@@ -71,7 +71,7 @@ class MainActivityCompose : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            LearningAppTheme {
+            JetpackComposePlaygroundAppTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
@@ -290,7 +290,7 @@ private fun GotoCryptoUtilTest(navController: NavController, nav: NavOptions) {
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    LearningAppTheme {
+    JetpackComposePlaygroundAppTheme {
         val navController = rememberNavController()
         SetNavAppHost(navController)
     }

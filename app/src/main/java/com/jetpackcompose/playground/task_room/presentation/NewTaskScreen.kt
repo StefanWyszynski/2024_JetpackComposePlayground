@@ -37,6 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -47,6 +48,7 @@ import androidx.navigation.NavHostController
 import com.jetpackcompose.playground.R
 import com.jetpackcompose.playground.common.presentation.components.CustomTopAppBar
 import com.jetpackcompose.playground.common.presentation.data.CustomTopAppBarData
+import com.jetpackcompose.playground.common.presentation.utils.TestConstants
 import com.jetpackcompose.playground.task_room.domain.data.Priority
 import com.jetpackcompose.playground.task_room.domain.data.Task
 import com.jetpackcompose.playground.task_room.presentation.viewmodel.TaskViewModel
@@ -82,8 +84,8 @@ fun NewTaskScreen(
                         datePickerState.selectedDateMillis?.let { convertMillisToDate(it) }
                             .toString()
                 }) {
-                    Text(stringResource(R.string.confirm))
-                }
+                Text(stringResource(R.string.confirm))
+            }
             },
             content = { DatePicker(state = datePickerState) },
             onDismissRequest = { isDatePickerDialogVisible.value = false })
@@ -136,7 +138,8 @@ private fun AddTaskContent(
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Button(
-                        modifier = Modifier.wrapContentWidth(),
+                        modifier = Modifier.wrapContentWidth()
+                            .testTag(TestConstants.ROOM_ADD_TASK_ADD_BUTTON),
                         onClick = {
                             val task =
                                 Task(
@@ -151,7 +154,8 @@ private fun AddTaskContent(
                         Text(text = stringResource(R.string.add_task))
                     }
                     Button(
-                        modifier = Modifier.wrapContentWidth(),
+                        modifier = Modifier.wrapContentWidth()
+                            .testTag(TestConstants.ROOM_ADD_TASK_CANCEL_BUTTON),
                         onClick = { navController.popBackStack() }) {
                         Text(text = stringResource(R.string.cancel))
                     }
@@ -233,6 +237,7 @@ private fun TaskNameSection(taskTitle: MutableState<String>) {
         modifier = Modifier
             .widthIn(1.dp, Dp.Infinity)
             .fillMaxWidth()
+            .testTag(TestConstants.ROOM_ADD_TASK_TITLE)
     )
 }
 

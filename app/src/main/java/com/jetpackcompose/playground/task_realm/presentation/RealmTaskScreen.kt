@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
@@ -33,6 +34,7 @@ import androidx.navigation.NavOptions
 import com.jetpackcompose.playground.common.presentation.components.CustomTopAppBar
 import com.jetpackcompose.playground.common.presentation.data.CustomTopAppBarData
 import com.jetpackcompose.playground.common.presentation.data.ScreenRoute
+import com.jetpackcompose.playground.common.presentation.utils.TestConstants
 import com.jetpackcompose.playground.task_realm.presentation.viewmodel.RealmTaskViewModel
 import com.jetpackcompose.playground.task_room.domain.data.RealmTask
 import com.jetpackcompose.playground.task_room.presentation.components.RealmTaskListItem
@@ -51,11 +53,12 @@ fun RealmTaskScreen(
             ExtendedFloatingActionButton(onClick = {
                 val nav = NavOptions.Builder().build()
                 ScreenRoute.RealmTask.NewTask.navigate(navController, nav)
-            }) {
+            }, modifier = Modifier.testTag(TestConstants.REALM_TASK_LIST_ADD_NEW_TASK_BUTTON)) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add task")
                 Text(text = "Add task")
             }
-        }) { scaffoldPading ->
+        }
+    ) { scaffoldPading ->
         Surface(
             modifier = Modifier
                 .fillMaxSize()
@@ -105,7 +108,9 @@ private fun Tasks(tasks: List<RealmTask>, onDelete: (RealmTask) -> Unit) {
             item {
                 Text(
                     text = "No tasks found", textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag(TestConstants.REALM_TASK_LIST_NO_TASK_FOUND_TEXT )
                 )
             }
         }

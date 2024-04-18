@@ -36,6 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -46,6 +47,7 @@ import androidx.navigation.NavHostController
 import com.jetpackcompose.playground.R
 import com.jetpackcompose.playground.common.presentation.components.CustomTopAppBar
 import com.jetpackcompose.playground.common.presentation.data.CustomTopAppBarData
+import com.jetpackcompose.playground.common.presentation.utils.TestConstants
 import com.jetpackcompose.playground.task_realm.presentation.viewmodel.RealmTaskViewModel
 import com.jetpackcompose.playground.task_room.domain.data.Priority
 import com.jetpackcompose.playground.task_room.domain.data.RealmTask
@@ -132,7 +134,9 @@ private fun AddRealmTaskContent(
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Button(
-                        modifier = Modifier.wrapContentWidth(),
+                        modifier = Modifier
+                            .wrapContentWidth()
+                            .testTag(TestConstants.REALM_ADD_TASK_ADD_BUTTON),
                         onClick = {
                             val task =
                                 RealmTask().apply {
@@ -146,7 +150,9 @@ private fun AddRealmTaskContent(
                         Text(text = stringResource(R.string.add_task))
                     }
                     Button(
-                        modifier = Modifier.wrapContentWidth(),
+                        modifier = Modifier
+                            .wrapContentWidth()
+                            .testTag(TestConstants.REALM_ADD_TASK_CANCEL_BUTTON),
                         onClick = { navController.popBackStack() }) {
                         Text(text = stringResource(R.string.cancel))
                     }
@@ -228,6 +234,7 @@ private fun TaskNameSection(taskTitle: MutableState<String>) {
         modifier = Modifier
             .widthIn(1.dp, Dp.Infinity)
             .fillMaxWidth()
+            .testTag(TestConstants.REALM_ADD_TASK_TITLE)
     )
 }
 
