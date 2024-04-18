@@ -84,8 +84,8 @@ fun NewTaskScreen(
                         datePickerState.selectedDateMillis?.let { convertMillisToDate(it) }
                             .toString()
                 }) {
-                Text(stringResource(R.string.confirm))
-            }
+                    Text(stringResource(R.string.confirm))
+                }
             },
             content = { DatePicker(state = datePickerState) },
             onDismissRequest = { isDatePickerDialogVisible.value = false })
@@ -138,7 +138,8 @@ private fun AddTaskContent(
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Button(
-                        modifier = Modifier.wrapContentWidth()
+                        modifier = Modifier
+                            .wrapContentWidth()
                             .testTag(TestConstants.ROOM_ADD_TASK_ADD_BUTTON),
                         onClick = {
                             val task =
@@ -154,7 +155,8 @@ private fun AddTaskContent(
                         Text(text = stringResource(R.string.add_task))
                     }
                     Button(
-                        modifier = Modifier.wrapContentWidth()
+                        modifier = Modifier
+                            .wrapContentWidth()
                             .testTag(TestConstants.ROOM_ADD_TASK_CANCEL_BUTTON),
                         onClick = { navController.popBackStack() }) {
                         Text(text = stringResource(R.string.cancel))

@@ -105,7 +105,8 @@ private fun Tasks(tasks: List<Task>, onDelete: (Task) -> Unit) {
             item {
                 Text(
                     text = "No tasks found", textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .testTag(TestConstants.ROOM_TASK_LIST_NO_TASK_FOUND_TEXT)
                 )
             }

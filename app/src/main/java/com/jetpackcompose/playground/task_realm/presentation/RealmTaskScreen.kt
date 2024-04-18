@@ -110,7 +110,7 @@ private fun Tasks(tasks: List<RealmTask>, onDelete: (RealmTask) -> Unit) {
                     text = "No tasks found", textAlign = TextAlign.Center,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .testTag(TestConstants.REALM_TASK_LIST_NO_TASK_FOUND_TEXT )
+                        .testTag(TestConstants.REALM_TASK_LIST_NO_TASK_FOUND_TEXT)
                 )
             }
         }

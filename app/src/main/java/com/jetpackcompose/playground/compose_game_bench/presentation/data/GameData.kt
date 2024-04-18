@@ -10,7 +10,7 @@ class GameData {
     /**
      * this will be a buffer for screen pixels. Here we cast floor and ceiling. Walls could be cast
      * here but for benchmarking purposes it's drawn separately using drawImage with jetpack compose
-      */
+     */
     var screenPixelsBuffer: IntArray
 
     /**

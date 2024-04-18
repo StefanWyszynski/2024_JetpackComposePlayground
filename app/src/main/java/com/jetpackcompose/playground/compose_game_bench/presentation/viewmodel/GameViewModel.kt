@@ -86,7 +86,12 @@ class GameViewModel @Inject constructor(var rayCastInteractor: RayCastUseCaseImp
     }
 
     fun handlePlayerMovement(playerPointerAction: PointF, deltaTime: Float) {
-        playerState.value.handlePlayerMovement(playerPointerAction.x, playerPointerAction.y, deltaTime, gameData.gameMap)
+        playerState.value.handlePlayerMovement(
+            playerPointerAction.x,
+            playerPointerAction.y,
+            deltaTime,
+            gameData.gameMap
+        )
     }
 
     suspend fun convertImageBitmapToIntArray(image: ImageBitmap): IntArray {
