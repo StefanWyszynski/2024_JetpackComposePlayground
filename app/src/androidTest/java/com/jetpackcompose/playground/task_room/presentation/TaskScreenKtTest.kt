@@ -121,19 +121,19 @@ class TaskScreenKtTest {
         val text = "NewTaskTitle"
         composeTestRule.apply {
             // wait until screen shows
-            composeTestRule.waitUntilAtLeastOneExists(hasTestTag(TestConstants.ROOM_TASK_LIST_ADD_NEW_TASK_BUTTON))
+            waitUntilAtLeastOneExists(hasTestTag(TestConstants.ROOM_TASK_LIST_ADD_NEW_TASK_BUTTON))
             // click
             onNodeWithTag(TestConstants.ROOM_TASK_LIST_ADD_NEW_TASK_BUTTON).performClick()
 
             // move to add task screen
-            composeTestRule.waitUntilDoesNotExist(hasTestTag(TestConstants.ROOM_TASK_LIST_NO_TASK_FOUND_TEXT))
+            waitUntilDoesNotExist(hasTestTag(TestConstants.ROOM_TASK_LIST_NO_TASK_FOUND_TEXT))
 
             onNodeWithTag(TestConstants.ROOM_ADD_TASK_TITLE).performTextInput(text)
 
             // go back
             onNodeWithTag(TestConstants.ROOM_ADD_TASK_ADD_BUTTON).performClick()
 
-            composeTestRule.waitUntilDoesNotExist(hasTestTag(TestConstants.ROOM_ADD_TASK_ADD_BUTTON))
+            waitUntilDoesNotExist(hasTestTag(TestConstants.ROOM_ADD_TASK_ADD_BUTTON))
             // check if task was added
             onNodeWithText(text).assertIsDisplayed()
 
@@ -153,17 +153,17 @@ class TaskScreenKtTest {
     fun moveToAddTaskAndCancelShouldDisplayEmptyTaskList() {
         composeTestRule.apply {
             // wait until screen shows
-            composeTestRule.waitUntilAtLeastOneExists(hasTestTag(TestConstants.ROOM_TASK_LIST_ADD_NEW_TASK_BUTTON))
+            waitUntilAtLeastOneExists(hasTestTag(TestConstants.ROOM_TASK_LIST_ADD_NEW_TASK_BUTTON))
             // click
             onNodeWithTag(TestConstants.ROOM_TASK_LIST_ADD_NEW_TASK_BUTTON).performClick()
 
             // move to add task screen
-            composeTestRule.waitUntilDoesNotExist(hasTestTag(TestConstants.ROOM_TASK_LIST_NO_TASK_FOUND_TEXT))
+            waitUntilDoesNotExist(hasTestTag(TestConstants.ROOM_TASK_LIST_NO_TASK_FOUND_TEXT))
 
             // go back
             onNodeWithTag(TestConstants.ROOM_ADD_TASK_CANCEL_BUTTON).performClick()
 
-            composeTestRule.waitUntilDoesNotExist(hasTestTag(TestConstants.ROOM_ADD_TASK_ADD_BUTTON))
+            waitUntilDoesNotExist(hasTestTag(TestConstants.ROOM_ADD_TASK_ADD_BUTTON))
 
             onNodeWithTag(TestConstants.ROOM_TASK_LIST_NO_TASK_FOUND_TEXT).assertIsDisplayed()
         }

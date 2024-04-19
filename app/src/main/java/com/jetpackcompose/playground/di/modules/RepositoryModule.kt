@@ -1,7 +1,5 @@
 package com.jetpackcompose.playground.di.modules
 
-import com.jetpackcompose.playground.crypto.data.CryptoUtilRepositoryImpl
-import com.jetpackcompose.playground.crypto.domain.repository.CryptoUtilRepository
 import com.jetpackcompose.playground.domain.repositories.GithubUsersRepository
 import com.jetpackcompose.playground.repos.data.repositiories.GithubReposRepositoryImpl
 import com.jetpackcompose.playground.repos.data.repositiories.GithubUsersRepositoryImpl
@@ -32,5 +30,5 @@ abstract class RepositoryModule {
     abstract fun bindRealmTaskRepository(realmTaskRepository: RealmTaskRepositoryImpl): RealmTaskRepository
 
     @Binds
-    abstract fun bindCryptoUtilRepository(cryptoUtilRepository: CryptoUtilRepositoryImpl): CryptoUtilRepository
+    abstract fun bindCryptoUtilRepository(cryptoUtilRepository: com.thwackstudio.crypto.data.CryptoUtilRepositoryImpl): com.thwackstudio.crypto.domain.repository.CryptoUtilRepository
 }

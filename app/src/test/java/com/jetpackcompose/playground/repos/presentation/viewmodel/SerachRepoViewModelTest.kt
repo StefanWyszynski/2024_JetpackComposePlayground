@@ -42,6 +42,9 @@ class SerachRepoViewModelTest {
         val repos = listOf(GithubRepo("ExampleRepo"))
 
         // When
+        // mockk
+//        coEvery { githubSearchRepoUseCase(repoName) } returns NetworkOperation.Success(repos)
+        // testing mockito
         `when`(githubSearchRepoUseCase(repoName)).thenReturn(NetworkOperation.Success(repos))
         githubSearchViewModel.searchRepos(repoName, testDispatcher)
 

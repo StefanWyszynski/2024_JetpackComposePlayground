@@ -13,20 +13,22 @@ class RayCastUtilTest {
 
     // Given
     val rayAngle = 0.0
-    val screenState = ScreenState()
-    val map1 = listOf(
-        listOf(1, 1, 1, 1),
-        listOf(1, 0, 0, 1),
-        listOf(1, 0, 0, 1),
-        listOf(1, 1, 1, 1)
-    )
-    var player = Player(x = 2.0, y = 2.0)
-    var collInfo = RaycastScreenColumnInfo()
+    lateinit var screenState: ScreenState
+    lateinit var map1: List<List<Int>>
+    lateinit var player: Player
+    lateinit var collInfo: RaycastScreenColumnInfo
 
     @Before
     fun start() {
+        screenState = ScreenState()
         player = Player(x = 2.0, y = 2.0)
         collInfo = RaycastScreenColumnInfo()
+        map1 = listOf(
+            listOf(1, 1, 1, 1),
+            listOf(1, 0, 0, 1),
+            listOf(1, 0, 0, 1),
+            listOf(1, 1, 1, 1)
+        )
     }
 
     @Test

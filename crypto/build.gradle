@@ -1,56 +1,35 @@
 plugins {
-    id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
-
+    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.jetbrainsKotlinAndroid)
     id 'kotlin-kapt'
-    id 'com.google.dagger.hilt.android'
+//    id 'com.google.dagger.hilt.android'
     id 'kotlin-parcelize'
-    id 'io.realm.kotlin'
 }
 
 android {
-    namespace 'com.jetpackcompose.playground'
+    namespace 'com.thwackstudio.crypto'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.jetpackcompose.playground"
         minSdk 24
-        targetSdk 34
-        versionCode 1
-        versionName "1.0"
 
-        testInstrumentationRunner "com.jetpackcompose.playground.HiltTestRunner"
-        vectorDrawables {
-            useSupportLibrary true
-        }
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     // Allow references to generated code
     kapt {
         correctErrorTypes true
     }
-
-    hilt {
-        enableAggregatingTask = true
-    }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-        debug {
-            minifyEnabled false
-        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
-    }
-    testOptions {
-        unitTests.returnDefaultValues = false
-    }
-    kotlinOptions {
-        jvmTarget = '1.8'
     }
     buildFeatures {
         compose true
@@ -58,24 +37,23 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion '1.5.1'
     }
-    packaging {
-        resources {
-            excludes += '/META-INF/{AL2.0,LGPL2.1}'
-        }
+    kotlinOptions {
+        jvmTarget = '1.8'
     }
 }
 
 dependencies {
 
-    implementation(project(":crypto"))
-    implementation(project(":permissions-util"))
-
-    // core
     implementation libs.core.ktx
     implementation libs.appcompat
     implementation libs.material
-    implementation libs.constraintlayout
-    implementation libs.lifecycle.runtime.ktx
+
+    // hilt
+    implementation libs.hilt.android
+    // hiltViewModel() in composable
+    implementation libs.androidx.hilt.navigation.compose
+    kapt libs.hilt.compiler
+
     // compose
     implementation libs.lifecycle.viewmodel.compose
     implementation libs.constraintlayout.compose
@@ -99,45 +77,6 @@ dependencies {
 //    implementation "androidx.navigation:navigation-common-ktx:$nav_version"
 //    implementation "androidx.navigation:navigation-common:$nav_version"
     implementation libs.androidx.navigation.compose
-
-    // camera x
-    implementation libs.androidx.camera.core
-    implementation libs.androidx.camera.camera2
-    implementation libs.androidx.camera.lifecycle
-    implementation libs.androidx.camera.video
-    implementation libs.androidx.camera.view
-    implementation libs.androidx.camera.extensions
-
-    // hilt
-    implementation libs.hilt.android
-    // hiltViewModel() in composable
-    implementation libs.androidx.hilt.navigation.compose
-    kapt libs.hilt.compiler
-
-    // retrofit 2
-    implementation libs.retrofit2.retrofit
-    implementation libs.logging.interceptor
-    // JSON Converter
-    implementation libs.converter.gson
-    /* Gson */
-    implementation libs.gson
-    // coil
-    implementation libs.coil.compose
-    // flowredux
-    implementation libs.flowredux.jvm
-    implementation libs.flowredux.compose
-
-    // google maps
-    implementation libs.maps.compose
-
-    // room db
-    implementation libs.androidx.room.common
-    implementation libs.androidx.room.ktx
-    kapt libs.androidx.room.compiler
-
-    // realm db
-    implementation libs.realm.base
-    implementation libs.kotlin.coroutines
 
     // TEST ========================================================================================
     // Required -- JUnit 4 framework

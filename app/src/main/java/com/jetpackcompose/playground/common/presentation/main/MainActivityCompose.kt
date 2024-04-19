@@ -45,8 +45,6 @@ import com.jetpackcompose.playground.common.presentation.theme.JetpackComposePla
 import com.jetpackcompose.playground.common.presentation.utils.topAppBarToogleVisibility
 import com.jetpackcompose.playground.compose_game_bench.presentation.GameScreen
 import com.jetpackcompose.playground.compose_game_bench.presentation.viewmodel.GameViewModel
-import com.jetpackcompose.playground.crypto.presentation.CryptoUtilTestScreen
-import com.jetpackcompose.playground.crypto.presentation.viewmodel.CryptoUtilTestViewModel
 import com.jetpackcompose.playground.maps.presentation.GoogleMapScreen
 import com.jetpackcompose.playground.repos.presentation.SearchRepoScreen
 import com.jetpackcompose.playground.repos.presentation.viewmodel.SerachRepoViewModel
@@ -58,6 +56,8 @@ import com.jetpackcompose.playground.task_room.presentation.TaskScreen
 import com.jetpackcompose.playground.task_room.presentation.viewmodel.TaskViewModel
 import com.jetpackcompose.playground.users.presentation.SearchUserScreen
 import com.jetpackcompose.playground.users.presentation.viewmodel.SerachUserViewModel
+import com.thwackstudio.crypto.presentation.CryptoUtilTestScreen
+import com.thwackstudio.crypto.presentation.viewmodel.CryptoUtilTestViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

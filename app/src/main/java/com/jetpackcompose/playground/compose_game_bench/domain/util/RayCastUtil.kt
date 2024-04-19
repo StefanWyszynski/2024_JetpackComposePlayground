@@ -120,8 +120,8 @@ class RayCastUtil @Inject constructor() {
 
             val mapX = floor(rayX).toInt()
             val mapY = floor(rayY).toInt()
-            if (mapX < 0 || mapY < 0 || mapX > map[0].size || mapY > map.size) {
-                break
+            if (mapX < 0 || mapY < 0 || mapX >= map[0].size || mapY >= map.size) {
+                throw ArrayIndexOutOfBoundsException()
             }
             wall = map[mapY][mapX]
         }
