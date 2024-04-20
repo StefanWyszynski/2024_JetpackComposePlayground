@@ -5,10 +5,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -20,13 +24,15 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -51,8 +57,8 @@ import com.jetpackcompose.playground.repos.presentation.SearchRepoScreen
 import com.jetpackcompose.playground.repos.presentation.viewmodel.SerachRepoViewModel
 import com.jetpackcompose.playground.task_realm.presentation.viewmodel.RealmTaskViewModel
 import com.jetpackcompose.playground.task_room.presentation.RealmNewTaskScreen
-import com.jetpackcompose.playground.task_room.presentation.RoomNewTaskScreen
 import com.jetpackcompose.playground.task_room.presentation.RealmTaskScreen
+import com.jetpackcompose.playground.task_room.presentation.RoomNewTaskScreen
 import com.jetpackcompose.playground.task_room.presentation.RoomTaskScreen
 import com.jetpackcompose.playground.task_room.presentation.viewmodel.TaskViewModel
 import com.jetpackcompose.playground.users.presentation.SearchUserScreen
@@ -88,10 +94,7 @@ class MainActivityCompose : ComponentActivity() {
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun SetNavAppHost(
-    navController: NavHostController
-) {
-
+fun SetNavAppHost(navController: NavHostController) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val toppAppBarToogleCallback = remember { topAppBarToogleVisibility(scope, drawerState) }
@@ -99,7 +102,15 @@ fun SetNavAppHost(
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            ModalDrawerSheet {
+            ModalDrawerSheet(
+                modifier = Modifier
+                    .fillMaxWidth(0.7f)
+                    .background(
+                        color = Color(0xFF000077),
+                        shape = RoundedCornerShape(corner = CornerSize(0.dp))
+                    ),
+                drawerShape = RectangleShape
+            ) {
                 DrawerContent(navController) {
                     drawerState.apply {
                         scope.launch {
@@ -110,8 +121,6 @@ fun SetNavAppHost(
             }
         },
         gesturesEnabled = drawerState.isOpen,
-        modifier = Modifier
-            .background(Color.Black)
     ) {
         NavHost(navController = navController, startDestination = ScreenRoute.SearchUser.route) {
             composable(ScreenRoute.GameScreen.route) {
@@ -136,7 +145,8 @@ fun SetNavAppHost(
                 GoogleMapScreen()
             }
             composable(
-                route = ScreenRoute.RoomTask.route, arguments = ScreenRoute.RoomTask.namedNavArguments()
+                route = ScreenRoute.RoomTask.route,
+                arguments = ScreenRoute.RoomTask.namedNavArguments()
             ) { backStackEntry ->
                 val hiltViewModel = hiltViewModel<TaskViewModel>(backStackEntry)
                 val nestedScreen = backStackEntry.arguments?.getString("nestedScreen")
@@ -183,14 +193,26 @@ fun SetNavAppHost(
 
 @Composable
 fun DrawerContent(navController: NavController, onClickOptionCallback: () -> Unit) {
-    Text(
-        text = "Jetpack compose playground app",
-        fontSize = 20.sp,
+    Column(
         modifier = Modifier
-            .fillMaxWidth(1f)
-            .padding(20.dp),
-        fontWeight = FontWeight.Bold
-    )
+            .background(
+                color = Color(0xFF000055),
+                shape = RoundedCornerShape(corner = CornerSize(0.dp))
+            )
+            .fillMaxWidth()
+            .wrapContentHeight()
+    ) {
+        Text(
+            text = "Jetpack compose playground app",
+            fontSize = 20.sp,
+            modifier = Modifier
+                .fillMaxWidth(1f)
+                .padding(20.dp),
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+            color = Color.White
+        )
+    }
     val nav = NavOptions.Builder().setLaunchSingleTop(true).build()
 
     for (navigateItem in NavigationDrawerItems.entries) {
@@ -205,23 +227,27 @@ fun DrawerContent(navController: NavController, onClickOptionCallback: () -> Uni
 private fun DrawerContentOptionButton(
     onClickOption: () -> Unit, title: String
 ) {
-    Button(modifier = Modifier.typicalButton(),
+    val interactionSource = remember { MutableInteractionSource() }
+    val isHovering by interactionSource.collectIsHoveredAsState()
+    Button(modifier = Modifier
+        .typicalButton(),
         colors = ButtonDefaults.buttonColors(
-            contentColor = Color.Blue,
-            containerColor = Color.White
+            contentColor = if (isHovering) Color(0xFFffffcc) else Color.White,
+            containerColor = if (isHovering) Color(0xFFffffcc) else Color.White
         ),
+        shape = RoundedCornerShape(4.dp),
+        interactionSource = interactionSource,
         onClick = {
             onClickOption()
         }) {
-        Text(text = title, color = Color.Black)
+        Text(text = title, color = Color.Black, fontSize = 10.sp)
     }
 }
 
 fun Modifier.typicalButton() = this
+    .padding(4.dp)
     .fillMaxWidth(1f)
     .wrapContentHeight()
-    .padding(8.dp)
-    .clip(RoundedCornerShape(20.dp))
 
 @Preview(showBackground = true)
 @Composable
