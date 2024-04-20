@@ -54,7 +54,7 @@ import com.jetpackcompose.playground.task_room.domain.data.RealmTask
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NewRealmTaskScreen(
+fun RealmNewTaskScreen(
     navController: NavHostController,
     taskViewModel: RealmTaskViewModel,
     customTopAppBarData: CustomTopAppBarData

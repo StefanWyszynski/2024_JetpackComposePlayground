@@ -40,6 +40,7 @@ import androidx.navigation.compose.rememberNavController
 import com.jetpackcompose.playground.R
 import com.jetpackcompose.playground.camerax.presentation.cameraxtest.CameraXScreenContainer
 import com.jetpackcompose.playground.common.presentation.data.CustomTopAppBarData
+import com.jetpackcompose.playground.common.presentation.data.NavigationDrawerItems
 import com.jetpackcompose.playground.common.presentation.data.ScreenRoute
 import com.jetpackcompose.playground.common.presentation.theme.JetpackComposePlaygroundAppTheme
 import com.jetpackcompose.playground.common.presentation.utils.topAppBarToogleVisibility
@@ -49,10 +50,10 @@ import com.jetpackcompose.playground.maps.presentation.GoogleMapScreen
 import com.jetpackcompose.playground.repos.presentation.SearchRepoScreen
 import com.jetpackcompose.playground.repos.presentation.viewmodel.SerachRepoViewModel
 import com.jetpackcompose.playground.task_realm.presentation.viewmodel.RealmTaskViewModel
-import com.jetpackcompose.playground.task_room.presentation.NewRealmTaskScreen
-import com.jetpackcompose.playground.task_room.presentation.NewTaskScreen
+import com.jetpackcompose.playground.task_room.presentation.RealmNewTaskScreen
+import com.jetpackcompose.playground.task_room.presentation.RoomNewTaskScreen
 import com.jetpackcompose.playground.task_room.presentation.RealmTaskScreen
-import com.jetpackcompose.playground.task_room.presentation.TaskScreen
+import com.jetpackcompose.playground.task_room.presentation.RoomTaskScreen
 import com.jetpackcompose.playground.task_room.presentation.viewmodel.TaskViewModel
 import com.jetpackcompose.playground.users.presentation.SearchUserScreen
 import com.jetpackcompose.playground.users.presentation.viewmodel.SerachUserViewModel
@@ -135,19 +136,19 @@ fun SetNavAppHost(
                 GoogleMapScreen()
             }
             composable(
-                route = ScreenRoute.Task.route, arguments = ScreenRoute.Task.namedNavArguments()
+                route = ScreenRoute.RoomTask.route, arguments = ScreenRoute.RoomTask.namedNavArguments()
             ) { backStackEntry ->
                 val hiltViewModel = hiltViewModel<TaskViewModel>(backStackEntry)
                 val nestedScreen = backStackEntry.arguments?.getString("nestedScreen")
                 when (nestedScreen) {
-                    ScreenRoute.Task.Main.route -> {
+                    ScreenRoute.RoomTask.Main.route -> {
                         customTopAppBarData.title = stringResource(R.string.tasks)
-                        TaskScreen(navController, hiltViewModel, customTopAppBarData)
+                        RoomTaskScreen(navController, hiltViewModel, customTopAppBarData)
                     }
 
-                    ScreenRoute.Task.NewTask.route -> {
+                    ScreenRoute.RoomTask.NewTask.route -> {
                         customTopAppBarData.title = stringResource(R.string.add_new_task)
-                        NewTaskScreen(navController, hiltViewModel, customTopAppBarData)
+                        RoomNewTaskScreen(navController, hiltViewModel, customTopAppBarData)
                     }
 
                 }
@@ -166,7 +167,7 @@ fun SetNavAppHost(
 
                     ScreenRoute.RealmTask.NewTask.route -> {
                         customTopAppBarData.title = stringResource(R.string.add_new_task)
-                        NewRealmTaskScreen(navController, hiltViewModel, customTopAppBarData)
+                        RealmNewTaskScreen(navController, hiltViewModel, customTopAppBarData)
                     }
 
                 }
@@ -192,45 +193,12 @@ fun DrawerContent(navController: NavController, onClickOptionCallback: () -> Uni
     )
     val nav = NavOptions.Builder().setLaunchSingleTop(true).build()
 
-    DrawerContentOptionButton({
-        GotoGameScreen(navController, nav)
-        onClickOptionCallback()
-    }, "3D game - drawing playground")
-
-    DrawerContentOptionButton({
-        GotoSearchUsers(navController, nav)
-        onClickOptionCallback()
-    }, "Search github users")
-
-    DrawerContentOptionButton({
-        GotoSearchRepos(navController, nav)
-        onClickOptionCallback()
-    }, "Search github repos")
-
-    DrawerContentOptionButton({
-        GotoCameraXTest(navController, nav)
-        onClickOptionCallback()
-    }, "Camera X test")
-
-//    DrawerContentOptionButton({
-//        GotoMapsTest(navController, nav)
-//        onClickOptionCallback()
-//    }, "Map test")
-
-    DrawerContentOptionButton({
-        GotoTaskTest(navController, nav)
-        onClickOptionCallback()
-    }, "Task")
-
-    DrawerContentOptionButton({
-        GotoRealmTaskTest(navController, nav)
-        onClickOptionCallback()
-    }, "Realm Task")
-
-    DrawerContentOptionButton({
-        GotoCryptoUtilTest(navController, nav)
-        onClickOptionCallback()
-    }, "Crypto Util test")
+    for (navigateItem in NavigationDrawerItems.entries) {
+        DrawerContentOptionButton({
+            navigateItem.navigate(navController, nav)
+            onClickOptionCallback()
+        }, stringResource(navigateItem.title))
+    }
 }
 
 @Composable
@@ -254,38 +222,6 @@ fun Modifier.typicalButton() = this
     .wrapContentHeight()
     .padding(8.dp)
     .clip(RoundedCornerShape(20.dp))
-
-private fun GotoSearchUsers(navController: NavController, nav: NavOptions) {
-    navController.navigate(ScreenRoute.SearchUser.route, navOptions = nav)
-}
-
-private fun GotoSearchRepos(navController: NavController, nav: NavOptions) {
-    navController.navigate(ScreenRoute.SearchRepo.route, navOptions = nav)
-}
-
-private fun GotoCameraXTest(navController: NavController, nav: NavOptions) {
-    navController.navigate(ScreenRoute.CameraXTest.route, navOptions = nav)
-}
-
-private fun GotoMapsTest(navController: NavController, nav: NavOptions) {
-    navController.navigate(ScreenRoute.MapsTest.route, navOptions = nav)
-}
-
-private fun GotoGameScreen(navController: NavController, nav: NavOptions) {
-    navController.navigate(ScreenRoute.GameScreen.route, navOptions = nav)
-}
-
-private fun GotoTaskTest(navController: NavController, nav: NavOptions) {
-    ScreenRoute.Task.Main.navigate(navController, nav)
-}
-
-private fun GotoRealmTaskTest(navController: NavController, nav: NavOptions) {
-    ScreenRoute.RealmTask.Main.navigate(navController, nav)
-}
-
-private fun GotoCryptoUtilTest(navController: NavController, nav: NavOptions) {
-    navController.navigate(ScreenRoute.CryptoUtilTest.route, navOptions = nav)
-}
 
 @Preview(showBackground = true)
 @Composable

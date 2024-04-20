@@ -40,7 +40,7 @@ import com.jetpackcompose.playground.task_room.presentation.components.TaskListI
 import com.jetpackcompose.playground.task_room.presentation.viewmodel.TaskViewModel
 
 @Composable
-fun TaskScreen(
+fun RoomTaskScreen(
     navController: NavHostController,
     taskViewModel: TaskViewModel,
     customTopAppBarData: CustomTopAppBarData
@@ -50,7 +50,7 @@ fun TaskScreen(
         floatingActionButton = {
             ExtendedFloatingActionButton(onClick = {
                 val nav = NavOptions.Builder().build()
-                ScreenRoute.Task.NewTask.navigate(navController, nav)
+                ScreenRoute.RoomTask.NewTask.navigate(navController, nav)
             }, modifier = Modifier.testTag(TestConstants.ROOM_TASK_LIST_ADD_NEW_TASK_BUTTON)) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add task")
                 Text(text = "Add task")

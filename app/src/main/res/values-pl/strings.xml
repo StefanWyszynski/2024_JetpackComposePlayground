@@ -11,4 +11,11 @@
     <string name="camerax_test">CameraX test</string>
     <string name="search_for_user">Wyszukaj użytkownika</string>
     <string name="search_for_repo">Wyszukaj repozytorium</string>
+    <string name="navigation_item_3d_game">Gra 3D przy użyciu Jetpack Compose UI</string>
+    <string name="navigation_item_search_github_users">Wyszukaj użytkowników github</string>
+    <string name="navigation_item_search_github_repos">Wyszukaj repozytoria github</string>
+    <string name="navigation_item_camera_x_test">Test camera X</string>
+    <string name="navigation_item_room_task_management">Zarządzanie taskami Room</string>
+    <string name="navigation_item_realm_task_management">Zarządzanie taskami Realm</string>
+    <string name="navigation_item_crypto_util_test">Crypto Util test</string>
 </resources>

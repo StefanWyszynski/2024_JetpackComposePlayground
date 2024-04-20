@@ -12,4 +12,11 @@
     <string name="camerax_test">CameraX test</string>
     <string name="search_for_user">Search for user</string>
     <string name="search_for_repo">Search for repo</string>
+    <string name="navigation_item_3d_game">3D game using Jetpack Compose UI</string>
+    <string name="navigation_item_search_github_users">Search github users</string>
+    <string name="navigation_item_search_github_repos">Search github repos</string>
+    <string name="navigation_item_camera_x_test">Camera X test</string>
+    <string name="navigation_item_room_task_management">Room Task management</string>
+    <string name="navigation_item_realm_task_management">Realm Task management</string>
+    <string name="navigation_item_crypto_util_test">Crypto Util test</string>
 </resources>

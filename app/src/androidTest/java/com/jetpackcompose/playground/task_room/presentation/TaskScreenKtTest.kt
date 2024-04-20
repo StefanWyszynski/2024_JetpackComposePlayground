@@ -74,30 +74,30 @@ class TaskScreenKtTest {
                     CustomTopAppBarData(openIconClick = toppAppBarToogleCallback)
                 NavHost(
                     navController = navController,
-                    startDestination = ScreenRoute.Task.Main.getFullPath()
+                    startDestination = ScreenRoute.RoomTask.Main.getFullPath()
                 ) {
                     composable(
-                        route = ScreenRoute.Task.route,
-                        arguments = ScreenRoute.Task.namedNavArguments()
+                        route = ScreenRoute.RoomTask.route,
+                        arguments = ScreenRoute.RoomTask.namedNavArguments()
                     ) { backStackEntry ->
                         val hiltViewModel = hiltViewModel<TaskViewModel>(backStackEntry)
                         val nestedScreen = backStackEntry.arguments?.getString("nestedScreen")
                         when (nestedScreen) {
-                            ScreenRoute.Task.Main.route -> {
+                            ScreenRoute.RoomTask.Main.route -> {
                                 customTopAppBarData.title = stringResource(R.string.tasks)
-                                TaskScreen(navController, hiltViewModel, customTopAppBarData)
+                                RoomTaskScreen(navController, hiltViewModel, customTopAppBarData)
                             }
 
-                            ScreenRoute.Task.NewTask.route -> {
+                            ScreenRoute.RoomTask.NewTask.route -> {
                                 customTopAppBarData.title = stringResource(R.string.add_new_task)
-                                NewTaskScreen(navController, hiltViewModel, customTopAppBarData)
+                                RoomNewTaskScreen(navController, hiltViewModel, customTopAppBarData)
                             }
                         }
                     }
                 }
 
                 val nav = NavOptions.Builder().setLaunchSingleTop(true).build()
-                ScreenRoute.Task.Main.navigate(navController, nav = nav)
+                ScreenRoute.RoomTask.Main.navigate(navController, nav = nav)
             }
         }
     }

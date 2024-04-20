@@ -30,7 +30,7 @@ import com.jetpackcompose.playground.common.presentation.utils.topAppBarToogleVi
 import com.jetpackcompose.playground.di.modules.DatabaseModule
 import com.jetpackcompose.playground.task_realm.data.RealmTaskRepositoryImpl
 import com.jetpackcompose.playground.task_realm.presentation.viewmodel.RealmTaskViewModel
-import com.jetpackcompose.playground.task_room.presentation.NewRealmTaskScreen
+import com.jetpackcompose.playground.task_room.presentation.RealmNewTaskScreen
 import com.jetpackcompose.playground.task_room.presentation.RealmTaskScreen
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -97,7 +97,7 @@ class RealmTaskScreenKtTest {
                             ScreenRoute.RealmTask.NewTask.route -> {
                                 customTopAppBarData.title =
                                     stringResource(R.string.add_new_task)
-                                NewRealmTaskScreen(
+                                RealmNewTaskScreen(
                                     navController,
                                     hiltViewModel,
                                     customTopAppBarData
