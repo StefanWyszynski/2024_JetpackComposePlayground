@@ -70,6 +70,13 @@ dependencies {
     implementation(project(":crypto"))
     implementation(project(":permissions-util"))
 
+    // rebugger
+    // https://github.com/theapache64/rebugger
+    // Call Rebugger and pass the states you want to track.
+    // how to use: Rebugger(trackMap = mapOf("something" to something))
+    // where something is your compose remember
+    implementation libs.rebugger
+
     // core
     implementation libs.core.ktx
     implementation libs.appcompat
@@ -158,6 +165,10 @@ dependencies {
     // Optional -- Robolectric environment
     testImplementation libs.androidx.core
 
+    // mockwebserver
+    testImplementation "com.squareup.okhttp3:mockwebserver:4.12.0"
+
+    // compose
     testImplementation platform('androidx.compose:compose-bom:2024.02.02')
     testImplementation 'androidx.compose.ui:ui-test-junit4'
     // ANDROID TEST ========================================================================================
@@ -185,7 +196,6 @@ dependencies {
 //    kaptTest 'com.google.dagger:hilt-android-compiler:2.44'
 //    // ...with Java.
 //    testAnnotationProcessor 'com.google.dagger:hilt-android-compiler:2.44'
-
 
     // For instrumented tests.
     androidTestImplementation libs.test.hilt.android.testing

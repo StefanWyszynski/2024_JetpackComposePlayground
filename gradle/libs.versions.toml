@@ -26,6 +26,7 @@ mockitoCoreVersion = "5.7.0"
 mockitoKotlin = "5.3.1"
 mockkVersion = "1.13.10"
 navigationComposeVersion = "2.7.7"
+rebuggerVersion = "1.0.0-rc03"
 retrofit2Version = "2.9.0"
 composeBomVersion = "2024.02.02"
 agpVersion = "8.3.2"
@@ -49,6 +50,7 @@ androidx-navigation-compose = { module = "androidx.navigation:navigation-compose
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilComposeVersion" }
 flowredux-compose = { group = "com.freeletics.flowredux", name = "compose", version.ref = "flowreduxJvmVersion" }
 flowredux-jvm = { group = "com.freeletics.flowredux", name = "flowredux-jvm", version.ref = "flowreduxJvmVersion" }
+rebugger = { module = "io.github.theapache64:rebugger", version.ref = "rebuggerVersion" }
 test-hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hiltAndroidTestingVersion" }
 test-mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoKotlin" }
 test-mockk = { module = "io.mockk:mockk", version.ref = "mockkVersion" }

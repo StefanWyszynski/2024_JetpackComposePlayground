@@ -18,7 +18,7 @@ class GithubReposRepositoryImpl @Inject constructor(private var gitHubApiService
 
     suspend override fun searchRepos(repoName: String): NetworkOperation<List<GithubRepo>> {
         if (repoName.isBlank()) {
-            return NetworkOperation.Failure<List<GithubRepo>>("Repository name shouldn't be empty")
+            return NetworkOperation.Failure("Repository name shouldn't be empty")
         }
         return safeApiCallRunner(
             apiCall = {

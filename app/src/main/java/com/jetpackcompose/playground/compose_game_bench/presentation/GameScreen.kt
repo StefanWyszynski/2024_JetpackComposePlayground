@@ -108,7 +108,6 @@ fun GameScreen(viewModel: GameViewModel) {
             }
         }
     )
-
 }
 
 @Composable
