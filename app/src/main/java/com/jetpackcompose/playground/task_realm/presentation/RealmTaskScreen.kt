@@ -24,13 +24,17 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
+import com.jetpackcompose.playground.R
 import com.jetpackcompose.playground.common.presentation.components.CustomTopAppBar
 import com.jetpackcompose.playground.common.presentation.data.CustomTopAppBarData
 import com.jetpackcompose.playground.common.presentation.data.ScreenRoute
@@ -55,7 +59,7 @@ fun RealmTaskScreen(
                 ScreenRoute.RealmTask.NewTask.navigate(navController, nav)
             }, modifier = Modifier.testTag(TestConstants.REALM_TASK_LIST_ADD_NEW_TASK_BUTTON)) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add task")
-                Text(text = "Add task")
+                Text(text = stringResource(R.string.add_task))
             }
         }
     ) { scaffoldPading ->
@@ -65,20 +69,20 @@ fun RealmTaskScreen(
                 .padding(scaffoldPading)
         )
         {
-            SearchRepoScreenContent(taskViewModel)
+            val tasks by taskViewModel.tasks.collectAsStateWithLifecycle()
+            SearchRepoScreenContent(tasks = tasks, onDelete = taskViewModel::deleteTask)
         }
     }
 }
 
 @Composable
-private fun SearchRepoScreenContent(taskViewModel: RealmTaskViewModel) {
+private fun SearchRepoScreenContent(tasks: List<RealmTask>, onDelete: (RealmTask) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
-        val tasks by taskViewModel.tasks.collectAsStateWithLifecycle()
-        Tasks(tasks = tasks, onDelete = taskViewModel::deleteTask)
+        Tasks(tasks = tasks, onDelete = onDelete)
     }
 }
 
@@ -86,6 +90,20 @@ private fun SearchRepoScreenContent(taskViewModel: RealmTaskViewModel) {
 @Composable
 private fun Tasks(tasks: List<RealmTask>, onDelete: (RealmTask) -> Unit) {
     val taskList = tasks.take(50)
+    if (tasks.count() == 0) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+
+            Text(
+                text = stringResource(R.string.no_tasks_found),
+                modifier = Modifier
+                    .padding(20.dp)
+                    .testTag(TestConstants.REALM_TASK_LIST_NO_TASK_FOUND_TEXT)
+            )
+        }
+    }
     LazyColumn(modifier = Modifier.fillMaxHeight()) {
         items(taskList.count()) { itemId ->
             val task = taskList[itemId]
@@ -102,16 +120,6 @@ private fun Tasks(tasks: List<RealmTask>, onDelete: (RealmTask) -> Unit) {
                     })
                     HorizontalDivider()
                 }
-            }
-        }
-        if (tasks.count() == 0) {
-            item {
-                Text(
-                    text = "No tasks found", textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .testTag(TestConstants.REALM_TASK_LIST_NO_TASK_FOUND_TEXT)
-                )
             }
         }
     }

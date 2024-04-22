@@ -24,7 +24,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -98,27 +100,22 @@ fun SetNavAppHost(navController: NavHostController) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val toppAppBarToogleCallback = remember { topAppBarToogleVisibility(scope, drawerState) }
-    val customTopAppBarData = CustomTopAppBarData(openIconClick = toppAppBarToogleCallback)
+    val customTopAppBarData by remember {
+        derivedStateOf{
+            CustomTopAppBarData(openIconClick = toppAppBarToogleCallback)
+        }
+    }
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            ModalDrawerSheet(
-                modifier = Modifier
-                    .fillMaxWidth(0.7f)
-                    .background(
-                        color = Color(0xFF000077),
-                        shape = RoundedCornerShape(corner = CornerSize(0.dp))
-                    ),
-                drawerShape = RectangleShape
-            ) {
-                DrawerContent(navController) {
-                    drawerState.apply {
-                        scope.launch {
-                            close()
-                        }
+            ModalDrawerContent(navController) {
+                drawerState.apply {
+                    scope.launch {
+                        close()
                     }
                 }
             }
+
         },
         gesturesEnabled = drawerState.isOpen,
     ) {
@@ -157,7 +154,7 @@ fun SetNavAppHost(navController: NavHostController) {
                     }
 
                     ScreenRoute.RoomTask.NewTask.route -> {
-                        customTopAppBarData.title = stringResource(R.string.add_new_task)
+                        customTopAppBarData.title = stringResource(R.string.add_task)
                         RoomNewTaskScreen(navController, hiltViewModel, customTopAppBarData)
                     }
 
@@ -176,7 +173,7 @@ fun SetNavAppHost(navController: NavHostController) {
                     }
 
                     ScreenRoute.RealmTask.NewTask.route -> {
-                        customTopAppBarData.title = stringResource(R.string.add_new_task)
+                        customTopAppBarData.title = stringResource(R.string.add_task)
                         RealmNewTaskScreen(navController, hiltViewModel, customTopAppBarData)
                     }
 
@@ -192,34 +189,44 @@ fun SetNavAppHost(navController: NavHostController) {
 }
 
 @Composable
-fun DrawerContent(navController: NavController, onClickOptionCallback: () -> Unit) {
-    Column(
+fun ModalDrawerContent(navController: NavController, onClickOptionCallback: () -> Unit) {
+    ModalDrawerSheet(
         modifier = Modifier
+            .fillMaxWidth(0.7f)
             .background(
-                color = Color(0xFF000055),
+                color = Color(0xFF000077),
                 shape = RoundedCornerShape(corner = CornerSize(0.dp))
-            )
-            .fillMaxWidth()
-            .wrapContentHeight()
+            ),
+        drawerShape = RectangleShape
     ) {
-        Text(
-            text = "Jetpack compose playground app",
-            fontSize = 20.sp,
+        Column(
             modifier = Modifier
-                .fillMaxWidth(1f)
-                .padding(20.dp),
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
-            color = Color.White
-        )
-    }
-    val nav = NavOptions.Builder().setLaunchSingleTop(true).build()
+                .background(
+                    color = Color(0xFF000055),
+                    shape = RoundedCornerShape(corner = CornerSize(0.dp))
+                )
+                .fillMaxWidth()
+                .wrapContentHeight()
+        ) {
+            Text(
+                text = "Jetpack compose playground app",
+                fontSize = 20.sp,
+                modifier = Modifier
+                    .fillMaxWidth(1f)
+                    .padding(20.dp),
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                color = Color.White
+            )
+        }
+        val nav = NavOptions.Builder().setLaunchSingleTop(true).build()
 
-    for (navigateItem in NavigationDrawerItems.entries) {
-        DrawerContentOptionButton({
-            navigateItem.navigate(navController, nav)
-            onClickOptionCallback()
-        }, stringResource(navigateItem.title))
+        for (navigateItem in NavigationDrawerItems.entries) {
+            DrawerContentOptionButton({
+                navigateItem.navigate(navController, nav)
+                onClickOptionCallback()
+            }, stringResource(navigateItem.title))
+        }
     }
 }
 

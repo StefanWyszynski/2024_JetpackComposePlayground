@@ -7,7 +7,6 @@
     <string name="cancel">Cancel</string>
     <string name="add_task">Add task</string>
     <string name="priority">Priority</string>
-    <string name="add_new_task">Add new task</string>
     <string name="tasks">Tasks</string>
     <string name="camerax_test">CameraX test</string>
     <string name="search_for_user">Search for user</string>
@@ -19,4 +18,5 @@
     <string name="navigation_item_room_task_management">Room Task management</string>
     <string name="navigation_item_realm_task_management">Realm Task management</string>
     <string name="navigation_item_crypto_util_test">Crypto Util test</string>
+    <string name="no_tasks_found">No tasks found</string>
 </resources>

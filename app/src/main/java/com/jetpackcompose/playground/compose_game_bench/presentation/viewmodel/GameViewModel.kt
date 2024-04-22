@@ -3,12 +3,14 @@ package com.jetpackcompose.playground.compose_game_bench.presentation.viewmodel
 import android.graphics.PointF
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.unit.IntSize
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jetpackcompose.playground.compose_game_bench.data.Player
 import com.jetpackcompose.playground.compose_game_bench.data.RaycastScreenColumnInfo
 import com.jetpackcompose.playground.compose_game_bench.domain.RayCastUseCaseImpl
-import com.jetpackcompose.playground.compose_game_bench.presentation.data.DrawLineData
+import com.jetpackcompose.playground.compose_game_bench.domain.util.getScaledLinePoint
+import com.jetpackcompose.playground.compose_game_bench.presentation.data.DrawWallLineData
 import com.jetpackcompose.playground.compose_game_bench.presentation.data.GameData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
@@ -22,7 +24,7 @@ import javax.inject.Inject
 class GameViewModel @Inject constructor(var rayCastInteractor: RayCastUseCaseImpl) :
     ViewModel() {
 
-    lateinit var gameData: GameData
+    var gameData: GameData
     private var _screenColumnsOffsets = listOf<RaycastScreenColumnInfo>()
     private var _screenColumnsData = listOf<RaycastScreenColumnInfo>()
 
@@ -35,9 +37,8 @@ class GameViewModel @Inject constructor(var rayCastInteractor: RayCastUseCaseImp
             it.copy(x = 2.0, y = 2.0)
         }
 
-        _screenColumnsOffsets =
-            (0..(gameData.screenState.screenWidth - 1)).toList()
-                .map { RaycastScreenColumnInfo(xOffset = it) }
+        _screenColumnsOffsets = (0..(gameData.screenState.screenWidth - 1)).toList()
+                .map { RaycastScreenColumnInfo(virtualScreenXLineNumber = it) }
     }
 
     fun setPlayerHealth(health: Float) {
@@ -54,36 +55,37 @@ class GameViewModel @Inject constructor(var rayCastInteractor: RayCastUseCaseImp
         }
     }
 
-    fun drawRaycastedWallsToScreen(drawColumn: (drawData: DrawLineData) -> Unit) {
-        val drawLineData = DrawLineData()
+    fun drawRaycastedWallsToScreen(size: IntSize, drawColumn: (drawWallLineData: DrawWallLineData) -> Unit) {
         val screenState = gameData.screenState
+        val drawWallLineData = DrawWallLineData()
+        drawWallLineData.virtualGameScreenToPhoneScreenRatioWidth = (size.width.toFloat() / (screenState.screenWidth.toFloat()))
+        drawWallLineData.virtualGameScreenToPhoneScreenRatioHeight = size.height.toFloat() / (screenState.screenHeight.toFloat())
 
         for (line in _screenColumnsData) {
-            val wallHeight = line.wallHeight.toFloat()
-            val colorIntensity = line.colorIntensity
-
-            val darkToWhiteColor =
-                Color(
-                    0xFF000000 +
-                            ((colorIntensity shl 16) or
-                                    (colorIntensity shl 8) or
-                                    colorIntensity)
-                )
+            val wallHeight = line.castedWallHeight.toFloat()
+            val darkToWhiteColor = createColorFromIntensityByte(line.castedWallColorIntensity)
             val wallTop = (screenState.screenHeightHalf - wallHeight)
             val wallBottom = (screenState.screenHeightHalf + wallHeight)
-            drawLineData.apply {
-                lineLeft = line.xOffset.toFloat()
-                lineTop = wallTop
-                lineBottom = wallBottom
+            val wallLeft = line.virtualScreenXLineNumber.toFloat()
+
+            drawWallLineData.apply {
                 this.worldTextureOffset = line.worldTextureOffset
                 colorStart = darkToWhiteColor
                 colorEnd = darkToWhiteColor
-                this.hitWall = line.hitWallNumber
+                this.eyeRayHitWallNum = line.eyeRayHitWallNumber
+                // set rescaled line start to size of the phone screen
+                wallLineTopLeft = getScaledLinePoint(wallLeft, wallTop, virtualGameScreenToPhoneScreenRatioWidth, virtualGameScreenToPhoneScreenRatioHeight)
+                // set rescaled line end to size of the phone screen
+                wallLineButtomLeft = getScaledLinePoint(wallLeft, wallBottom, virtualGameScreenToPhoneScreenRatioWidth, virtualGameScreenToPhoneScreenRatioHeight)
             }
 
-            drawColumn(drawLineData)
+            drawColumn(drawWallLineData)
         }
     }
+
+    private fun createColorFromIntensityByte(colorIntensity: Int) = Color(
+        0xFF000000 + ((colorIntensity shl 16) or (colorIntensity shl 8) or colorIntensity)
+    )
 
     fun handlePlayerMovement(playerPointerAction: PointF, deltaTime: Float) {
         playerState.value.handlePlayerMovement(
@@ -105,5 +107,4 @@ class GameViewModel @Inject constructor(var rayCastInteractor: RayCastUseCaseImp
         }
         return texArrayAsync.await()
     }
-
 }

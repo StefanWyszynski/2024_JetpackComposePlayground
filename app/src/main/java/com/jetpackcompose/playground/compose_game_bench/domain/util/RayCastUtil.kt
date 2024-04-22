@@ -1,5 +1,6 @@
 package com.jetpackcompose.playground.compose_game_bench.domain.util
 
+import androidx.compose.ui.geometry.Offset
 import androidx.core.graphics.ColorUtils
 import androidx.core.math.MathUtils
 import com.jetpackcompose.playground.compose_game_bench.data.Player
@@ -18,6 +19,26 @@ import kotlin.math.cos
 import kotlin.math.floor
 import kotlin.math.sin
 import kotlin.math.sqrt
+
+/**
+ * scale point x, y, by scaleW and scaleH and clamp to range 0...maxHeight
+ */
+inline fun getScaledAndClampedLinePoint(
+    x: Float, y: Float, scaleW: Float, scaleH: Float, maxHeight: Int
+): Offset {
+    val scaledY1 = (y * scaleH)
+    val clampScaledY = MathUtils.clamp(scaledY1, 0f, maxHeight.toFloat())
+    val lineStart = Offset(x * scaleW, clampScaledY)
+    return lineStart
+}
+
+/**
+ * scale point x, y, by scaleW and scaleH and clamp to range 0...maxHeight
+ */
+inline fun getScaledLinePoint(x: Float, y: Float, scaleW: Float, scaleH: Float): Offset {
+    val lineStart = Offset((x * scaleW), (y * scaleH))
+    return lineStart
+}
 
 class RayCastUtil @Inject constructor() {
 
@@ -58,7 +79,7 @@ class RayCastUtil @Inject constructor() {
             for (screenColumn in screenColumns) {
                 val item = async(Dispatchers.Default) {
                     var rayAngle = (player.angle - halfFov)
-                    rayAngle += screenState.incrementAngle * screenColumn.xOffset.toDouble()
+                    rayAngle += screenState.incrementAngle * screenColumn.virtualScreenXLineNumber.toDouble()
 
                     val distanceToWall =
                         castRayInMapToFindWalls(
@@ -73,13 +94,13 @@ class RayCastUtil @Inject constructor() {
                     val colorIntensity = RayCastMathUtils.calculateColorIntensityByDistance(
                         distanceToWall, player.maxViewDistance
                     )
-                    screenColumn.colorIntensity = colorIntensity
-                    screenColumn.wallHeight = wallHeight
+                    screenColumn.castedWallColorIntensity = colorIntensity
+                    screenColumn.castedWallHeight = wallHeight
 
                     drawFloorAndCeil(
                         screenState,
                         player,
-                        screenColumn.xOffset,
+                        screenColumn.virtualScreenXLineNumber,
                         wallHeight,
                         rayAngle,
                         textureWidth,
@@ -94,7 +115,7 @@ class RayCastUtil @Inject constructor() {
                 if (cleared)
                     deferedList.add(item)
                 else {
-                    deferedList[screenColumn.xOffset] = item
+                    deferedList[screenColumn.virtualScreenXLineNumber] = item
                 }
             }
         }
@@ -128,7 +149,7 @@ class RayCastUtil @Inject constructor() {
 
         collInfo.rayAngle = rayAngle
         collInfo.worldTextureOffset = (rayX + rayY)
-        collInfo.hitWallNumber = wall
+        collInfo.eyeRayHitWallNumber = wall
         val xPow = (player.x - rayX)
         val yPow = (player.y - rayY)
         var distanceToWall = sqrt(xPow * xPow + yPow * yPow)

@@ -57,7 +57,7 @@ class RayCastUtilTest {
         RayCastUtil().castRayInMapToFindWalls(player, rayAngle, screenState, map1, collInfo)
 
         // assertEquals(1, collInfo.wallHitScale)
-        assertThat(collInfo.hitWallNumber).isEqualTo(1)
+        assertThat(collInfo.eyeRayHitWallNumber).isEqualTo(1)
     }
 
     @Test

@@ -6,7 +6,6 @@
     <string name="cancel">Anuluj</string>
     <string name="add_task">Dodaj zadanie</string>
     <string name="priority">Priorytet</string>
-    <string name="add_new_task">Dodaj nowe zadanie</string>
     <string name="tasks">Zadania</string>
     <string name="camerax_test">CameraX test</string>
     <string name="search_for_user">Wyszukaj użytkownika</string>
@@ -15,7 +14,8 @@
     <string name="navigation_item_search_github_users">Wyszukaj użytkowników github</string>
     <string name="navigation_item_search_github_repos">Wyszukaj repozytoria github</string>
     <string name="navigation_item_camera_x_test">Test camera X</string>
-    <string name="navigation_item_room_task_management">Zarządzanie taskami Room</string>
-    <string name="navigation_item_realm_task_management">Zarządzanie taskami Realm</string>
+    <string name="navigation_item_room_task_management">Zarządzanie zadaniami Room</string>
+    <string name="navigation_item_realm_task_management">Zarządzanie zadaniami Realm</string>
     <string name="navigation_item_crypto_util_test">Crypto Util test</string>
+    <string name="no_tasks_found">Brak zadań</string>
 </resources>
