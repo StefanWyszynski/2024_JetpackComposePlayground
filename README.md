@@ -7,22 +7,22 @@ Kotlin project
 Technology stack:
 
 - Jetpack compose
-- 3d game rendering on canvas using jetpack compose canvas (like Wolfenstein 3d but very limited of
-  course :)), this is a test and benchmark
-- flow redux
+- JUnit, Jetpack Compose Test UI, Mockito, MockWebserver
+- 3d game rendering on canvas using Jetpack Compose canvas 
+- Flow Redux
 - CameraX
 - Hilt/dagger2
-- retrofit
-- room
-- realmDb
+- Retrofit
+- Room
+- RealmDb
 - GSON
 - OKHttp3
-- architecture components (ViewModel/flows/StateFlow/SharedFlow)
+- Architecture components (ViewModel/flows/StateFlow/SharedFlow)
 
 All examples are written using Jetpack Compose
-- 3d game like Wolfenstein 3d using Jetpack compose canvas,
+- 3d game like Wolfenstein 3d using Jetpack compose canvas, this is a test and benchmark
 - Search for Github users,
-- Search for Github repos,
+- Search for Github repositories,
 - CameraX with permissions handling using custom permissions Util built in as a separate module,
 - Task management by Room,
 - Task management by RealmDB,
