@@ -38,7 +38,7 @@ class GameViewModel @Inject constructor(var rayCastInteractor: RayCastUseCaseImp
         }
 
         _screenColumnsOffsets = (0..(gameData.screenState.screenWidth - 1)).toList()
-                .map { RaycastScreenColumnInfo(virtualScreenXLineNumber = it) }
+            .map { RaycastScreenColumnInfo(virtualScreenXLineNumber = it) }
     }
 
     fun setPlayerHealth(health: Float) {
@@ -55,11 +55,16 @@ class GameViewModel @Inject constructor(var rayCastInteractor: RayCastUseCaseImp
         }
     }
 
-    fun drawRaycastedWallsToScreen(size: IntSize, drawColumn: (drawWallLineData: DrawWallLineData) -> Unit) {
+    fun drawRaycastedWallsToScreen(
+        size: IntSize,
+        drawColumn: (drawWallLineData: DrawWallLineData) -> Unit
+    ) {
         val screenState = gameData.screenState
         val drawWallLineData = DrawWallLineData()
-        drawWallLineData.virtualGameScreenToPhoneScreenRatioWidth = (size.width.toFloat() / (screenState.screenWidth.toFloat()))
-        drawWallLineData.virtualGameScreenToPhoneScreenRatioHeight = size.height.toFloat() / (screenState.screenHeight.toFloat())
+        drawWallLineData.virtualGameScreenToPhoneScreenRatioWidth =
+            (size.width.toFloat() / (screenState.screenWidth.toFloat()))
+        drawWallLineData.virtualGameScreenToPhoneScreenRatioHeight =
+            size.height.toFloat() / (screenState.screenHeight.toFloat())
 
         for (line in _screenColumnsData) {
             val wallHeight = line.castedWallHeight.toFloat()
@@ -74,9 +79,19 @@ class GameViewModel @Inject constructor(var rayCastInteractor: RayCastUseCaseImp
                 colorEnd = darkToWhiteColor
                 this.eyeRayHitWallNum = line.eyeRayHitWallNumber
                 // set rescaled line start to size of the phone screen
-                wallLineTopLeft = getScaledLinePoint(wallLeft, wallTop, virtualGameScreenToPhoneScreenRatioWidth, virtualGameScreenToPhoneScreenRatioHeight)
+                wallLineTopLeft = getScaledLinePoint(
+                    wallLeft,
+                    wallTop,
+                    virtualGameScreenToPhoneScreenRatioWidth,
+                    virtualGameScreenToPhoneScreenRatioHeight
+                )
                 // set rescaled line end to size of the phone screen
-                wallLineButtomLeft = getScaledLinePoint(wallLeft, wallBottom, virtualGameScreenToPhoneScreenRatioWidth, virtualGameScreenToPhoneScreenRatioHeight)
+                wallLineButtomLeft = getScaledLinePoint(
+                    wallLeft,
+                    wallBottom,
+                    virtualGameScreenToPhoneScreenRatioWidth,
+                    virtualGameScreenToPhoneScreenRatioHeight
+                )
             }
 
             drawColumn(drawWallLineData)

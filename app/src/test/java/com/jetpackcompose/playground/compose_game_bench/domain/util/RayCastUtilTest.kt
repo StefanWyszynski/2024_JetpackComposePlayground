@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import com.jetpackcompose.playground.compose_game_bench.data.Player
 import com.jetpackcompose.playground.compose_game_bench.data.RaycastScreenColumnInfo
 import com.jetpackcompose.playground.compose_game_bench.data.ScreenState
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 //import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Before
@@ -18,6 +19,7 @@ class RayCastUtilTest {
     lateinit var player: Player
     lateinit var collInfo: RaycastScreenColumnInfo
 
+    val testDispatcher = UnconfinedTestDispatcher()
     @Before
     fun start() {
         screenState = ScreenState()
@@ -35,7 +37,7 @@ class RayCastUtilTest {
     fun `castRayInMap should return specific value when player in map range`() {
         // When
         val distanceToWall =
-            RayCastUtil().castRayInMapToFindWalls(player, rayAngle, screenState, map1, collInfo)
+            RayCastUtil(testDispatcher).castRayInMapToFindWalls(player, rayAngle, screenState, map1, collInfo)
 
         // Then
         // assertEquals(1.0, distanceToWall, 0.01)
@@ -45,7 +47,7 @@ class RayCastUtilTest {
     @Test
     fun `castRayInMap should return proper worldTextureOffset value when player in map range`() {
         // When
-        RayCastUtil().castRayInMapToFindWalls(player, rayAngle, screenState, map1, collInfo)
+        RayCastUtil(testDispatcher).castRayInMapToFindWalls(player, rayAngle, screenState, map1, collInfo)
 
         // Then
         // assertEquals(5.0f, collInfo.worldTextureOffset, 0.1f)
@@ -54,7 +56,7 @@ class RayCastUtilTest {
 
     @Test
     fun `castRayInMap should return proper wallHitScale value when player in map range`() {
-        RayCastUtil().castRayInMapToFindWalls(player, rayAngle, screenState, map1, collInfo)
+        RayCastUtil(testDispatcher).castRayInMapToFindWalls(player, rayAngle, screenState, map1, collInfo)
 
         // assertEquals(1, collInfo.wallHitScale)
         assertThat(collInfo.eyeRayHitWallNumber).isEqualTo(1)
@@ -65,7 +67,7 @@ class RayCastUtilTest {
         player = Player(x = -200.0, y = -200.0)
 
         assertThrows(ArrayIndexOutOfBoundsException::class.java) {
-            RayCastUtil().castRayInMapToFindWalls(player, rayAngle, screenState, map1, collInfo)
+            RayCastUtil(testDispatcher).castRayInMapToFindWalls(player, rayAngle, screenState, map1, collInfo)
         }
     }
 }

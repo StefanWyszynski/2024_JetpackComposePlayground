@@ -7,6 +7,8 @@ import com.jetpackcompose.playground.compose_game_bench.data.Player
 import com.jetpackcompose.playground.compose_game_bench.data.RaycastScreenColumnInfo
 import com.jetpackcompose.playground.compose_game_bench.data.ScreenState
 import com.jetpackcompose.playground.compose_game_bench.presentation.data.GameData
+import com.jetpackcompose.playground.di.annotations.DispathersDefault
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -40,7 +42,7 @@ inline fun getScaledLinePoint(x: Float, y: Float, scaleW: Float, scaleH: Float):
     return lineStart
 }
 
-class RayCastUtil @Inject constructor() {
+class RayCastUtil @Inject constructor(@DispathersDefault val defaultDispatcher: CoroutineDispatcher) {
 
     private var deferedList = mutableListOf<Deferred<RaycastScreenColumnInfo>>()
 
@@ -77,7 +79,7 @@ class RayCastUtil @Inject constructor() {
         val halfFov = gameData.screenState.halfFov
         if (texturesData.size >= 2) {
             for (screenColumn in screenColumns) {
-                val item = async(Dispatchers.Default) {
+                val item = async(defaultDispatcher) {
                     var rayAngle = (player.angle - halfFov)
                     rayAngle += screenState.incrementAngle * screenColumn.virtualScreenXLineNumber.toDouble()
 

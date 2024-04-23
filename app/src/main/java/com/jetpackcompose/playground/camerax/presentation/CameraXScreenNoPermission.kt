@@ -1,4 +1,4 @@
-package com.jetpackcompose.playground.camerax.presentation.cameraxtest
+package com.jetpackcompose.playground.camerax.presentation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

@@ -47,7 +47,7 @@ class GithubUsersStateMachine @Inject constructor(
 
                         is NetworkOperation.Success -> state.override {
                             GithubUserState.ContentState(
-                                users = searchUser.users,
+                                users = searchUser.data,
                                 userName = userName
                             )
                         }

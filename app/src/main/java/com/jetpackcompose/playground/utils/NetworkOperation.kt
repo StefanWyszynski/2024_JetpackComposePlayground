@@ -11,7 +11,7 @@ sealed interface NetworkOperation<T> {
 
     data class Loading<T>(var placeholder: T? = null) : NetworkOperation<T>
 
-    data class Success<T>(var users: T) : NetworkOperation<T>
+    data class Success<T>(var data: T) : NetworkOperation<T>
     data class Failure<T>(var reason: String? = null) : NetworkOperation<T>
 
     @Composable
@@ -25,7 +25,7 @@ sealed interface NetworkOperation<T> {
     @Composable
     fun onSuccess(action: @Composable (data: T) -> Unit): NetworkOperation<T> {
         if (this is Success) {
-            action(this.users)
+            action(this.data)
         }
         return this
     }

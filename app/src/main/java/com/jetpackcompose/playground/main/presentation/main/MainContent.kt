@@ -7,7 +7,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.jetpackcompose.playground.R
-import com.jetpackcompose.playground.camerax.presentation.cameraxtest.CameraXScreenContainer
+import com.jetpackcompose.playground.camerax.presentation.CameraXScreenContainer
+import com.jetpackcompose.playground.camerax.presentation.viewmodel.CameraXViewModel
 import com.jetpackcompose.playground.compose_game_bench.presentation.GameScreen
 import com.jetpackcompose.playground.compose_game_bench.presentation.viewmodel.GameViewModel
 import com.jetpackcompose.playground.main.presentation.data.CustomTopAppBarData
@@ -52,7 +53,8 @@ fun MainContent(
         }
         composable(ScreenRoute.CameraXTest.route) {
             customTopAppBarData.title = stringResource(R.string.camerax_test)
-            CameraXScreenContainer(customTopAppBarData)
+            val hiltViewModel = hiltViewModel<CameraXViewModel>(it)
+            CameraXScreenContainer(customTopAppBarData, hiltViewModel)
         }
         composable(ScreenRoute.MapsTest.route) {
             GoogleMapScreen()
