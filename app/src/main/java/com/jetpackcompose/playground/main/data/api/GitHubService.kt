@@ -1,4 +1,4 @@
-package com.jetpackcompose.playground.common.data.api
+package com.jetpackcompose.playground.main.data.api
 
 import com.jetpackcompose.playground.repos.data.dto.GithubReposSearchDto
 import com.jetpackcompose.playground.users.data.dto.GithubUserDto

@@ -3,7 +3,7 @@ package com.jetpackcompose.playground.camerax.presentation.cameraxtest
 import android.Manifest
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import com.jetpackcompose.playground.common.presentation.data.CustomTopAppBarData
+import com.jetpackcompose.playground.main.presentation.data.CustomTopAppBarData
 import com.thwackstudio.permissions_util.domain.data.PermissionInfo
 import com.thwackstudio.permissions_util.domain.data.PermissionsContainer
 import com.thwackstudio.permissions_util.domain.data.PermissionsDialogHelper

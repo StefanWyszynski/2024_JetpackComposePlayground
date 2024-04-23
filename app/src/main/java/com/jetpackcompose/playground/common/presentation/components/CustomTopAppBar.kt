@@ -13,7 +13,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.jetpackcompose.playground.common.presentation.data.CustomTopAppBarData
+import com.jetpackcompose.playground.main.presentation.data.CustomTopAppBarData
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)

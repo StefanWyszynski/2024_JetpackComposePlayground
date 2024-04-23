@@ -23,7 +23,7 @@ import com.jetpackcompose.playground.common.presentation.components.LoadingProgr
 import com.jetpackcompose.playground.common.presentation.components.SearchField
 import com.jetpackcompose.playground.common.presentation.components.SearchResultListItem
 import com.jetpackcompose.playground.common.presentation.components.Spacer
-import com.jetpackcompose.playground.common.presentation.data.CustomTopAppBarData
+import com.jetpackcompose.playground.main.presentation.data.CustomTopAppBarData
 import com.jetpackcompose.playground.repos.domain.model.GithubRepo
 import com.jetpackcompose.playground.repos.presentation.viewmodel.SerachRepoViewModel
 import com.jetpackcompose.playground.utils.NetworkOperation

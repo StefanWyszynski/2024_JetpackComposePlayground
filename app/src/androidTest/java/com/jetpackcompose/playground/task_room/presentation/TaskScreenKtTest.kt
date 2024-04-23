@@ -21,11 +21,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.jetpackcompose.playground.R
-import com.jetpackcompose.playground.common.data.database.AppDatabase
-import com.jetpackcompose.playground.common.presentation.data.CustomTopAppBarData
-import com.jetpackcompose.playground.common.presentation.data.ScreenRoute
-import com.jetpackcompose.playground.common.presentation.main.MainActivityCompose
-import com.jetpackcompose.playground.common.presentation.theme.JetpackComposePlaygroundAppTheme
+import com.jetpackcompose.playground.main.data.database.AppDatabase
+import com.jetpackcompose.playground.main.presentation.data.CustomTopAppBarData
+import com.jetpackcompose.playground.main.presentation.data.ScreenRoute
+import com.jetpackcompose.playground.main.presentation.main.MainActivityCompose
+import com.jetpackcompose.playground.main.presentation.theme.JetpackComposePlaygroundAppTheme
 import com.jetpackcompose.playground.common.presentation.utils.TestConstants
 import com.jetpackcompose.playground.common.presentation.utils.topAppBarToogleVisibility
 import com.jetpackcompose.playground.di.modules.DatabaseModule

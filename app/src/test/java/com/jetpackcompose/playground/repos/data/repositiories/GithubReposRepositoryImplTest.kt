@@ -2,7 +2,7 @@ package com.jetpackcompose.playground.repos.data.repositiories
 
 import com.google.common.truth.Truth
 import com.google.gson.Gson
-import com.jetpackcompose.playground.common.data.api.GitHubApiService
+import com.jetpackcompose.playground.main.data.api.GitHubApiService
 import com.jetpackcompose.playground.repos.data.dto.GithubRepoDto
 import com.jetpackcompose.playground.repos.data.dto.GithubReposSearchDto
 import com.jetpackcompose.playground.repos.data.dto.mapToDomain

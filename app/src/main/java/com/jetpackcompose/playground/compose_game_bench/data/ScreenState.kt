@@ -14,5 +14,4 @@ data class ScreenState(
     var fov: Double = 60.0,
     var halfFov: Double = (fov / 2.0),
     val incrementAngle: Double = fov / screenWidth.toDouble()
-
 )

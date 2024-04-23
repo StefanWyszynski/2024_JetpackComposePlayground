@@ -2,7 +2,7 @@ package com.jetpackcompose.playground.task_room.data
 
 import androidx.test.filters.SmallTest
 import com.google.common.truth.Truth
-import com.jetpackcompose.playground.common.data.database.AppDatabase
+import com.jetpackcompose.playground.main.data.database.AppDatabase
 import com.jetpackcompose.playground.di.modules.DatabaseModule
 import com.jetpackcompose.playground.task_room.domain.data.Priority
 import com.jetpackcompose.playground.task_room.domain.data.Task

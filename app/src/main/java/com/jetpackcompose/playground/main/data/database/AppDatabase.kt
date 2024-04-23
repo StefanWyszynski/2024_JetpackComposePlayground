@@ -1,4 +1,4 @@
-package com.jetpackcompose.playground.common.data.database
+package com.jetpackcompose.playground.main.data.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

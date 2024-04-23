@@ -29,7 +29,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import com.jetpackcompose.playground.common.presentation.components.CustomTopAppBar
-import com.jetpackcompose.playground.common.presentation.data.CustomTopAppBarData
+import com.jetpackcompose.playground.main.presentation.data.CustomTopAppBarData
 
 @Composable
 fun CameraXScreenContent(

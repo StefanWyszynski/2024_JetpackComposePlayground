@@ -1,6 +1,6 @@
 package com.jetpackcompose.playground.repos.data.repositiories
 
-import com.jetpackcompose.playground.common.data.api.GitHubApiService
+import com.jetpackcompose.playground.main.data.api.GitHubApiService
 import com.jetpackcompose.playground.domain.repositories.GithubUsersRepository
 import com.jetpackcompose.playground.users.data.dto.mapToDomain
 import com.jetpackcompose.playground.users.domain.model.GithubUser

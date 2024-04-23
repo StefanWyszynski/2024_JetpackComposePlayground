@@ -25,7 +25,7 @@ import com.jetpackcompose.playground.common.presentation.components.LoadingProgr
 import com.jetpackcompose.playground.common.presentation.components.SearchField
 import com.jetpackcompose.playground.common.presentation.components.SearchResultListItem
 import com.jetpackcompose.playground.common.presentation.components.Spacer
-import com.jetpackcompose.playground.common.presentation.data.CustomTopAppBarData
+import com.jetpackcompose.playground.main.presentation.data.CustomTopAppBarData
 import com.jetpackcompose.playground.users.presentation.redux.GithubUserState
 import com.jetpackcompose.playground.users.presentation.viewmodel.SerachUserViewModel
 

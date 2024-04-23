@@ -5,7 +5,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import com.google.gson.JsonSyntaxException
-import com.jetpackcompose.playground.common.data.api.GitHubApiService
+import com.jetpackcompose.playground.main.data.api.GitHubApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

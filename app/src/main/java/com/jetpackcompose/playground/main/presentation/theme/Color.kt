@@ -1,4 +1,4 @@
-package com.jetpackcompose.playground.common.presentation.theme
+package com.jetpackcompose.playground.main.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
