@@ -2,6 +2,7 @@ package com.jetpackcompose.playground.di.modules
 
 import com.jetpackcompose.playground.di.annotations.DispathersDefault
 import com.jetpackcompose.playground.di.annotations.DispathersIO
+import com.jetpackcompose.playground.di.annotations.DispathersMain
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,7 +36,7 @@ class DispathersModule {
 
     @Provides
     @Singleton
-    @DispathersDefault
+    @DispathersMain
     fun provideMainDispatcher(): CoroutineDispatcher {
         return Dispatchers.Main
     }
