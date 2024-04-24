@@ -213,23 +213,4 @@ class RayCastUtil @Inject constructor(@DispathersDefault val defaultDispatcher: 
                 ceilColorAtDist
         }
     }
-
-    fun myFizzBuzzImplForFun(n: Int): MutableList<String> {
-        val fizzBuzzOccuranceText =
-            arrayListOf("Fizz", "Buzz", "Fizz", "Fizz", "Buzz", "Fizz", "FizzBuzz")
-        val fizzBuzzValues = arrayListOf(3, 5, 3, 3, 5, 3, 3)
-        var index = 0
-        var currentNum = 3
-        val result = mutableListOf<String>()
-        for (i in 1..n) {
-            if (i % currentNum == 0) {
-                result.add(fizzBuzzOccuranceText[index])
-                index = (index + 1) % 7
-                currentNum = fizzBuzzValues[index]
-            } else {
-                result.add(i.toString())
-            }
-        }
-        return result
-    }
 }
