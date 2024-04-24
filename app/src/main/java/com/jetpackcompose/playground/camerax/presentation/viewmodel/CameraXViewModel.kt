@@ -4,10 +4,11 @@ import androidx.camera.core.ImageProxy
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jetpackcompose.playground.camerax.domain.ImageProxyToImageBitmapConverterUseCase
+import com.jetpackcompose.playground.camerax.presentation.data.ImageProxyToImageBitmapConverter
 import com.jetpackcompose.playground.di.annotations.DispathersDefault
 import com.jetpackcompose.playground.utils.ThreadOperation
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -16,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CameraXViewModel @Inject constructor(
-    val imageProxyToImageBitmapConverterUseCase: ImageProxyToImageBitmapConverterUseCase,
+    val imageProxyToImageBitmapConverterImpl: ImageProxyToImageBitmapConverter,
     @DispathersDefault val defaultDispather: CoroutineDispatcher
 ) :
     ViewModel() {
@@ -34,14 +35,17 @@ class CameraXViewModel @Inject constructor(
             try {
                 processingImage = true
                 val processedImage =
-                    imageProxyToImageBitmapConverterUseCase.convertImageAndClose(
+                    imageProxyToImageBitmapConverterImpl.convertImageAndClose(
                         image, defaultDispather
                     )
-                processedImage?.let {
+                processedImage.let {
                     _receivedImageSharedFlow.emit(ThreadOperation.Success(processedImage))
-                } ?: _receivedImageSharedFlow.emit(
+                }
+            } catch (e: Exception) {
+                _receivedImageSharedFlow.emit(
                     ThreadOperation.Failure("Error occured while processing camera photo")
                 )
+                if (e is CancellationException) throw e;
             } finally {
                 processingImage = false
             }

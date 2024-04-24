@@ -1,4 +1,4 @@
-package com.jetpackcompose.playground.camerax.domain
+package com.jetpackcompose.playground.camerax.presentation.data
 
 import androidx.camera.core.ImageProxy
 import androidx.compose.ui.graphics.ImageBitmap
@@ -9,5 +9,5 @@ interface ImageProxyToImageBitmapConverter {
     suspend fun convertImageAndClose(
         imageProxy: ImageProxy,
         dispatcher: CoroutineDispatcher
-    ): ImageBitmap?
+    ): ImageBitmap
 }
