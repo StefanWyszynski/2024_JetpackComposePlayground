@@ -38,7 +38,7 @@ object MyAlgorithmsImpl {
 
     /**
      * typical implementation is O(n log(n)) because it uses sorting,
-     * so I created implementation with O(n) because it uses counting to zero
+     * this is with O(n) because it uses counting to zero
      */
     fun myIsAnagramImplForFun(first: String, second: String): Boolean {
         val sumArr = Array(256) { 0 }
@@ -58,5 +58,30 @@ object MyAlgorithmsImpl {
 //            sum += aChars[i].code - bChars[i].code
 //        }
 //        return sum == 0L
+    }
+
+    fun myIsAnagramImplForFun2(s: String, t: String): Boolean {
+        val sumArr = mutableMapOf<Int, Int>()
+        val aChars = s.filter { it.isLetter() }
+        val bChars = t.filter { it.isLetter() }
+
+        if (aChars.length != bChars.length) {
+            return false
+        }
+        for (i in 0 until aChars.length) {
+            val v1 = aChars[i].code
+            val v2 = bChars[i].code
+            if (sumArr.containsKey(v1)) {
+                sumArr[v1] = sumArr[v1]!! + 1
+            } else {
+                sumArr[v1] = 1
+            }
+            if (sumArr.containsKey(v2)) {
+                sumArr[v2] = sumArr[v2]!! - 1
+            } else {
+                sumArr[v2] = -1
+            }
+        }
+        return sumArr.values.all { it == 0 }
     }
 }

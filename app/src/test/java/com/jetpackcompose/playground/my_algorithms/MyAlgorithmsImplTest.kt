@@ -37,4 +37,19 @@ class MyAlgorithmsImplTest{
         assertEquals(false, MyAlgorithmsImpl.myIsAnagramImplForFun("aa", "bbbbb"))
         assertEquals(false, MyAlgorithmsImpl.myIsAnagramImplForFun("bbbbb", "aa"))
     }
+
+    @Test
+    fun test_myAnagram2() {
+        // anagram
+        assertEquals(true, MyAlgorithmsImpl.myIsAnagramImplForFun2("listen", "silent"))
+        assertEquals(true, MyAlgorithmsImpl.myIsAnagramImplForFun2("debit card", "bad credit"))
+        assertEquals(true, MyAlgorithmsImpl.myIsAnagramImplForFun2("astronomer", "moon starer"))
+
+        // not anagram
+        assertEquals(false, MyAlgorithmsImpl.myIsAnagramImplForFun2("hello", "world"))
+        assertEquals(false, MyAlgorithmsImpl.myIsAnagramImplForFun2("apple", "orange"))
+        assertEquals(false, MyAlgorithmsImpl.myIsAnagramImplForFun2("cat", "dog"))
+        assertEquals(false, MyAlgorithmsImpl.myIsAnagramImplForFun2("aa", "bbbbb"))
+        assertEquals(false, MyAlgorithmsImpl.myIsAnagramImplForFun2("bbbbb", "aa"))
+    }
 }
