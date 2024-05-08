@@ -92,8 +92,8 @@ dependencies {
 
     implementation libs.activity.compose
 
-    debugImplementation 'androidx.compose.ui:ui-tooling'
-    debugImplementation 'androidx.compose.ui:ui-test-manifest'
+    debugImplementation libs.androidx.ui.tooling
+    debugImplementation libs.androidx.ui.test.manifest
 
     // jetpack compose
     implementation platform(libs.composeBom)
@@ -151,9 +151,9 @@ dependencies {
     testImplementation libs.test.junit
     testImplementation libs.test.truth
     testImplementation libs.test.ext.junit
-    testImplementation 'junit:junit:4.12'
-    testImplementation "androidx.test:runner:1.5.2"
-    testImplementation "androidx.test:rules:1.5.0"
+    testImplementation libs.test.junit.v412
+    testImplementation libs.test.androidx.runner
+    testImplementation libs.test.androidx.rules
     // Optional -- Mockk framework
     testImplementation libs.test.mockk
 
@@ -166,28 +166,28 @@ dependencies {
     testImplementation libs.androidx.core
 
     // mockwebserver
-    testImplementation "com.squareup.okhttp3:mockwebserver:4.12.0"
+    testImplementation libs.test.mockwebserver
 
     // compose
-    testImplementation platform('androidx.compose:compose-bom:2024.02.02')
-    testImplementation 'androidx.compose.ui:ui-test-junit4'
+    testImplementation libs.compose.bom.v20240202
+    testImplementation libs.test.androidx.ui.test.junit4
     // ANDROID TEST ========================================================================================
     androidTestImplementation libs.test.ext.junit
-    androidTestImplementation "androidx.test:runner:1.5.2"
-    androidTestImplementation "androidx.test:rules:1.5.0"
+    androidTestImplementation libs.test.androidx.runner
+    androidTestImplementation libs.test.androidx.rules
 
     // Optional -- Mockito framework
     androidTestImplementation libs.test.mockito.core
     // Optional -- mockito-kotlin
     androidTestImplementation libs.test.mockito.kotlin
 
-    // expresso
+    // espresso
     androidTestImplementation libs.test.espresso.core
     androidTestImplementation libs.test.truth
 
     // jetpack compose test
-    androidTestImplementation platform('androidx.compose:compose-bom:2024.02.02')
-    androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
+    androidTestImplementation libs.compose.bom.v20240202
+    androidTestImplementation libs.test.ui.test.junit4
 
 
     // For Robolectric tests.
@@ -200,7 +200,7 @@ dependencies {
     // For instrumented tests.
     androidTestImplementation libs.test.hilt.android.testing
     // ...with Kotlin.
-    kaptAndroidTest 'com.google.dagger:hilt-android-compiler:2.50'
+    kaptAndroidTest libs.hilt.android.compiler
     // ...with Java.
     androidTestAnnotationProcessor 'com.google.dagger:hilt-android-compiler:2.50'
 }

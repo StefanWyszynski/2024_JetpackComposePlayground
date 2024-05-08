@@ -30,7 +30,7 @@ data class DrawWallLineData(
     /**
      * bottom left position of the rendering wall on the screen
      */
-    var wallLineButtomLeft: Offset = Offset(0f, 0f),
+    var wallLineBottomLeft: Offset = Offset(0f, 0f),
 
     /**
      * ratio between virtual screen width and phone screen width

@@ -1,5 +1,6 @@
 package com.thwackstudio.crypto.domain.usecase
 
+import com.thwackstudio.crypto.domain.repository.CryptoUtilRepository
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -10,7 +11,7 @@ import org.mockito.junit.MockitoJUnitRunner
 class CryptoUtilDecryptUseCaseTest {
 
     @Mock
-    lateinit var cryptoUtil: com.thwackstudio.crypto.domain.repository.CryptoUtilRepository
+    lateinit var cryptoUtil: CryptoUtilRepository
 
     @Test
     fun `decrypting ByteArray should return String`() {
@@ -19,7 +20,7 @@ class CryptoUtilDecryptUseCaseTest {
 
         Mockito.`when`(cryptoUtil.decryptAsString(encryptedData)).thenReturn(decryptedString)
 
-        val useCase = com.thwackstudio.crypto.domain.usecase.CryptoUtilDecryptUseCase(cryptoUtil)
+        val useCase = CryptoUtilDecryptUseCase(cryptoUtil)
 
         val result = useCase(encryptedData)
 

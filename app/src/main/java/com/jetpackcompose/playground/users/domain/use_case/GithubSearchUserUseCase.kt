@@ -1,11 +1,11 @@
-package com.jetpackcompose.playground.domain.use_case
+package com.jetpackcompose.playground.users.domain.use_case
 
-import com.jetpackcompose.playground.domain.repositories.GithubUsersRepository
 import com.jetpackcompose.playground.users.domain.model.GithubUser
+import com.jetpackcompose.playground.users.domain.repositories.GithubUsersRepository
 import com.jetpackcompose.playground.utils.NetworkOperation
 import javax.inject.Inject
 
-/*
+/**
  * Copyright 2024
  *
  * @author Stefan Wyszyński

@@ -21,6 +21,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -54,8 +56,8 @@ fun GameScreen(viewModel: GameViewModel) {
     // prepare game states
     val screenState by remember { mutableStateOf(viewModel.gameData.screenState) }
     val playerDirection = remember { mutableStateOf(PointF()) }
-    var deltaTime by remember { mutableStateOf(0f) }
-    var lastFrameTime by remember { mutableStateOf(System.currentTimeMillis()) }
+    var deltaTime by remember { mutableFloatStateOf(0f) }
+    var lastFrameTime by remember { mutableLongStateOf(System.currentTimeMillis()) }
 
     // prepare game textures
     val wall1 = ImageBitmap.imageResource(id = R.drawable.wall4)
@@ -180,7 +182,7 @@ inline fun DrawScope.drawTexturedWall(
             dstOffset = IntOffset(wallLineTopLeft.x.toInt(), wallLineTopLeft.y.toInt()),
             dstSize = IntSize(
                 virtualGameScreenToPhoneScreenRatioWidth.toInt() + oneDpInPixels,
-                (wallLineButtomLeft.y - wallLineTopLeft.y).toInt()
+                (wallLineBottomLeft.y - wallLineTopLeft.y).toInt()
             ),
             colorFilter = ColorFilter.tint(colorStart, blendMode = BlendMode.Multiply),
             filterQuality = screenState.filteringQuality
@@ -202,7 +204,7 @@ private fun PlayerControlJoystickLayout(playerDirection: MutableState<PointF>) {
 
     val scaleJoystickIcon by animateFloatAsState(
         targetValue = if (isJoystickPressed) 1.5f else 1f,
-        animationSpec = tween(500, easing = LinearOutSlowInEasing)
+        animationSpec = tween(500, easing = LinearOutSlowInEasing), label = ""
     )
     Column(
         modifier = Modifier

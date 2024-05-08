@@ -3,7 +3,7 @@ package com.jetpackcompose.playground.users.domain.model
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
-/*
+/**
  * Copyright 2024
  *
  * @author Stefan Wyszyński

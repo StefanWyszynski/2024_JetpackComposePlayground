@@ -17,7 +17,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 
-/*
+/**
  * Copyright 2024
  *
  * @author Stefan Wyszyński
@@ -34,7 +34,7 @@ class ApiModule {
 //            .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
             .setPrettyPrinting()
             .setVersion(1.0)
-            .create();
+            .create()
     }
 
     @Provides

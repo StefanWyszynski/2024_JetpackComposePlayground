@@ -57,11 +57,11 @@ fun RoomTaskScreen(
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add task")
                 Text(text = stringResource(R.string.add_task))
             }
-        }) { scaffoldPading ->
+        }) { scaffoldPadding ->
         Surface(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(scaffoldPading)
+                .padding(scaffoldPadding)
         )
         {
             val tasks by taskViewModel.tasks.collectAsStateWithLifecycle()

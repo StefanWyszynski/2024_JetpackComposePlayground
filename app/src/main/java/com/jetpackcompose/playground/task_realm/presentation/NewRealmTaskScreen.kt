@@ -1,4 +1,4 @@
-package com.jetpackcompose.playground.task_room.presentation
+package com.jetpackcompose.playground.task_realm.presentation
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
@@ -46,11 +46,12 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.jetpackcompose.playground.R
 import com.jetpackcompose.playground.common.presentation.components.CustomTopAppBar
+import com.jetpackcompose.playground.common.presentation.utils.DateUtils.convertMillisToDate
 import com.jetpackcompose.playground.common.presentation.utils.TestConstants
 import com.jetpackcompose.playground.main.presentation.data.CustomTopAppBarData
+import com.jetpackcompose.playground.task_realm.domain.data.RealmTask
 import com.jetpackcompose.playground.task_realm.presentation.viewmodel.RealmTaskViewModel
 import com.jetpackcompose.playground.task_room.domain.data.Priority
-import com.jetpackcompose.playground.task_room.domain.data.RealmTask
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -108,11 +109,11 @@ private fun AddRealmTaskContent(
     val dropDownExposed = remember { mutableStateOf(false) }
 
     Scaffold(topBar = { CustomTopAppBar(customTopAppBarData) })
-    { scaffoldPading ->
+    { scaffoldPadding ->
         Surface(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(scaffoldPading)
+                .padding(scaffoldPadding)
         )
         {
             Column(

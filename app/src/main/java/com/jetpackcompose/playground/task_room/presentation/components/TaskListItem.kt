@@ -57,12 +57,12 @@ fun TaskListItem(
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
-                    text = task.name ?: "Empty",
+                    text = task.name,
                     modifier = Modifier
                         .padding(8.dp)
                 )
                 Text(
-                    text = task.date ?: "None",
+                    text = task.date,
                     modifier = Modifier
                         .padding(8.dp)
                 )

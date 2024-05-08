@@ -31,8 +31,7 @@ fun GoogleMapScreen() {
     if (permissionsRequester.isAllPermissionsGranted()) {
         GoogleMapTest()
     } else {
-        MapNoPermissionScreen() {
-        }
+        MapNoPermissionScreen{}
 
         permissionsRequester.RequestMultiplePermissions(onShowPermissionDialog = { permissionDialogHelper: PermissionsDialogHelper ->
             DefaultPermissionDialog(permissionsDialogHelper = permissionDialogHelper)

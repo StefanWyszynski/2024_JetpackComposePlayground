@@ -2,7 +2,7 @@ package com.jetpackcompose.playground.users.presentation.redux
 
 import com.freeletics.flowredux.dsl.FlowReduxStateMachine
 import com.freeletics.flowredux.dsl.State
-import com.jetpackcompose.playground.domain.use_case.GithubSearchUserUseCase
+import com.jetpackcompose.playground.users.domain.use_case.GithubSearchUserUseCase
 import com.jetpackcompose.playground.utils.NetworkOperation
 import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject

@@ -1,13 +1,13 @@
 package com.thwackstudio.permissions_util.presentation
 
 import android.content.Context
-import android.util.Log
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -50,10 +50,10 @@ class PermissionsRequester(private var _permissions: List<PermissionInfo>) {
             return
         }
         val processState = remember { mutableStateOf(PermissionProcessState.CALL_PERMISSION_LAUNCHER_ON_START) }
-        val showRationaleDialogsCount = remember { mutableStateOf(0) }
-        val permissionPermamentlyDenied = remember { mutableStateOf(false) }
+        val showRationaleDialogsCount = remember { mutableIntStateOf(0) }
+        val permissionPermanentlyDenied = remember { mutableStateOf(false) }
         val resultLauncher = rememberResultLauncher(
-            permissionPermamentlyDenied, showRationaleDialogsCount, processState
+            permissionPermanentlyDenied, showRationaleDialogsCount, processState
         )
 
         val context = LocalContext.current
@@ -70,7 +70,7 @@ class PermissionsRequester(private var _permissions: List<PermissionInfo>) {
             PermissionProcessState.CHECK_FOR_STATE_CHANGE -> {
                 if (numPermissionsToCheck > 0) {
                     if (showRationaleDialogsCount.value == 0 &&
-                        !isAllPermissionsGranted() && !permissionPermamentlyDenied.value
+                        !isAllPermissionsGranted() && !permissionPermanentlyDenied.value
                     ) {
                         processState.value = PermissionProcessState.CALL_PERMISSION_LAUNCHER_ON_START
                     } else {
@@ -85,7 +85,7 @@ class PermissionsRequester(private var _permissions: List<PermissionInfo>) {
                 val permissions = _permissions.getNotDeniedAndNotGrantedPermissions(context)
                 for (permissionInfo in permissions) {
                     val customPermissionDialog = rememberPermissionDialogHelper(
-                        permissionPermamentlyDenied,
+                        permissionPermanentlyDenied,
                         permissionInfo,
                         launchRequestLauncher = {
                             processState.value = PermissionProcessState.CALL_PERMISSION_LAUNCHER_IN_RATIONALE_DIALOG
@@ -111,7 +111,7 @@ class PermissionsRequester(private var _permissions: List<PermissionInfo>) {
 
     @Composable
     private fun rememberResultLauncher(
-        permamentlyDenied: MutableState<Boolean>,
+        permanentlyDenied: MutableState<Boolean>,
         showRationaleDialogsCount: MutableState<Int>,
         processState: MutableState<PermissionProcessState>
     ): ManagedActivityResultLauncher<Array<String>, Map<String, @JvmSuppressWildcards Boolean>> {
@@ -127,13 +127,9 @@ class PermissionsRequester(private var _permissions: List<PermissionInfo>) {
                         val allPermissionsGranted = permissions.values.all { isGranted ->
                             isGranted
                         }
-                        Log.e(
-                            "TAG", "isLaunchedToFastMeansSystemIsPermamentyDeniedPermissions: " +
-                                    isLaunchedToFastMeansSystemIsPermamentyDeniedPermissions()
-                        )
-                        permamentlyDenied.value = (!allPermissionsGranted) &&
-                                isLaunchedToFastMeansSystemIsPermamentyDeniedPermissions()
-                        if (!allPermissionsGranted || permamentlyDenied.value) {
+                        permanentlyDenied.value = (!allPermissionsGranted) &&
+                                isLaunchedToFastMeansSystemIsPermanentlyDeniedPermissions()
+                        if (!allPermissionsGranted || permanentlyDenied.value) {
                             showRationaleDialogsCount.value =
                                 _permissions.getNotDeniedAndNotGrantedPermissions(
                                     context
@@ -163,7 +159,7 @@ class PermissionsRequester(private var _permissions: List<PermissionInfo>) {
         _permissions.getNotDeniedAndNotGrantedPermissions(context)
             .map { it.name }.toList().toTypedArray()
 
-    private fun isLaunchedToFastMeansSystemIsPermamentyDeniedPermissions() =
+    private fun isLaunchedToFastMeansSystemIsPermanentlyDeniedPermissions() =
         (System.currentTimeMillis() - PERMISSIONS_CLICK_DELAY_MS < lastPermissionRequestLaunchedAt)
 
     fun List<PermissionInfo>.getNotDeniedAndNotGrantedPermissions(context: Context): List<PermissionInfo> {
@@ -182,7 +178,7 @@ class PermissionsRequester(private var _permissions: List<PermissionInfo>) {
 
     @Composable
     internal fun rememberPermissionDialogHelper(
-        permissionPermamentlyDenied: MutableState<Boolean>,
+        permissionPermanentlyDenied: MutableState<Boolean>,
         permission: PermissionInfo,
         launchRequestLauncher: () -> Unit,
         showPermissionDialogsCount: MutableState<Int>,
@@ -190,12 +186,12 @@ class PermissionsRequester(private var _permissions: List<PermissionInfo>) {
     ): PermissionsDialogHelper {
         return remember {
             object : PermissionsDialogHelper {
-                override fun arePermissionsPermamentyDenied(): Boolean {
-                    return permissionPermamentlyDenied.value
+                override fun arePermissionsPermanentlyDenied(): Boolean {
+                    return permissionPermanentlyDenied.value
                 }
 
                 override fun getDescription(): String {
-                    return if (arePermissionsPermamentyDenied()) {
+                    return if (arePermissionsPermanentlyDenied()) {
                         getPermissionInfo().rationaleDescription ?: ""
                     } else {
                         getPermissionInfo().description ?: ""
@@ -229,7 +225,7 @@ class PermissionsRequester(private var _permissions: List<PermissionInfo>) {
 
                 override fun onConfirm() {
                     onDismiss()
-                    if (arePermissionsPermamentyDenied()) {
+                    if (arePermissionsPermanentlyDenied()) {
                         goToSystemSettings()
                     } else {
                         launchPermissionRequest()

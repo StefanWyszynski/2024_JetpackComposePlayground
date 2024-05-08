@@ -1,4 +1,4 @@
-package com.jetpackcompose.playground.task_room.presentation
+package com.jetpackcompose.playground.task_realm.presentation
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -37,9 +37,9 @@ import com.jetpackcompose.playground.common.presentation.components.CustomTopApp
 import com.jetpackcompose.playground.common.presentation.utils.TestConstants
 import com.jetpackcompose.playground.main.presentation.data.CustomTopAppBarData
 import com.jetpackcompose.playground.main.presentation.data.ScreenRoute
+import com.jetpackcompose.playground.task_realm.domain.data.RealmTask
+import com.jetpackcompose.playground.task_realm.presentation.components.RealmTaskListItem
 import com.jetpackcompose.playground.task_realm.presentation.viewmodel.RealmTaskViewModel
-import com.jetpackcompose.playground.task_room.domain.data.RealmTask
-import com.jetpackcompose.playground.task_room.presentation.components.RealmTaskListItem
 
 @Composable
 fun RealmTaskScreen(
@@ -60,11 +60,11 @@ fun RealmTaskScreen(
                 Text(text = stringResource(R.string.add_task))
             }
         }
-    ) { scaffoldPading ->
+    ) { scaffoldPadding ->
         Surface(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(scaffoldPading)
+                .padding(scaffoldPadding)
         )
         {
             val tasks by taskViewModel.tasks.collectAsStateWithLifecycle()

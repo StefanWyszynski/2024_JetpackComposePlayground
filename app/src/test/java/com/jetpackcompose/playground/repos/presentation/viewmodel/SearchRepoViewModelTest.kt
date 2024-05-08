@@ -19,20 +19,20 @@ import org.mockito.junit.MockitoJUnitRunner
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
-class SerachRepoViewModelTest {
+class SearchRepoViewModelTest {
 
 
     @Mock
     private lateinit var githubSearchRepoUseCase: GithubSearchRepoUseCase
 
-    private lateinit var githubSearchViewModel: SerachRepoViewModel
+    private lateinit var githubSearchViewModel: SearchRepoViewModel
     val testDispatcher = UnconfinedTestDispatcher()
 
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
         Dispatchers.setMain(testDispatcher)
-        githubSearchViewModel = SerachRepoViewModel(githubSearchRepoUseCase)
+        githubSearchViewModel = SearchRepoViewModel(githubSearchRepoUseCase)
     }
 
     @Test

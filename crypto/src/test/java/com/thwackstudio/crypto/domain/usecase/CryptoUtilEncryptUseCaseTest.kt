@@ -14,12 +14,12 @@ class CryptoUtilEncryptUseCaseTest {
     @Mock
     lateinit var cryptoUtil: com.thwackstudio.crypto.domain.repository.CryptoUtilRepository
 
-    private lateinit var encryptUseCase: com.thwackstudio.crypto.domain.usecase.CryptoUtilEncryptUseCase
+    private lateinit var encryptUseCase: CryptoUtilEncryptUseCase
 
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        encryptUseCase = com.thwackstudio.crypto.domain.usecase.CryptoUtilEncryptUseCase(cryptoUtil)
+        encryptUseCase = CryptoUtilEncryptUseCase(cryptoUtil)
     }
 
     @Test

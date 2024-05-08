@@ -27,7 +27,7 @@ import com.jetpackcompose.playground.main.presentation.data.ScreenRoute
 import com.jetpackcompose.playground.main.presentation.main.MainActivityCompose
 import com.jetpackcompose.playground.main.presentation.theme.JetpackComposePlaygroundAppTheme
 import com.jetpackcompose.playground.common.presentation.utils.TestConstants
-import com.jetpackcompose.playground.common.presentation.utils.topAppBarToogleVisibility
+import com.jetpackcompose.playground.common.presentation.utils.topAppBarToggleVisibility
 import com.jetpackcompose.playground.di.modules.DatabaseModule
 import com.jetpackcompose.playground.task_room.data.TaskDao
 import com.jetpackcompose.playground.task_room.presentation.viewmodel.TaskViewModel
@@ -68,10 +68,10 @@ class TaskScreenKtTest {
                 val navController = rememberNavController()
                 val scope = rememberCoroutineScope()
                 val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-                val toppAppBarToogleCallback =
-                    remember { topAppBarToogleVisibility(scope, drawerState) }
+                val topAppBarToggleCallback =
+                    remember { topAppBarToggleVisibility(scope, drawerState) }
                 val customTopAppBarData =
-                    CustomTopAppBarData(openIconClick = toppAppBarToogleCallback)
+                    CustomTopAppBarData(openIconClick = topAppBarToggleCallback)
                 NavHost(
                     navController = navController,
                     startDestination = ScreenRoute.RoomTask.Main.getFullPath()
@@ -89,7 +89,7 @@ class TaskScreenKtTest {
                             }
 
                             ScreenRoute.RoomTask.NewTask.route -> {
-                                customTopAppBarData.title = stringResource(R.string.add_new_task)
+                                customTopAppBarData.title = stringResource(R.string.add_task)
                                 RoomNewTaskScreen(navController, hiltViewModel, customTopAppBarData)
                             }
                         }

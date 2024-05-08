@@ -1,4 +1,4 @@
-package com.jetpackcompose.playground.task_room.presentation.components
+package com.jetpackcompose.playground.task_realm.presentation.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,8 +20,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.jetpackcompose.playground.task_realm.domain.data.RealmTask
 import com.jetpackcompose.playground.task_room.domain.data.Priority
-import com.jetpackcompose.playground.task_room.domain.data.RealmTask
 
 @Composable
 fun RealmTaskListItem(
@@ -58,12 +58,12 @@ fun RealmTaskListItem(
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
-                    text = task.name ?: "Empty",
+                    text = task.name,
                     modifier = Modifier
                         .padding(8.dp)
                 )
                 Text(
-                    text = task.date ?: "None",
+                    text = task.date,
                     modifier = Modifier
                         .padding(8.dp)
                 )

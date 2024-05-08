@@ -1,14 +1,14 @@
-package com.jetpackcompose.playground.repos.data.repositiories
+package com.jetpackcompose.playground.users.data.repositiories
 
-import com.jetpackcompose.playground.domain.repositories.GithubUsersRepository
 import com.jetpackcompose.playground.main.data.api.GitHubApiService
 import com.jetpackcompose.playground.users.data.dto.mapToDomain
 import com.jetpackcompose.playground.users.domain.model.GithubUser
+import com.jetpackcompose.playground.users.domain.repositories.GithubUsersRepository
 import com.jetpackcompose.playground.utils.NetworkOperation
 import com.jetpackcompose.playground.utils.safeApiCallRunner
 import javax.inject.Inject
 
-/*
+/**
  * Copyright 2024
  *
  * @author Stefan Wyszyński

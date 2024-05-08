@@ -3,7 +3,7 @@ package com.jetpackcompose.playground.repos.data.dto
 import com.google.gson.annotations.SerializedName
 import com.jetpackcompose.playground.repos.domain.model.GithubRepo
 
-/*
+/**
  * Copyright 2024
  *
  * @author Stefan Wyszyński

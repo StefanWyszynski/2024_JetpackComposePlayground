@@ -25,27 +25,27 @@ import com.jetpackcompose.playground.common.presentation.components.SearchResult
 import com.jetpackcompose.playground.common.presentation.components.Spacer
 import com.jetpackcompose.playground.main.presentation.data.CustomTopAppBarData
 import com.jetpackcompose.playground.repos.domain.model.GithubRepo
-import com.jetpackcompose.playground.repos.presentation.viewmodel.SerachRepoViewModel
+import com.jetpackcompose.playground.repos.presentation.viewmodel.SearchRepoViewModel
 import com.jetpackcompose.playground.utils.NetworkOperation
 
-/*
+/**
  * Copyright 2024
  *
  * @author Stefan Wyszyński
  */
 @Composable
 fun SearchRepoScreen(
-    viewModel: SerachRepoViewModel,
+    viewModel: SearchRepoViewModel,
     customTopAppBarData: CustomTopAppBarData
 ) {
     Scaffold(
         topBar = {
             CustomTopAppBar(customTopAppBarData)
-        }) { scaffoldPading ->
+        }) { scaffoldPadding ->
         Surface(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(scaffoldPading)
+                .padding(scaffoldPadding)
         )
         {
             SearchRepoScreenContent(viewModel)
@@ -54,7 +54,7 @@ fun SearchRepoScreen(
 }
 
 @Composable
-private fun SearchRepoScreenContent(viewModel: SerachRepoViewModel) {
+private fun SearchRepoScreenContent(viewModel: SearchRepoViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -64,13 +64,13 @@ private fun SearchRepoScreenContent(viewModel: SerachRepoViewModel) {
         val githubRepos by viewModel.gitHubRepos.collectAsStateWithLifecycle()
         SearchField(searchText, viewModel::onSearchTextChange)
         Spacer()
-        ShowRepositories(repositiories = githubRepos)
+        ShowRepositories(repositories = githubRepos)
     }
 }
 
 @Composable
-private fun ShowRepositories(repositiories: NetworkOperation<List<GithubRepo>>) {
-    repositiories.onSuccess { repos ->
+private fun ShowRepositories(repositories: NetworkOperation<List<GithubRepo>>) {
+    repositories.onSuccess { repos ->
         val reposRes = repos.take(50)
         LazyColumn(modifier = Modifier.fillMaxHeight()) {
             items(reposRes.count()) { itemId ->

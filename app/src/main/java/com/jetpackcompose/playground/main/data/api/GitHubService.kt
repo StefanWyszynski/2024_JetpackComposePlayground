@@ -9,7 +9,7 @@ import retrofit2.http.Headers
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-/*
+/**
  * Copyright 2024
  *
  * @author Stefan Wyszyński

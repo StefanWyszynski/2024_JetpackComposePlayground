@@ -1,6 +1,6 @@
-package com.jetpackcompose.playground.task_room.domain
+package com.jetpackcompose.playground.task_realm.domain
 
-import com.jetpackcompose.playground.task_room.domain.data.RealmTask
+import com.jetpackcompose.playground.task_realm.domain.data.RealmTask
 import kotlinx.coroutines.flow.Flow
 
 interface RealmTaskRepository {

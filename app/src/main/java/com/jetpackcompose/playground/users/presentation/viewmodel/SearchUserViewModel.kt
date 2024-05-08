@@ -17,15 +17,15 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-/*
+/**
  * Copyright 2024
  *
  * @author Stefan Wyszyński
  */
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 @HiltViewModel
-class SerachUserViewModel @Inject constructor(
-    private val githubUsersStateMachine: GithubUsersStateMachine
+class SearchUserViewModel @Inject constructor(
+    githubUsersStateMachine: GithubUsersStateMachine
 ) : StateViewModel<GithubUserState, GithubUserAction>(githubUsersStateMachine) {
 
     private var _searchText = MutableStateFlow("")

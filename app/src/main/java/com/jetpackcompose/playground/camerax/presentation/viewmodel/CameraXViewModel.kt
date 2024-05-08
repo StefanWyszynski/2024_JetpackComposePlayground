@@ -5,7 +5,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jetpackcompose.playground.camerax.presentation.data.ImageProxyToImageBitmapConverter
-import com.jetpackcompose.playground.di.annotations.DispathersDefault
+import com.jetpackcompose.playground.di.annotations.DispatchersDefault
 import com.jetpackcompose.playground.utils.ThreadOperation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
@@ -18,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CameraXViewModel @Inject constructor(
     val imageProxyToImageBitmapConverterImpl: ImageProxyToImageBitmapConverter,
-    @DispathersDefault val defaultDispather: CoroutineDispatcher
+    @DispatchersDefault val defaultDispatcher: CoroutineDispatcher
 ) :
     ViewModel() {
     private var processingImage = false
@@ -36,16 +36,16 @@ class CameraXViewModel @Inject constructor(
                 processingImage = true
                 val processedImage =
                     imageProxyToImageBitmapConverterImpl.convertImageAndClose(
-                        image, defaultDispather
+                        image, defaultDispatcher
                     )
                 processedImage.let {
                     _receivedImageSharedFlow.emit(ThreadOperation.Success(processedImage))
                 }
             } catch (e: Exception) {
                 _receivedImageSharedFlow.emit(
-                    ThreadOperation.Failure("Error occured while processing camera photo")
+                    ThreadOperation.Failure("Error occurred while processing camera photo")
                 )
-                if (e is CancellationException) throw e;
+                if (e is CancellationException) throw e
             } finally {
                 processingImage = false
             }

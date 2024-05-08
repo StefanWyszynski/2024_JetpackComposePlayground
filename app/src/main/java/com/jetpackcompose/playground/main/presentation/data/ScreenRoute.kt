@@ -5,23 +5,23 @@ import androidx.navigation.NavOptions
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 
-/*
+/**
  * Copyright 2024
  *
  * @author Stefan Wyszyński
  */
 sealed class ScreenRoute(val route: String) {
-    object GameScreen : ScreenRoute("GameScreen")
-    object SearchUser : ScreenRoute("searchUser")
-    object SearchRepo : ScreenRoute("searchRepo")
-    object CameraXTest : ScreenRoute("CameraXTest")
-    object MapsTest : ScreenRoute("MapTest")
-    object RoomTask : ScreenRoute("RoomTaskTest/{nestedScreen}") {
+    data object GameScreen : ScreenRoute("GameScreen")
+    data object SearchUser : ScreenRoute("searchUser")
+    data object SearchRepo : ScreenRoute("searchRepo")
+    data object CameraXTest : ScreenRoute("CameraXTest")
+    data object MapsTest : ScreenRoute("MapTest")
+    data object RoomTask : ScreenRoute("RoomTaskTest/{nestedScreen}") {
 
         fun namedNavArguments() =
             listOf(navArgument("nestedScreen") { type = NavType.StringType })
 
-        object Main : ScreenRoute("Main") {
+        data object Main : ScreenRoute("Main") {
 
             fun getFullPath() = RoomTask.route.replace("{nestedScreen}", Main.route)
 
@@ -33,7 +33,7 @@ sealed class ScreenRoute(val route: String) {
             }
         }
 
-        object NewTask : ScreenRoute("NewTask") {
+        data object NewTask : ScreenRoute("NewTask") {
             fun getFullPath() = RoomTask.route.replace("{nestedScreen}", NewTask.route)
             override fun navigate(navController: NavController, nav: NavOptions) {
                 navController.navigate(
@@ -51,12 +51,12 @@ sealed class ScreenRoute(val route: String) {
         }
     }
 
-    object RealmTask : ScreenRoute("RealmTaskTest/{nestedScreen}") {
+    data object RealmTask : ScreenRoute("RealmTaskTest/{nestedScreen}") {
 
         fun namedNavArguments() =
             listOf(navArgument("nestedScreen") { type = NavType.StringType })
 
-        object Main : ScreenRoute("Main") {
+        data object Main : ScreenRoute("Main") {
             fun getFullPath() = RealmTask.route.replace("{nestedScreen}", Main.route)
             override fun navigate(navController: NavController, nav: NavOptions) {
                 navController.navigate(
@@ -66,7 +66,7 @@ sealed class ScreenRoute(val route: String) {
             }
         }
 
-        object NewTask : ScreenRoute("NewTask") {
+        data object NewTask : ScreenRoute("NewTask") {
             fun getFullPath() = RealmTask.route.replace("{nestedScreen}", NewTask.route)
             override fun navigate(navController: NavController, nav: NavOptions) {
                 navController.navigate(
@@ -84,7 +84,7 @@ sealed class ScreenRoute(val route: String) {
         }
     }
 
-    object CryptoUtilTest : ScreenRoute("CryptoUtilTest")
+    data object CryptoUtilTest : ScreenRoute("CryptoUtilTest")
 
 
     open fun navigate(navController: NavController, nav: NavOptions) {

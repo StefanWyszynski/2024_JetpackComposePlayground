@@ -56,6 +56,6 @@ fun ConstraintLayoutTest() {
 
 @Preview
 @Composable
-fun ConstarainTestPreview() {
+fun ConstrainTestPreview() {
     ConstraintLayoutTest()
 }

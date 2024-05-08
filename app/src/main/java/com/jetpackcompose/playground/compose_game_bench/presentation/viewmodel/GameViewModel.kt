@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class GameViewModel @Inject constructor(var rayCastInteractor: RayCastUseCaseImpl) :
+class GameViewModel @Inject constructor(private var rayCastInteractor: RayCastUseCaseImpl) :
     ViewModel() {
 
     var gameData: GameData
@@ -86,7 +86,7 @@ class GameViewModel @Inject constructor(var rayCastInteractor: RayCastUseCaseImp
                     virtualGameScreenToPhoneScreenRatioHeight
                 )
                 // set rescaled line end to size of the phone screen
-                wallLineButtomLeft = getScaledLinePoint(
+                wallLineBottomLeft = getScaledLinePoint(
                     wallLeft,
                     wallBottom,
                     virtualGameScreenToPhoneScreenRatioWidth,

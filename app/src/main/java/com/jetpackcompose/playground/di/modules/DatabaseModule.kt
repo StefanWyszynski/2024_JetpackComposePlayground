@@ -3,8 +3,8 @@ package com.jetpackcompose.playground.di.modules
 import android.content.Context
 import androidx.room.Room
 import com.jetpackcompose.playground.main.data.database.AppDatabase
+import com.jetpackcompose.playground.task_realm.domain.data.RealmTask
 import com.jetpackcompose.playground.task_room.data.TaskDao
-import com.jetpackcompose.playground.task_room.domain.data.RealmTask
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,7 +14,7 @@ import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 import javax.inject.Singleton
 
-/*
+/**
  * Copyright 2024
  *
  * @author Stefan Wyszyński

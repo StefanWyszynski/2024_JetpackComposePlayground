@@ -14,7 +14,6 @@ import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -79,11 +78,11 @@ fun CameraXScreenContent(
                     contentDescription = "take image"
                 )
             }
-        }) { scaffoldPading ->
+        }) { scaffoldPadding ->
         Surface(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(scaffoldPading)
+                .padding(scaffoldPadding)
         )
         {
             when (capturedImage) {

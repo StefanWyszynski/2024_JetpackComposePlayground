@@ -7,11 +7,10 @@ import com.jetpackcompose.playground.compose_game_bench.data.Player
 import com.jetpackcompose.playground.compose_game_bench.data.RaycastScreenColumnInfo
 import com.jetpackcompose.playground.compose_game_bench.data.ScreenState
 import com.jetpackcompose.playground.compose_game_bench.presentation.data.GameData
-import com.jetpackcompose.playground.di.annotations.DispathersDefault
+import com.jetpackcompose.playground.di.annotations.DispatchersDefault
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
@@ -42,7 +41,7 @@ inline fun getScaledLinePoint(x: Float, y: Float, scaleW: Float, scaleH: Float):
     return lineStart
 }
 
-class RayCastUtil @Inject constructor(@DispathersDefault val defaultDispatcher: CoroutineDispatcher) {
+class RayCastUtil @Inject constructor(@DispatchersDefault val defaultDispatcher: CoroutineDispatcher) {
 
     private var deferedList = mutableListOf<Deferred<RaycastScreenColumnInfo>>()
 
@@ -131,7 +130,7 @@ class RayCastUtil @Inject constructor(@DispathersDefault val defaultDispatcher: 
         var rayX = player.x
         var rayY = player.y
 
-        // Ray path incrementers
+        // Ray path increments
         val rayCos = cos(Math.toRadians(rayAngle)) / screenInfo.raycastingPrecision
         val raySin = sin(Math.toRadians(rayAngle)) / screenInfo.raycastingPrecision
 

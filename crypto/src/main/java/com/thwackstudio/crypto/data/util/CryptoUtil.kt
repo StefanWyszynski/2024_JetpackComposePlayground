@@ -19,7 +19,7 @@ open class CryptoUtil(private val encryptOptions: EncryptOptions) {
         transformation = encryptOptions.getTransformation()
     }
 
-    private val keyStrore = KeyStore.getInstance("AndroidKeyStore").apply {
+    private val keyStore = KeyStore.getInstance("AndroidKeyStore").apply {
         load(null)
     }
 
@@ -50,7 +50,7 @@ open class CryptoUtil(private val encryptOptions: EncryptOptions) {
             val encBytes = ByteArray(encryptedBytes)
             it.read(encBytes)
 
-            getDepryptCipherForIv(bytesIv).doFinal(encBytes)
+            getDecryptCipherForIv(bytesIv).doFinal(encBytes)
         }
     }
 
@@ -62,14 +62,14 @@ open class CryptoUtil(private val encryptOptions: EncryptOptions) {
         return decrypt(bytes)?.decodeToString()
     }
 
-    private fun getDepryptCipherForIv(iv: ByteArray): Cipher {
+    private fun getDecryptCipherForIv(iv: ByteArray): Cipher {
         return Cipher.getInstance(transformation).apply {
             init(Cipher.DECRYPT_MODE, getKey(), IvParameterSpec(iv))
         }
     }
 
     private fun getKey(): SecretKey {
-        val key = keyStrore.getEntry(SECRET, null) as? KeyStore.SecretKeyEntry
+        val key = keyStore.getEntry(SECRET, null) as? KeyStore.SecretKeyEntry
         return key?.secretKey ?: createKey()
     }
 

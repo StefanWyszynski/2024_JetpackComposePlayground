@@ -1,15 +1,15 @@
 package com.jetpackcompose.playground.di.modules
 
-import com.jetpackcompose.playground.camerax.presentation.data.ImageProxyToImageBitmapConverterImpl
 import com.jetpackcompose.playground.camerax.presentation.data.ImageProxyToImageBitmapConverter
-import com.jetpackcompose.playground.domain.repositories.GithubUsersRepository
+import com.jetpackcompose.playground.camerax.presentation.data.ImageProxyToImageBitmapConverterImpl
 import com.jetpackcompose.playground.repos.data.repositiories.GithubReposRepositoryImpl
-import com.jetpackcompose.playground.repos.data.repositiories.GithubUsersRepositoryImpl
 import com.jetpackcompose.playground.repos.domain.repositories.GithubReposRepository
 import com.jetpackcompose.playground.task_realm.data.RealmTaskRepositoryImpl
+import com.jetpackcompose.playground.task_realm.domain.RealmTaskRepository
 import com.jetpackcompose.playground.task_room.data.TaskRepositoryImpl
-import com.jetpackcompose.playground.task_room.domain.RealmTaskRepository
 import com.jetpackcompose.playground.task_room.domain.TaskRepository
+import com.jetpackcompose.playground.users.data.repositiories.GithubUsersRepositoryImpl
+import com.jetpackcompose.playground.users.domain.repositories.GithubUsersRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

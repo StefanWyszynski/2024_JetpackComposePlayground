@@ -112,11 +112,11 @@ private fun AddTaskContent(
     val dropDownExposed = remember { mutableStateOf(false) }
 
     Scaffold(topBar = { CustomTopAppBar(customTopAppBarData) })
-    { scaffoldPading ->
+    { scaffoldPadding ->
         Surface(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(scaffoldPading)
+                .padding(scaffoldPadding)
         )
         {
             Column(

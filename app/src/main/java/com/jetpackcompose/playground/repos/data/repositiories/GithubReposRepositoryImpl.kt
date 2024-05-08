@@ -8,7 +8,7 @@ import com.jetpackcompose.playground.utils.NetworkOperation
 import com.jetpackcompose.playground.utils.safeApiCallRunner
 import javax.inject.Inject
 
-/*
+/**
  * Copyright 2024
  *
  * @author Stefan Wyszyński

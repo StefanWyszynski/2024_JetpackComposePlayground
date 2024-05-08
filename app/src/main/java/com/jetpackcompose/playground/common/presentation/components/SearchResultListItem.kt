@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun <T> SearchResultListItem(
     resultItem: T,

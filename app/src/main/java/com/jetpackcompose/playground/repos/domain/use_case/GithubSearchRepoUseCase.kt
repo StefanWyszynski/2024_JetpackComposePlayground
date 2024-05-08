@@ -5,7 +5,7 @@ import com.jetpackcompose.playground.repos.domain.repositories.GithubReposReposi
 import com.jetpackcompose.playground.utils.NetworkOperation
 import javax.inject.Inject
 
-/*
+/**
  * Copyright 2024
  *
  * @author Stefan Wyszyński

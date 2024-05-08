@@ -1,7 +1,7 @@
 package com.thwackstudio.permissions_util.domain.data
 
 interface PermissionsDialogHelper {
-    fun arePermissionsPermamentyDenied(): Boolean
+    fun arePermissionsPermanentlyDenied(): Boolean
     fun getDescription(): String
     fun getPermissionInfo(): PermissionInfo
     fun launchPermissionRequest()

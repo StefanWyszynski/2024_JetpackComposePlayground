@@ -1,8 +1,6 @@
 package com.thwackstudio.permissions_util.domain.data
 
-internal interface PermissionsGrantBuilderBase<out T> {
-
-}
+internal interface PermissionsGrantBuilderBase<out T>
 
 open class PermissionsContainer<T : PermissionsContainer<T>> :
     PermissionsGrantBuilderBase<T> {

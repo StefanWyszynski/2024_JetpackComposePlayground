@@ -27,25 +27,25 @@ import com.jetpackcompose.playground.common.presentation.components.SearchResult
 import com.jetpackcompose.playground.common.presentation.components.Spacer
 import com.jetpackcompose.playground.main.presentation.data.CustomTopAppBarData
 import com.jetpackcompose.playground.users.presentation.redux.GithubUserState
-import com.jetpackcompose.playground.users.presentation.viewmodel.SerachUserViewModel
+import com.jetpackcompose.playground.users.presentation.viewmodel.SearchUserViewModel
 
-/*
+/**
  * Copyright 2024
  *
  * @author Stefan Wyszyński
  */
 @Composable
 fun SearchUserScreen(
-    viewModel: SerachUserViewModel, customTopAppBarData: CustomTopAppBarData
+    viewModel: SearchUserViewModel, customTopAppBarData: CustomTopAppBarData
 ) {
     Scaffold(
         topBar = {
             CustomTopAppBar(customTopAppBarData)
-        }) { scaffoldPading ->
+        }) { scaffoldPadding ->
         Surface(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(scaffoldPading)
+                .padding(scaffoldPadding)
         )
         {
             SearchUserScreenContent(viewModel)
@@ -54,7 +54,7 @@ fun SearchUserScreen(
 }
 
 @Composable
-private fun SearchUserScreenContent(viewModel: SerachUserViewModel) {
+private fun SearchUserScreenContent(viewModel: SearchUserViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()

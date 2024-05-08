@@ -17,14 +17,14 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-/*
+/**
  * Copyright 2024
  *
  * @author Stefan Wyszyński
  */
 @OptIn(FlowPreview::class)
 @HiltViewModel
-class SerachRepoViewModel @Inject constructor(
+class SearchRepoViewModel @Inject constructor(
     private val githubSearchRepoUseCase: GithubSearchRepoUseCase,
 ) : ViewModel() {
 

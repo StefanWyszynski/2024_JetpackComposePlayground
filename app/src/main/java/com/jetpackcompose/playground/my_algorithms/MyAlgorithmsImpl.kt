@@ -1,6 +1,6 @@
 package com.jetpackcompose.playground.my_algorithms
 
-/*
+/**
  * Copyright 2024
  *
  * @author Stefan Wyszyński
@@ -18,7 +18,7 @@ object MyAlgorithmsImpl {
      * comparisons of type (i % SOME_NUMBER == 0). Anyway this is different and could be faster
      */
     fun myFizzBuzzImplForFun(n: Int): List<String> {
-        val fizzBuzzOccuranceText =
+        val fizzBuzzOccurrenceText =
             arrayListOf("Fizz", "Buzz", "Fizz", "Fizz", "Buzz", "Fizz", "FizzBuzz")
         val fizzBuzzValues = arrayListOf(3, 5, 3, 3, 5, 3, 3)
         var index = 0
@@ -26,7 +26,7 @@ object MyAlgorithmsImpl {
         val result = ArrayList<String>(n)
         for (i in 1..n) {
             if (i % currentNum == 0) {
-                result.add(fizzBuzzOccuranceText[index])
+                result.add(fizzBuzzOccurrenceText[index])
                 index = (index + 1) % 7
                 currentNum = fizzBuzzValues[index]
             } else {

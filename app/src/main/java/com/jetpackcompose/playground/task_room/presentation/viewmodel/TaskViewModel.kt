@@ -30,7 +30,7 @@ class TaskViewModel @Inject constructor(
     }
 
     private fun getAllTasks() {
-        viewModelScope.launch() {
+        viewModelScope.launch {
             getAllTasksUseCase.getAllTasks()
                 .flowOn(Dispatchers.IO)
                 .collect {

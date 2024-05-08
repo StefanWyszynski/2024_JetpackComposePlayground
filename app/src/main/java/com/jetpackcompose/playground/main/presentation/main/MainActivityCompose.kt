@@ -21,14 +21,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.jetpackcompose.playground.common.presentation.utils.topAppBarToogleVisibility
+import com.jetpackcompose.playground.common.presentation.utils.topAppBarToggleVisibility
 import com.jetpackcompose.playground.main.presentation.data.CustomTopAppBarData
 import com.jetpackcompose.playground.main.presentation.data.ScreenRoute
 import com.jetpackcompose.playground.main.presentation.theme.JetpackComposePlaygroundAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
-/*
+/**
  * Copyright 2024
  *
  * @author Stefan Wyszyński
@@ -58,10 +58,10 @@ fun SetNavAppHost(navController: NavHostController) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
-    val toppAppBarToogleCallback = remember { topAppBarToogleVisibility(scope, drawerState) }
+    val topAppBarToggleCallback = remember { topAppBarToggleVisibility(scope, drawerState) }
     val customTopAppBarData by remember {
         derivedStateOf {
-            CustomTopAppBarData(openIconClick = toppAppBarToogleCallback)
+            CustomTopAppBarData(openIconClick = topAppBarToggleCallback)
         }
     }
     ModalNavigationDrawer(

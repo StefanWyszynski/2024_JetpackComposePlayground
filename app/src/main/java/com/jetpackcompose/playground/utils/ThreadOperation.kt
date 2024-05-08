@@ -1,6 +1,6 @@
 package com.jetpackcompose.playground.utils
 
-/*
+/**
  * Copyright 2024
  *
  * @author Stefan Wyszyński

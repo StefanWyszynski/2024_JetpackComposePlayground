@@ -5,7 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Response
 
-/*
+/**
  * Copyright 2024
  *
  * @author Stefan Wyszyński
@@ -33,7 +33,7 @@ suspend fun <T, R> safeApiCallRunner(
             }
         }
     } catch (e: Exception) {
-        if (e is CancellationException) throw e;
+        if (e is CancellationException) throw e
         withContext(Dispatchers.Main) {
             return@withContext NetworkOperation.Failure("" + e.toString())
         }

@@ -4,7 +4,7 @@ import androidx.compose.material3.DrawerState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-fun topAppBarToogleVisibility(
+fun topAppBarToggleVisibility(
     scope: CoroutineScope,
     drawerState: DrawerState
 ): () -> Unit = {

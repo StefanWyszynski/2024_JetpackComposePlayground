@@ -26,12 +26,10 @@ import com.jetpackcompose.playground.main.presentation.data.ScreenRoute
 import com.jetpackcompose.playground.main.presentation.main.MainActivityCompose
 import com.jetpackcompose.playground.main.presentation.theme.JetpackComposePlaygroundAppTheme
 import com.jetpackcompose.playground.common.presentation.utils.TestConstants
-import com.jetpackcompose.playground.common.presentation.utils.topAppBarToogleVisibility
+import com.jetpackcompose.playground.common.presentation.utils.topAppBarToggleVisibility
 import com.jetpackcompose.playground.di.modules.DatabaseModule
 import com.jetpackcompose.playground.task_realm.data.RealmTaskRepositoryImpl
 import com.jetpackcompose.playground.task_realm.presentation.viewmodel.RealmTaskViewModel
-import com.jetpackcompose.playground.task_room.presentation.RealmNewTaskScreen
-import com.jetpackcompose.playground.task_room.presentation.RealmTaskScreen
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -70,10 +68,10 @@ class RealmTaskScreenKtTest {
                 val navController = rememberNavController()
                 val scope = rememberCoroutineScope()
                 val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-                val toppAppBarToogleCallback =
-                    remember { topAppBarToogleVisibility(scope, drawerState) }
+                val topAppBarToggleCallback =
+                    remember { topAppBarToggleVisibility(scope, drawerState) }
                 val customTopAppBarData =
-                    CustomTopAppBarData(openIconClick = toppAppBarToogleCallback)
+                    CustomTopAppBarData(openIconClick = topAppBarToggleCallback)
                 NavHost(
                     navController = navController,
                     startDestination = ScreenRoute.RealmTask.Main.getFullPath()
@@ -96,7 +94,7 @@ class RealmTaskScreenKtTest {
 
                             ScreenRoute.RealmTask.NewTask.route -> {
                                 customTopAppBarData.title =
-                                    stringResource(R.string.add_new_task)
+                                    stringResource(R.string.add_task)
                                 RealmNewTaskScreen(
                                     navController,
                                     hiltViewModel,

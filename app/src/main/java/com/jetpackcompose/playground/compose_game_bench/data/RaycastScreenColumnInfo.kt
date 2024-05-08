@@ -7,5 +7,4 @@ data class RaycastScreenColumnInfo(
     var worldTextureOffset: Double = 0.0,
     var eyeRayHitWallNumber: Int = 0,
     var rayAngle: Double = 0.0
-) {
-}
+)

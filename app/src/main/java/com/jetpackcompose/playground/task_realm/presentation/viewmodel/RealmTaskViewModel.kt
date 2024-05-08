@@ -2,10 +2,10 @@ package com.jetpackcompose.playground.task_realm.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jetpackcompose.playground.task_room.domain.data.RealmTask
-import com.jetpackcompose.playground.task_room.domain.usecase.DeleteRealmTaskUseCase
-import com.jetpackcompose.playground.task_room.domain.usecase.GetAllRealmTasksUseCase
-import com.jetpackcompose.playground.task_room.domain.usecase.InsertRealmTaskUseCase
+import com.jetpackcompose.playground.task_realm.domain.data.RealmTask
+import com.jetpackcompose.playground.task_realm.domain.usecase.DeleteRealmTaskUseCase
+import com.jetpackcompose.playground.task_realm.domain.usecase.GetAllRealmTasksUseCase
+import com.jetpackcompose.playground.task_realm.domain.usecase.InsertRealmTaskUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,7 +30,7 @@ class RealmTaskViewModel @Inject constructor(
     }
 
     private fun getAllTasks() {
-        viewModelScope.launch() {
+        viewModelScope.launch {
             getAllRealmTasksUseCase.getAllTasks()
                 .flowOn(Dispatchers.IO)
                 .collect {

@@ -2,7 +2,7 @@ package com.jetpackcompose.playground.utils
 
 import androidx.compose.runtime.Composable
 
-/*
+/**
  * Copyright 2024
  *
  * @author Stefan Wyszyński
