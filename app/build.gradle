@@ -6,7 +6,8 @@ plugins {
     id 'com.google.dagger.hilt.android'
     id 'kotlin-parcelize'
     id 'io.realm.kotlin'
-    id "org.jetbrains.kotlin.plugin.serialization"
+    id 'kotlinx-serialization'
+    id 'org.jetbrains.kotlin.plugin.serialization'
 }
 
 android {

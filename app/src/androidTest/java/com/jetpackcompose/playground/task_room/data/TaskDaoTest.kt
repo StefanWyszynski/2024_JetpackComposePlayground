@@ -24,7 +24,6 @@ import javax.inject.Inject
 @SmallTest
 class TaskDaoTest {
 
-
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
