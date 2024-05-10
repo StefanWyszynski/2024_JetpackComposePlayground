@@ -1,93 +1,57 @@
 package com.jetpackcompose.playground.main.presentation.data
 
+import android.os.Parcelable
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
-import androidx.navigation.NavType
-import androidx.navigation.navArgument
+import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
+
+object TaskSubScreen {
+    val TaskMain = 0
+    val TaskNew = 1
+}
 
 /**
  * Copyright 2024
  *
  * @author Stefan Wyszyński
  */
-sealed class ScreenRoute(val route: String) {
-    data object GameScreen : ScreenRoute("GameScreen")
-    data object SearchUser : ScreenRoute("searchUser")
-    data object SearchRepo : ScreenRoute("searchRepo")
-    data object CameraXTest : ScreenRoute("CameraXTest")
-    data object MapsTest : ScreenRoute("MapTest")
-    data object RoomTask : ScreenRoute("RoomTaskTest/{nestedScreen}") {
+@Serializable
+sealed class ScreenRoute() {
+    @Serializable
+    @Parcelize
+    object GameScreen : ScreenRoute(), Parcelable
 
-        fun namedNavArguments() =
-            listOf(navArgument("nestedScreen") { type = NavType.StringType })
+    @Serializable
+    @Parcelize
+    object SearchUser : ScreenRoute(), Parcelable
 
-        data object Main : ScreenRoute("Main") {
+    @Serializable
+    @Parcelize
+    object SearchRepo : ScreenRoute(), Parcelable
 
-            fun getFullPath() = RoomTask.route.replace("{nestedScreen}", Main.route)
+    @Serializable
+    @Parcelize
+    object CameraXTest : ScreenRoute(), Parcelable
 
-            override fun navigate(navController: NavController, nav: NavOptions) {
-                navController.navigate(
-                    RoomTask.route.replace("{nestedScreen}", Main.route),
-                    navOptions = nav
-                )
-            }
-        }
+    @Serializable
+    @Parcelize
+    object MapsTest : ScreenRoute(), Parcelable
 
-        data object NewTask : ScreenRoute("NewTask") {
-            fun getFullPath() = RoomTask.route.replace("{nestedScreen}", NewTask.route)
-            override fun navigate(navController: NavController, nav: NavOptions) {
-                navController.navigate(
-                    RoomTask.route.replace("{nestedScreen}", NewTask.route),
-                    navOptions = nav
-                )
-            }
-        }
+    @Serializable
+    @Parcelize
+    data class RoomTask(val nastedScreen: Int) : ScreenRoute(), Parcelable
 
-        override fun navigate(navController: NavController, nav: NavOptions) {
-            navController.navigate(
-                RoomTask.route.replace("{nestedScreen}", Main.route),
-                navOptions = nav
-            )
-        }
-    }
+    @Serializable
+    @Parcelize
+    data class RealmTask(val nastedScreen: Int) : ScreenRoute(), Parcelable
 
-    data object RealmTask : ScreenRoute("RealmTaskTest/{nestedScreen}") {
-
-        fun namedNavArguments() =
-            listOf(navArgument("nestedScreen") { type = NavType.StringType })
-
-        data object Main : ScreenRoute("Main") {
-            fun getFullPath() = RealmTask.route.replace("{nestedScreen}", Main.route)
-            override fun navigate(navController: NavController, nav: NavOptions) {
-                navController.navigate(
-                    RealmTask.route.replace("{nestedScreen}", Main.route),
-                    navOptions = nav
-                )
-            }
-        }
-
-        data object NewTask : ScreenRoute("NewTask") {
-            fun getFullPath() = RealmTask.route.replace("{nestedScreen}", NewTask.route)
-            override fun navigate(navController: NavController, nav: NavOptions) {
-                navController.navigate(
-                    RealmTask.route.replace("{nestedScreen}", NewTask.route),
-                    navOptions = nav
-                )
-            }
-        }
-
-        override fun navigate(navController: NavController, nav: NavOptions) {
-            navController.navigate(
-                RealmTask.route.replace("{nestedScreen}", Main.route),
-                navOptions = nav
-            )
-        }
-    }
-
-    data object CryptoUtilTest : ScreenRoute("CryptoUtilTest")
+    @Serializable
+    @Parcelize
+    object CryptoUtilTest : ScreenRoute(), Parcelable
 
 
-    open fun navigate(navController: NavController, nav: NavOptions) {
-        navController.navigate(route, navOptions = nav)
+    open fun navigate(navController: NavController, nav: NavOptions.Builder) {
+        navController.navigate(this, navOptions = nav.build())
     }
 }

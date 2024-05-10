@@ -28,9 +28,14 @@ import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import com.jetpackcompose.playground.main.presentation.data.NavigationDrawerItems
 
-
+/**
+ * Copyright 2024
+ *
+ * @author Stefan Wyszyński
+ */
 @Composable
 fun DrawerContent(navController: NavController, onClickOptionCallback: () -> Unit) {
+
     ModalDrawerSheet(
         modifier = Modifier
             .fillMaxWidth(0.7f)
@@ -60,7 +65,7 @@ fun DrawerContent(navController: NavController, onClickOptionCallback: () -> Uni
                 color = Color.White
             )
         }
-        val nav = NavOptions.Builder().setLaunchSingleTop(true).build()
+        val nav = NavOptions.Builder().setLaunchSingleTop(true)
 
         for (navigateItem in NavigationDrawerItems.entries) {
             DrawerContentOptionButton({

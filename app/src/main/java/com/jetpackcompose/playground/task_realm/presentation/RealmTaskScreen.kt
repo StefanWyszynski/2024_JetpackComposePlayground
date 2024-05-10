@@ -37,6 +37,7 @@ import com.jetpackcompose.playground.common.presentation.components.CustomTopApp
 import com.jetpackcompose.playground.common.presentation.utils.TestConstants
 import com.jetpackcompose.playground.main.presentation.data.CustomTopAppBarData
 import com.jetpackcompose.playground.main.presentation.data.ScreenRoute
+import com.jetpackcompose.playground.main.presentation.data.TaskSubScreen
 import com.jetpackcompose.playground.task_realm.domain.data.RealmTask
 import com.jetpackcompose.playground.task_realm.presentation.components.RealmTaskListItem
 import com.jetpackcompose.playground.task_realm.presentation.viewmodel.RealmTaskViewModel
@@ -53,8 +54,8 @@ fun RealmTaskScreen(
         },
         floatingActionButton = {
             ExtendedFloatingActionButton(onClick = {
-                val nav = NavOptions.Builder().build()
-                ScreenRoute.RealmTask.NewTask.navigate(navController, nav)
+                ScreenRoute.RealmTask(TaskSubScreen.TaskNew)
+                    .navigate(navController, NavOptions.Builder())
             }, modifier = Modifier.testTag(TestConstants.REALM_TASK_LIST_ADD_NEW_TASK_BUTTON)) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add task")
                 Text(text = stringResource(R.string.add_task))

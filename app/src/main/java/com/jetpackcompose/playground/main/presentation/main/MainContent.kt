@@ -6,6 +6,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.jetpackcompose.playground.R
 import com.jetpackcompose.playground.camerax.presentation.CameraXScreenContainer
 import com.jetpackcompose.playground.camerax.presentation.viewmodel.CameraXViewModel
@@ -27,7 +28,11 @@ import com.jetpackcompose.playground.users.presentation.viewmodel.SearchUserView
 import com.thwackstudio.crypto.presentation.CryptoUtilTestScreen
 import com.thwackstudio.crypto.presentation.viewmodel.CryptoUtilTestViewModel
 
-
+/**
+ * Copyright 2024
+ *
+ * @author Stefan Wyszyński
+ */
 @Composable
 fun MainContent(
     navController: NavHostController,
@@ -35,70 +40,67 @@ fun MainContent(
 ) {
     NavHost(
         navController = navController,
-        startDestination = ScreenRoute.SearchUser.route
+        startDestination = ScreenRoute.SearchUser
     ) {
-        composable(ScreenRoute.GameScreen.route) {
+        composable<ScreenRoute.GameScreen> {
             val hiltViewModel = hiltViewModel<GameViewModel>(it)
             GameScreen(hiltViewModel)
         }
-        composable(ScreenRoute.SearchUser.route) {
+        composable<ScreenRoute.SearchUser> {
             customTopAppBarData.title = stringResource(R.string.search_for_user)
             val hiltViewModel = hiltViewModel<SearchUserViewModel>(it)
             SearchUserScreen(hiltViewModel, customTopAppBarData)
         }
-        composable(ScreenRoute.SearchRepo.route) {
+        composable<ScreenRoute.SearchRepo> {
             customTopAppBarData.title = stringResource(R.string.search_for_repo)
             val hiltViewModel = hiltViewModel<SearchRepoViewModel>(it)
             SearchRepoScreen(hiltViewModel, customTopAppBarData)
         }
-        composable(ScreenRoute.CameraXTest.route) {
+        composable<ScreenRoute.CameraXTest> {
             customTopAppBarData.title = stringResource(R.string.camerax_test)
             val hiltViewModel = hiltViewModel<CameraXViewModel>(it)
             CameraXScreenContainer(customTopAppBarData, hiltViewModel)
         }
-        composable(ScreenRoute.MapsTest.route) {
+        composable<ScreenRoute.MapsTest> {
             GoogleMapScreen()
         }
-        composable(
-            route = ScreenRoute.RoomTask.route,
-            arguments = ScreenRoute.RoomTask.namedNavArguments()
-        ) { backStackEntry ->
+        composable<ScreenRoute.RoomTask> { backStackEntry ->
             val hiltViewModel = hiltViewModel<TaskViewModel>(backStackEntry)
-            val nestedScreen = backStackEntry.arguments?.getString("nestedScreen")
+            val nestedScreen = backStackEntry.toRoute<ScreenRoute.RoomTask>().nastedScreen
             when (nestedScreen) {
-                ScreenRoute.RoomTask.Main.route -> {
+                0 -> {
                     customTopAppBarData.title = stringResource(R.string.tasks)
                     RoomTaskScreen(navController, hiltViewModel, customTopAppBarData)
                 }
 
-                ScreenRoute.RoomTask.NewTask.route -> {
+                1 -> {
                     customTopAppBarData.title = stringResource(R.string.add_task)
                     RoomNewTaskScreen(navController, hiltViewModel, customTopAppBarData)
                 }
 
+                else -> {}
+
             }
         }
-        composable(
-            route = ScreenRoute.RealmTask.route,
-            arguments = ScreenRoute.RealmTask.namedNavArguments()
-        ) { backStackEntry ->
+        composable<ScreenRoute.RealmTask> { backStackEntry ->
             val hiltViewModel = hiltViewModel<RealmTaskViewModel>(backStackEntry)
-            val nestedScreen = backStackEntry.arguments?.getString("nestedScreen")
+            val nestedScreen = backStackEntry.toRoute<ScreenRoute.RealmTask>().nastedScreen
             when (nestedScreen) {
-                ScreenRoute.RealmTask.Main.route -> {
+                0 -> {
                     customTopAppBarData.title = stringResource(R.string.tasks)
                     RealmTaskScreen(navController, hiltViewModel, customTopAppBarData)
                 }
 
-                ScreenRoute.RealmTask.NewTask.route -> {
+                1 -> {
                     customTopAppBarData.title = stringResource(R.string.add_task)
                     RealmNewTaskScreen(navController, hiltViewModel, customTopAppBarData)
                 }
 
+                else -> {}
             }
         }
 
-        composable(ScreenRoute.CryptoUtilTest.route) {
+        composable<ScreenRoute.CryptoUtilTest> {
             val hiltViewModel = hiltViewModel<CryptoUtilTestViewModel>(it)
             CryptoUtilTestScreen(hiltViewModel)
         }

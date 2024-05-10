@@ -20,6 +20,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.jetpackcompose.playground.R
 import com.jetpackcompose.playground.main.data.database.AppDatabase
 import com.jetpackcompose.playground.main.presentation.data.CustomTopAppBarData
@@ -29,6 +30,7 @@ import com.jetpackcompose.playground.main.presentation.theme.JetpackComposePlayg
 import com.jetpackcompose.playground.common.presentation.utils.TestConstants
 import com.jetpackcompose.playground.common.presentation.utils.topAppBarToggleVisibility
 import com.jetpackcompose.playground.di.modules.DatabaseModule
+import com.jetpackcompose.playground.main.presentation.data.TaskSubScreen
 import com.jetpackcompose.playground.task_room.data.TaskDao
 import com.jetpackcompose.playground.task_room.presentation.viewmodel.TaskViewModel
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -74,30 +76,28 @@ class TaskScreenKtTest {
                     CustomTopAppBarData(openIconClick = topAppBarToggleCallback)
                 NavHost(
                     navController = navController,
-                    startDestination = ScreenRoute.RoomTask.Main.getFullPath()
+                    startDestination = ScreenRoute.RoomTask
                 ) {
-                    composable(
-                        route = ScreenRoute.RoomTask.route,
-                        arguments = ScreenRoute.RoomTask.namedNavArguments()
-                    ) { backStackEntry ->
+                    composable<ScreenRoute.RoomTask> { backStackEntry ->
                         val hiltViewModel = hiltViewModel<TaskViewModel>(backStackEntry)
-                        val nestedScreen = backStackEntry.arguments?.getString("nestedScreen")
+                        val nestedScreen = backStackEntry.toRoute<ScreenRoute.RoomTask>().nastedScreen
                         when (nestedScreen) {
-                            ScreenRoute.RoomTask.Main.route -> {
+                            TaskSubScreen.TaskMain -> {
                                 customTopAppBarData.title = stringResource(R.string.tasks)
                                 RoomTaskScreen(navController, hiltViewModel, customTopAppBarData)
                             }
 
-                            ScreenRoute.RoomTask.NewTask.route -> {
+                            TaskSubScreen.TaskNew -> {
                                 customTopAppBarData.title = stringResource(R.string.add_task)
                                 RoomNewTaskScreen(navController, hiltViewModel, customTopAppBarData)
                             }
+                            else -> {}
                         }
                     }
                 }
 
-                val nav = NavOptions.Builder().setLaunchSingleTop(true).build()
-                ScreenRoute.RoomTask.Main.navigate(navController, nav = nav)
+                val nav = NavOptions.Builder().setLaunchSingleTop(true)
+                ScreenRoute.RoomTask(TaskSubScreen.TaskMain).navigate(navController, nav = nav)
             }
         }
     }

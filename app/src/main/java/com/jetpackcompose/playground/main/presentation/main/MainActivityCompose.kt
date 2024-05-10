@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.jetpackcompose.playground.common.presentation.utils.topAppBarToggleVisibility
 import com.jetpackcompose.playground.main.presentation.data.CustomTopAppBarData
 import com.jetpackcompose.playground.main.presentation.data.ScreenRoute
@@ -85,7 +86,7 @@ fun SetNavAppHost(navController: NavHostController) {
 @Composable
 private fun isGameOpened(navController: NavHostController): Boolean {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val gameVisible = (navBackStackEntry?.destination?.route ?: "") == ScreenRoute.GameScreen.route
+    val gameVisible = navBackStackEntry?.toRoute<ScreenRoute.GameScreen>() == ScreenRoute.GameScreen
     return gameVisible
 }
 

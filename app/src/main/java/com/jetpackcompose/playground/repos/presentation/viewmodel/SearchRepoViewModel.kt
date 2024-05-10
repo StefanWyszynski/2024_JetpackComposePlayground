@@ -1,7 +1,10 @@
 package com.jetpackcompose.playground.repos.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.jetpackcompose.playground.common.presentation.utils.DataStoreUtil
+import com.jetpackcompose.playground.common.presentation.utils.DataStoreUtilProperty
 import com.jetpackcompose.playground.repos.domain.model.GithubRepo
 import com.jetpackcompose.playground.repos.domain.use_case.GithubSearchRepoUseCase
 import com.jetpackcompose.playground.utils.NetworkOperation
@@ -26,7 +29,10 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchRepoViewModel @Inject constructor(
     private val githubSearchRepoUseCase: GithubSearchRepoUseCase,
+//    dataStoreUtil: DataStoreUtil
 ) : ViewModel() {
+
+//    var boolKey = DataStoreUtilProperty(dataStoreUtil, "boolKey", false)
 
     private var _searchText = MutableStateFlow("")
     var searchText: StateFlow<String> = _searchText.asStateFlow()
@@ -37,6 +43,10 @@ class SearchRepoViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+//            boolKey.setValue(true)
+//            boolKey.getValue {
+//                Log.e("TAG", "LLL " + it)
+//            }
             val searchTextHot = searchText.stateIn(viewModelScope)
             searchTextHot
                 .debounce(500)

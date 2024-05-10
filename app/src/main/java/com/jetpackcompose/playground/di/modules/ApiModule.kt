@@ -1,6 +1,13 @@
 package com.jetpackcompose.playground.di.modules
 
+import android.content.Context
 import android.util.Log
+import androidx.datastore.core.DataStore
+import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.preferencesDataStoreFile
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
@@ -9,6 +16,7 @@ import com.jetpackcompose.playground.main.data.api.GitHubApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -81,8 +89,17 @@ class ApiModule {
         return retrofit.create(GitHubApiService::class.java)
     }
 
+    @Singleton
+    @Provides
+    fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> {
+        return PreferenceDataStoreFactory.create(
+            corruptionHandler = ReplaceFileCorruptionHandler(produceNewData = { emptyPreferences() }),
+            produceFile = { context.preferencesDataStoreFile(GLOBAL_DATA_STORE_FILE) })
+    }
+
     companion object {
         val HTTP_GITHUB_ROOT_ENDPOINT = "https://api.github.com"
+        val GLOBAL_DATA_STORE_FILE = "GlobalStore"
     }
 }
 

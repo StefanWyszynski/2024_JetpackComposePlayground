@@ -20,14 +20,16 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.jetpackcompose.playground.R
 import com.jetpackcompose.playground.main.presentation.data.CustomTopAppBarData
 import com.jetpackcompose.playground.main.presentation.data.ScreenRoute
 import com.jetpackcompose.playground.main.presentation.main.MainActivityCompose
-import com.jetpackcompose.playground.main.presentation.theme.JetpackComposePlaygroundAppTheme
 import com.jetpackcompose.playground.common.presentation.utils.TestConstants
 import com.jetpackcompose.playground.common.presentation.utils.topAppBarToggleVisibility
 import com.jetpackcompose.playground.di.modules.DatabaseModule
+import com.jetpackcompose.playground.main.presentation.data.TaskSubScreen
+import com.jetpackcompose.playground.main.presentation.theme.JetpackComposePlaygroundAppTheme
 import com.jetpackcompose.playground.task_realm.data.RealmTaskRepositoryImpl
 import com.jetpackcompose.playground.task_realm.presentation.viewmodel.RealmTaskViewModel
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -74,16 +76,13 @@ class RealmTaskScreenKtTest {
                     CustomTopAppBarData(openIconClick = topAppBarToggleCallback)
                 NavHost(
                     navController = navController,
-                    startDestination = ScreenRoute.RealmTask.Main.getFullPath()
+                    startDestination = ScreenRoute.RealmTask
                 ) {
-                    composable(
-                        route = ScreenRoute.RealmTask.route,
-                        arguments = ScreenRoute.RealmTask.namedNavArguments()
-                    ) { backStackEntry ->
+                    composable<ScreenRoute.RealmTask> { backStackEntry ->
                         val hiltViewModel = hiltViewModel<RealmTaskViewModel>(backStackEntry)
-                        val nestedScreen = backStackEntry.arguments?.getString("nestedScreen")
+                        val nestedScreen = backStackEntry.toRoute<ScreenRoute.RealmTask>().nastedScreen
                         when (nestedScreen) {
-                            ScreenRoute.RealmTask.Main.route -> {
+                            TaskSubScreen.TaskMain -> {
                                 customTopAppBarData.title = stringResource(R.string.tasks)
                                 RealmTaskScreen(
                                     navController,
@@ -92,7 +91,7 @@ class RealmTaskScreenKtTest {
                                 )
                             }
 
-                            ScreenRoute.RealmTask.NewTask.route -> {
+                            TaskSubScreen.TaskNew -> {
                                 customTopAppBarData.title =
                                     stringResource(R.string.add_task)
                                 RealmNewTaskScreen(
@@ -101,12 +100,12 @@ class RealmTaskScreenKtTest {
                                     customTopAppBarData
                                 )
                             }
-
+                            else -> {}
                         }
                     }
                 }
-                val nav = NavOptions.Builder().setLaunchSingleTop(true).build()
-                ScreenRoute.RealmTask.Main.navigate(navController, nav = nav)
+                val nav = NavOptions.Builder().setLaunchSingleTop(true)
+                ScreenRoute.RealmTask(TaskSubScreen.TaskMain).navigate(navController, nav = nav)
             }
         }
     }

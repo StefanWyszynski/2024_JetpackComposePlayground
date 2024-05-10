@@ -6,6 +6,7 @@ plugins {
     id 'com.google.dagger.hilt.android'
     id 'kotlin-parcelize'
     id 'io.realm.kotlin'
+    id "org.jetbrains.kotlin.plugin.serialization"
 }
 
 android {
@@ -83,6 +84,8 @@ dependencies {
     implementation libs.material
     implementation libs.constraintlayout
     implementation libs.lifecycle.runtime.ktx
+    implementation libs.kotlinx.serialization.json
+
     // compose
     implementation libs.lifecycle.viewmodel.compose
     implementation libs.constraintlayout.compose
@@ -146,6 +149,10 @@ dependencies {
     implementation libs.realm.base
     implementation libs.kotlin.coroutines
 
+    // data store preferences and protobuf
+    implementation libs.androidx.datastore.preferences
+    implementation libs.androidx.datastore.core
+
     // TEST ========================================================================================
     // Required -- JUnit 4 framework
     testImplementation libs.test.junit
@@ -169,7 +176,7 @@ dependencies {
     testImplementation libs.test.mockwebserver
 
     // compose
-    testImplementation libs.compose.bom.v20240202
+    testImplementation platform(libs.composeBom)
     testImplementation libs.test.androidx.ui.test.junit4
     // ANDROID TEST ========================================================================================
     androidTestImplementation libs.test.ext.junit
@@ -186,8 +193,8 @@ dependencies {
     androidTestImplementation libs.test.truth
 
     // jetpack compose test
-    androidTestImplementation libs.compose.bom.v20240202
-    androidTestImplementation libs.test.ui.test.junit4
+    androidTestImplementation platform(libs.composeBom)
+    androidTestImplementation libs.test.androidx.ui.test.junit4
 
 
     // For Robolectric tests.
@@ -203,4 +210,5 @@ dependencies {
     kaptAndroidTest libs.hilt.android.compiler
     // ...with Java.
     androidTestAnnotationProcessor 'com.google.dagger:hilt-android-compiler:2.50'
+    androidTestImplementation libs.kotlinx.serialization.json
 }

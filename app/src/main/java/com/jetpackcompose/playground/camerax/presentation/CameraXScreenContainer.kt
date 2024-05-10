@@ -21,7 +21,7 @@ fun CameraXScreenContainer(
     if (permissionsRequester.isAllPermissionsGranted()) {
         CameraXScreenContent(customTopAppBarData, hiltViewModel)
     } else {
-        NoPermissionScreen{}
+        NoPermissionScreen {}
 
         permissionsRequester.RequestMultiplePermissions(onShowPermissionDialog = { permissionDialogHelper: PermissionsDialogHelper ->
 //        DefaultPermissionDialog(permissionsDialogHelper = permissionDialogHelper)

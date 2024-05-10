@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-kapt'
 //    id 'com.google.dagger.hilt.android'
     id 'kotlin-parcelize'
+    id "org.jetbrains.kotlin.plugin.serialization"
 }
 
 android {
@@ -97,8 +98,8 @@ dependencies {
     // Optional -- Robolectric environment
     testImplementation libs.androidx.core
 
-    testImplementation libs.androidx.compose.bom.v20240202
-    testImplementation libs.androidx.ui.test.junit4
+    testImplementation platform(libs.composeBom)
+    testImplementation libs.test.androidx.ui.test.junit4
     // ANDROID TEST ========================================================================================
     androidTestImplementation libs.test.ext.junit
     androidTestImplementation libs.test.androidx.runner
@@ -114,9 +115,8 @@ dependencies {
     androidTestImplementation libs.test.truth
 
     // jetpack compose test
-    androidTestImplementation libs.androidx.compose.bom.v20240202
-    androidTestImplementation libs.ui.test.junit4
-
+//    androidtestImplementation platform(libs.composeBom)
+    androidTestImplementation libs.test.androidx.ui.test.junit4
 
     // For Robolectric tests.
 //    testImplementation 'com.google.dagger:hilt-android-testing:2.44'
