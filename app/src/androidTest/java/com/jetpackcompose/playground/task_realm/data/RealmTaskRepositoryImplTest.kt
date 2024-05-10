@@ -3,8 +3,8 @@ package com.jetpackcompose.playground.task_realm.data
 import androidx.test.filters.SmallTest
 import com.google.common.truth.Truth
 import com.jetpackcompose.playground.di.modules.DatabaseModule
+import com.jetpackcompose.playground.task_realm.domain.data.RealmTask
 import com.jetpackcompose.playground.task_room.domain.data.Priority
-import com.jetpackcompose.playground.task_room.domain.data.RealmTask
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
