@@ -78,6 +78,7 @@ class DataStoreUtil @Inject constructor(val dataStore: DataStore<Preferences>) {
     }
 }
 
+@Suppress("UNCHECKED_CAST")
 class DataStoreUtilProperty<T>(
     var dataStoreUtil: DataStoreUtil,
     val name: String,
@@ -85,12 +86,12 @@ class DataStoreUtilProperty<T>(
     val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) where T : Any {
     var value = when (defaultValue) {
-        is Int -> intPreferencesKey(name) as Preferences.Key<T>
-        is Long -> longPreferencesKey(name) as Preferences.Key<T>
-        is Float -> floatPreferencesKey(name) as Preferences.Key<T>
-        is Double -> doublePreferencesKey(name) as Preferences.Key<T>
-        is String -> stringPreferencesKey(name) as Preferences.Key<T>
-        is Boolean -> booleanPreferencesKey(name) as Preferences.Key<T>
+        is Int -> intPreferencesKey(name)
+        is Long -> longPreferencesKey(name)
+        is Float -> floatPreferencesKey(name)
+        is Double -> doublePreferencesKey(name)
+        is String -> stringPreferencesKey(name)
+        is Boolean -> booleanPreferencesKey(name)
         else -> throw InvalidObjectException("Invalid")
     }
 
@@ -98,14 +99,16 @@ class DataStoreUtilProperty<T>(
         withContext(coroutineDispatcher) {
             val t = dataStoreUtil.get(value) ?: defaultValue
             withContext(Dispatchers.Main) {
-                valueCallback(t)
+                valueCallback(t as T)
             }
         }
     }
 
     suspend fun setValue(v: T) {
         withContext(coroutineDispatcher) {
-            dataStoreUtil.modify { value.setValue(v) }
+            dataStoreUtil.modify {
+                (value as Preferences.Key<T>).setValue(v)
+            }
         }
     }
 }
