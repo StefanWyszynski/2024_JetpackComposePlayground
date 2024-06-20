@@ -38,7 +38,6 @@ fun ConstraintLayoutTest() {
         }
     }
     ConstraintLayout(constraintSet = constraintSet, modifier = Modifier.fillMaxSize()) {
-
         Box(
             modifier = Modifier
                 .padding(10.dp)

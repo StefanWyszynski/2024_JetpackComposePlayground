@@ -28,12 +28,8 @@ import javax.inject.Inject
 @OptIn(FlowPreview::class)
 @HiltViewModel
 class SearchRepoViewModel @Inject constructor(
-    private val githubSearchRepoUseCase: GithubSearchRepoUseCase,
-//    dataStoreUtil: DataStoreUtil
+    private val githubSearchRepoUseCase: GithubSearchRepoUseCase
 ) : ViewModel() {
-
-//    var boolKey = DataStoreUtilProperty(dataStoreUtil, "boolKey", false)
-
     private var _searchText = MutableStateFlow("")
     var searchText: StateFlow<String> = _searchText.asStateFlow()
 
@@ -43,10 +39,6 @@ class SearchRepoViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-//            boolKey.setValue(true)
-//            boolKey.getValue {
-//                Log.e("TAG", "LLL " + it)
-//            }
             val searchTextHot = searchText.stateIn(viewModelScope)
             searchTextHot
                 .debounce(500)

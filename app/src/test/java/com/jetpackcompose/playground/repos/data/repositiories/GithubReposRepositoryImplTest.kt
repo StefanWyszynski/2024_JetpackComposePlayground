@@ -2,6 +2,7 @@ package com.jetpackcompose.playground.repos.data.repositiories
 
 import com.google.common.truth.Truth
 import com.google.gson.Gson
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.jetpackcompose.playground.main.data.api.GitHubApiService
 import com.jetpackcompose.playground.repos.data.dto.GithubRepoDto
 import com.jetpackcompose.playground.repos.data.dto.GithubReposSearchDto
@@ -46,6 +47,7 @@ class GithubReposRepositoryImplTest {
         val retrofit = Retrofit.Builder()
             .baseUrl(mockWebServer.url("/"))
             .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .build()
 
         gitHubApiService = retrofit.create(GitHubApiService::class.java)

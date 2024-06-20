@@ -12,6 +12,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import com.google.gson.JsonSyntaxException
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.jetpackcompose.playground.main.data.api.GitHubApiService
 import dagger.Module
 import dagger.Provides
@@ -79,6 +80,7 @@ class ApiModule {
         return Retrofit.Builder()
             .baseUrl(HTTP_GITHUB_ROOT_ENDPOINT)
             .addConverterFactory(GsonConverterFactory.create(gson))
+            .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .client(okHttpClient)
             .build()
     }

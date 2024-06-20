@@ -127,9 +127,12 @@ dependencies {
 
     // retrofit 2
     implementation libs.retrofit2.retrofit
+    // retrofit 2 JSON Converter
+    implementation libs.retrofit2.converter.gson
+    // retrofit 2 Call adapter
+    implementation libs.retrofit2.kotlin.coroutines.adapter
+    // okhttp3 interceptor
     implementation libs.logging.interceptor
-    // JSON Converter
-    implementation libs.converter.gson
     /* Gson */
     implementation libs.gson
     // coil
